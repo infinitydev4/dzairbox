@@ -1,0 +1,271 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "services": "Services",
+    "about": "À propos",
+    "contact": "Contact",
+    "login": "Connexion",
+    "register": "Inscription",
+    "directory": "Annuaire",
+    "dashboard": "Tableau de bord",
+    "logout": "Se déconnecter"
+  },
+  "hero": {
+    "title": "Développez votre activité locale en Algérie",
+    "subtitle": "Rejoignez des milliers d'entreprises qui font confiance à notre plateforme pour développer leur visibilité en ligne",
+    "register": "Inscrire mon entreprise",
+    "find": "Trouver un service",
+    "trustBadge": "+5000 entreprises nous font confiance",
+    "stats": {
+      "businesses": "Entreprises inscrites",
+      "wilayas": "Wilayas couvertes",
+      "rating": "Note moyenne"
+    }
+  },
+  "features": {
+    "title": "Pourquoi choisir DzBusiness ?",
+    "subtitle": "Une plateforme complète pour développer votre présence en ligne en Algérie",
+    "visibility": {
+      "title": "Visibilité maximale",
+      "description": "Votre entreprise visible 24h/24 sur internet"
+    },
+    "seo": {
+      "title": "SEO local optimisé",
+      "description": "Référencement optimisé pour l'Algérie"
+    },
+    "mobile": {
+      "title": "Mobile-first",
+      "description": "Interface parfaitement adaptée aux mobiles"
+    },
+    "security": {
+      "title": "Sécurisé et fiable",
+      "description": "Données protégées et sauvegardées"
+    },
+    "speed": {
+      "title": "Inscription rapide",
+      "description": "Chatbot IA pour une inscription en 5 minutes"
+    },
+    "location": {
+      "title": "Géolocalisation précise",
+      "description": "Trouvé facilement par vos clients locaux"
+    }
+  },
+  "services": {
+    "title": "Services populaires",
+    "subtitle": "Découvrez tous les services disponibles près de chez vous",
+    "electrician": "Électriciens",
+    "mechanic": "Mécaniciens",
+    "pharmacy": "Pharmacies",
+    "grocery": "Épiceries",
+    "bakery": "Boulangeries",
+    "restaurant": "Restaurants",
+    "hairdresser": "Coiffeurs",
+    "craftsman": "Artisans",
+    "drivingSchool": "Auto-écoles",
+    "realEstate": "Immobilier",
+    "doctor": "Médecins",
+    "school": "Écoles"
+  },
+  "chatbot": {
+    "welcome": "Bonjour ! Je vais vous aider à inscrire votre entreprise. Commençons par le nom de votre entreprise.",
+    "placeholder": "Tapez votre message...",
+    "send": "Envoyer"
+  },
+  "register": {
+    "title": "Inscrivez votre entreprise",
+    "subtitle": "Choisissez la méthode d'inscription qui vous convient le mieux. Notre assistant IA ou un formulaire classique - les deux vous guideront vers le succès !",
+    "aiChat": {
+      "title": "Assistant IA Conversationnel",
+      "subtitle": "Une expérience guidée et naturelle",
+      "recommended": "Recommandé",
+      "feature1": "Conversation naturelle en français",
+      "feature2": "Questions adaptées à votre secteur",
+      "feature3": "Conseils personnalisés en temps réel",
+      "feature4": "Validation automatique des informations",
+      "button": "Commencer avec l'IA",
+      "tagline": "⚡ Plus rapide • Plus intelligent • Plus facile"
+    },
+    "classicForm": {
+      "title": "Formulaire Classique",
+      "subtitle": "Méthode traditionnelle et structurée",
+      "feature1": "Formulaire étape par étape",
+      "feature2": "Saisie manuelle des informations",
+      "feature3": "Interface familière",
+      "feature4": "Contrôle total sur les données",
+      "button": "Formulaire classique",
+      "tagline": "📝 Méthode traditionnelle"
+    },
+    "whyAi": {
+      "title": "Pourquoi choisir l'assistant IA ?",
+      "description": "Notre assistant IA utilise l'intelligence artificielle pour rendre l'inscription plus intuitive. Il s'adapte à votre secteur d'activité, vous pose les bonnes questions au bon moment, et vous aide à optimiser votre profil pour un meilleur référencement local en Algérie."
+    }
+  },
+  "directory": {
+    "title": "Annuaire des Entreprises",
+    "subtitle": "Découvrez les entreprises algériennes présentes sur DzBusiness",
+    "search": "Rechercher une entreprise, catégorie ou ville...",
+    "stats": {
+      "activeBusinesses": "Entreprises actives",
+      "citiesCovered": "Villes couvertes",
+      "categories": "Catégories"
+    },
+    "empty": {
+      "title": "Aucune entreprise active",
+      "subtitle": "Soyez la première entreprise à rejoindre notre plateforme !",
+      "button": "Inscrire mon entreprise"
+    },
+    "viewPage": "Voir la page",
+    "cta": {
+      "title": "Votre entreprise n'est pas listée ?",
+      "subtitle": "Rejoignez DzBusiness gratuitement et donnez plus de visibilité à votre entreprise. Créez votre page personnalisée en quelques minutes.",
+      "button": "Inscrire mon entreprise gratuitement"
+    }
+  },
+  "auth": {
+    "signin": {
+      "noAccount": "Pas encore de compte ?",
+      "signup": "S'inscrire"
+    },
+    "signup": {
+      "hasAccount": "Déjà un compte ?",
+      "signin": "Se connecter"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue",
+    "loading": "Chargement...",
+    "unauthorized": "Vous devez être connecté pour accéder à cette page.",
+    "createBusiness": "Création de votre entreprise...",
+    "createBusinessSubtitle": "Veuillez patienter pendant que nous finalisons votre inscription.",
+    "myBusinesses": {
+      "title": "Mes Entreprises",
+      "description": "Gérez vos entreprises enregistrées"
+    },
+    "newBusiness": {
+      "title": "Nouvelle Entreprise",
+      "description": "Enregistrez une nouvelle entreprise"
+    },
+    "profile": {
+      "title": "Mon Profil",
+      "description": "Gérez vos informations personnelles"
+    },
+    "admin": {
+      "title": "Administration",
+      "description": "Accès aux fonctions d'administration"
+    },
+    "settings": {
+      "title": "Paramètres",
+      "description": "Configurer vos préférences"
+    },
+    "user": "Utilisateur",
+    "businesses": {
+      "title": "Mes Entreprises",
+      "subtitle": "Gérez vos entreprises enregistrées sur DzBusiness",
+      "newBusiness": "Nouvelle entreprise",
+      "search": {
+        "placeholder": "Rechercher par nom, catégorie, description ou adresse..."
+      },
+      "filters": {
+        "button": "Filtres",
+        "category": "Catégorie",
+        "status": "Statut",
+        "allCategories": "Toutes les catégories",
+        "allStatuses": "Tous les statuts",
+        "clear": "Effacer les filtres"
+      },
+      "results": {
+        "total": "{{count}} entreprise(s) au total",
+        "filtered": "{{filtered}} sur {{total}} entreprise(s)"
+      },
+      "noBusinesses": {
+        "title": "Aucune entreprise enregistrée",
+        "subtitle": "Vous n'avez pas encore enregistré d'entreprise. Commencez dès maintenant !",
+        "button": "Inscrire ma première entreprise"
+      },
+      "noResults": {
+        "title": "Aucun résultat trouvé",
+        "subtitle": "Aucune entreprise ne correspond à vos critères de recherche. Essayez de modifier vos filtres."
+      },
+      "status": {
+        "active": "Active",
+        "pending": "En attente",
+        "label": "Statut:"
+      },
+      "viewPage": "Voir la page",
+      "address": "Adresse:",
+      "phone": "Téléphone:",
+      "hours": "Horaires:",
+      "tips": {
+        "title": "💡 Comment optimiser votre visibilité ?",
+        "tip1": "• Assurez-vous que vos informations sont complètes et à jour",
+        "tip2": "• Ajoutez des photos de qualité de votre entreprise",
+        "tip3": "• Répondez rapidement aux demandes de vos clients",
+        "tip4": "• Mettez à jour vos horaires d'ouverture régulièrement"
+      }
+    }
+  },
+  "business": {
+    "notFound": "Entreprise non trouvée",
+    "backToDirectory": "Retour à l'annuaire",
+    "meta": {
+      "notFoundTitle": "Entreprise non trouvée - DzBusiness",
+      "discover": "Découvrez"
+    },
+    "page": {
+      "activeStatus": "Entreprise active",
+      "call": "Appeler",
+      "directions": "Itinéraire",
+      "share": "Partager",
+      "copied": "Copié !",
+      "services": "Nos Services",
+      "showLess": "Voir moins",
+      "showMore": "Voir plus",
+      "others": "autres",
+      "about": "À propos",
+      "aboutDefault": "est une entreprise spécialisée en",
+      "locatedAt": ", située à",
+      "contact": "Contact",
+      "contactDescription": "Prenez contact avec nous",
+      "sendEmail": "Envoyer un email",
+      "website": "Site web",
+      "hours": "Horaires",
+      "address": "Adresse",
+      "openInMaps": "Ouvrir dans Maps",
+      "hostedOn": "Cette page est hébergée sur DzBusiness",
+      "createMyPage": "Créer ma page entreprise"
+    },
+    "notFound": {
+      "title": "Entreprise non trouvée",
+      "description": "L'entreprise que vous recherchez n'existe pas ou n'est pas encore active.",
+      "whatHappened": "Que s'est-il passé ?",
+      "reasons": {
+        "notActivated": "L'entreprise n'a pas encore été activée par nos équipes",
+        "misspelled": "Le sous-domaine a été mal orthographié",
+        "removed": "L'entreprise a été supprimée ou désactivée"
+      },
+      "whatCanYouDo": "Que pouvez-vous faire ?",
+      "homeButton": "Accueil DzBusiness",
+      "searchButton": "Rechercher une entreprise",
+      "ownerTitle": "🏢 Vous êtes propriétaire d'une entreprise ?",
+      "ownerDescription": "Inscrivez votre entreprise sur DzBusiness et obtenez votre page professionnelle",
+      "registerButton": "Inscrire mon entreprise"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "open": "Ouvrir",
+    "url": "URL"
+  }
+} 
