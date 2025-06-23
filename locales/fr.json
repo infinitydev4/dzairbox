@@ -776,7 +776,63 @@
       "errorMessage": "Désolé, une erreur s'est produite. Pouvez-vous répéter votre message ?",
       "createSuccess": "Entreprise créée avec succès !",
       "createError": "Erreur lors de la création de l'entreprise",
-      "restartMessage": "Parfait ! Recommençons. Quel est le nom de votre entreprise ?"
+      "restartMessage": "Parfait ! Recommençons. Quel est le nom de votre entreprise ?",
+      "toasts": {
+        "successTitle": "Succès !",
+        "errorTitle": "Erreur"
+      }
+    },
+    "chat": {
+      "welcome": "Bonjour ! Je suis votre assistant pour l'inscription de votre entreprise sur DzBusiness. Je vais vous accompagner étape par étape pour créer votre profil d'entreprise. Commençons par le nom de votre entreprise. Comment s'appelle-t-elle ?",
+      "assistantTitle": "Assistant d'inscription DzBusiness",
+      "thinking": "L'assistant réfléchit...",
+      "inputPlaceholder": "Tapez votre message...",
+      "send": "Envoyer",
+      "errorMessage": "Désolé, une erreur s'est produite. Pouvez-vous répéter votre message ?",
+      "completed": {
+        "title": "🎉 Inscription terminée !",
+        "modify": "Modifier les informations",
+        "create": "Créer mon entreprise",
+        "creating": "Création en cours..."
+      },
+      "progress": {
+        "title": "Progression",
+        "optional": "Optionnel :",
+        "motivation": {
+          "start": "🚀 Excellent début !",
+          "middle": "⭐ Vous y êtes presque !",
+          "end": "🎉 Dernière ligne droite !"
+        },
+        "fields": {
+          "name": "Nom",
+          "category": "Activité", 
+          "description": "Description",
+          "address": "Adresse",
+          "phone": "Téléphone",
+          "hours": "Horaires",
+          "email": "Email",
+          "website": "Site web",
+          "services": "Services"
+        }
+      },
+      "tips": {
+        "title": "💡 Conseils",
+        "natural": "Répondez naturellement aux questions",
+        "precise": "Soyez précis pour l'adresse (wilaya, commune)",
+        "phone": "Vérifiez votre numéro de téléphone",
+        "hours": "Indiquez vos horaires d'ouverture"
+      },
+      "aiInfo": {
+        "title": "Assistant IA",
+        "powered": "Powered by OpenAI GPT-4"
+      },
+      "summary": {
+        "title": "Récapitulatif de votre entreprise",
+        "nextSteps": {
+          "title": "Prochaines étapes",
+          "description": "Après validation, votre entreprise sera visible sur DzBusiness avec un sous-domaine dédié. Vous pourrez gérer votre profil depuis votre tableau de bord."
+        }
+      }
     },
     "tips": {
       "title": "Conseils pour améliorer votre visibilité",

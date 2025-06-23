@@ -2,28 +2,31 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BusinessData } from "./chat-interface"
+import { useLanguage } from "@/components/language-provider"
 
 interface BusinessSummaryProps {
   businessData: BusinessData
 }
 
 export function BusinessSummary({ businessData }: BusinessSummaryProps) {
+  const { t } = useLanguage()
+  
   const fields = [
-    { key: "name", label: "Nom de l'entreprise", icon: "🏢" },
-    { key: "category", label: "Type d'activité", icon: "🏷️" },
-    { key: "description", label: "Description", icon: "📝" },
-    { key: "address", label: "Adresse", icon: "📍" },
-    { key: "phone", label: "Téléphone", icon: "📞" },
-    { key: "email", label: "Email", icon: "📧" },
-    { key: "website", label: "Site web", icon: "🌐" },
-    { key: "hours", label: "Horaires d'ouverture", icon: "⏰" },
-    { key: "services", label: "Services proposés", icon: "⚙️" },
+    { key: "name", label: t('dashboard.chat.progress.fields.name'), icon: "🏢" },
+    { key: "category", label: t('dashboard.chat.progress.fields.category'), icon: "🏷️" },
+    { key: "description", label: t('dashboard.chat.progress.fields.description'), icon: "📝" },
+    { key: "address", label: t('dashboard.chat.progress.fields.address'), icon: "📍" },
+    { key: "phone", label: t('dashboard.chat.progress.fields.phone'), icon: "📞" },
+    { key: "email", label: t('dashboard.chat.progress.fields.email'), icon: "📧" },
+    { key: "website", label: t('dashboard.chat.progress.fields.website'), icon: "🌐" },
+    { key: "hours", label: t('dashboard.chat.progress.fields.hours'), icon: "⏰" },
+    { key: "services", label: t('dashboard.chat.progress.fields.services'), icon: "⚙️" },
   ]
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl">Récapitulatif de votre entreprise</CardTitle>
+        <CardTitle className="text-xl">{t('dashboard.chat.summary.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -67,10 +70,9 @@ export function BusinessSummary({ businessData }: BusinessSummaryProps) {
           <div className="flex items-start space-x-3">
             <span className="text-blue-600 text-lg">💡</span>
             <div>
-              <h4 className="font-medium text-blue-900">Prochaines étapes</h4>
+              <h4 className="font-medium text-blue-900">{t('dashboard.chat.summary.nextSteps.title')}</h4>
               <p className="text-sm text-blue-700 mt-1">
-                Après validation, votre entreprise sera visible sur DzBusiness avec un sous-domaine dédié. 
-                Vous pourrez gérer votre profil depuis votre tableau de bord.
+                {t('dashboard.chat.summary.nextSteps.description')}
               </p>
             </div>
           </div>

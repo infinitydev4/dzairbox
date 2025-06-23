@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle, Circle } from "lucide-react"
 import { BusinessData } from "./chat-interface"
+import { useLanguage } from "@/components/language-provider"
 
 interface ChatProgressProps {
   progress: number
@@ -10,13 +11,15 @@ interface ChatProgressProps {
 }
 
 export function ChatProgress({ progress, businessData }: ChatProgressProps) {
+  const { t } = useLanguage()
+  
   const fields = [
-    { key: "name", label: "Nom", icon: "🏢" },
-    { key: "category", label: "Activité", icon: "🏷️" },
-    { key: "description", label: "Description", icon: "📝" },
-    { key: "address", label: "Adresse", icon: "📍" },
-    { key: "phone", label: "Téléphone", icon: "📞" },
-    { key: "hours", label: "Horaires", icon: "⏰" },
+    { key: "name", label: t('dashboard.chat.progress.fields.name'), icon: "🏢" },
+    { key: "category", label: t('dashboard.chat.progress.fields.category'), icon: "🏷️" },
+    { key: "description", label: t('dashboard.chat.progress.fields.description'), icon: "📝" },
+    { key: "address", label: t('dashboard.chat.progress.fields.address'), icon: "📍" },
+    { key: "phone", label: t('dashboard.chat.progress.fields.phone'), icon: "📞" },
+    { key: "hours", label: t('dashboard.chat.progress.fields.hours'), icon: "⏰" },
   ]
 
   const isFieldCompleted = (field: string) => {
@@ -36,7 +39,7 @@ export function ChatProgress({ progress, businessData }: ChatProgressProps) {
     <Card className="bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-200">
       <CardHeader className="pb-3">
         <CardTitle className="text-sm flex items-center justify-between">
-          <span className="text-emerald-900">Progression</span>
+          <span className="text-emerald-900">{t('dashboard.chat.progress.title')}</span>
           <span className="text-emerald-600 font-bold text-lg">{Math.round(progress)}%</span>
         </CardTitle>
       </CardHeader>
@@ -73,12 +76,12 @@ export function ChatProgress({ progress, businessData }: ChatProgressProps) {
 
         {/* Champs optionnels */}
         <div className="pt-2 border-t border-emerald-200">
-          <p className="text-xs text-emerald-700 font-medium mb-2">Optionnel :</p>
+          <p className="text-xs text-emerald-700 font-medium mb-2">{t('dashboard.chat.progress.optional')}</p>
           <div className="space-y-1">
             {[
-              { key: "email", label: "Email", icon: "📧" },
-              { key: "website", label: "Site web", icon: "🌐" },
-              { key: "services", label: "Services", icon: "⚙️" },
+              { key: "email", label: t('dashboard.chat.progress.fields.email'), icon: "📧" },
+              { key: "website", label: t('dashboard.chat.progress.fields.website'), icon: "🌐" },
+              { key: "services", label: t('dashboard.chat.progress.fields.services'), icon: "⚙️" },
             ].map((field) => {
               const isCompleted = isFieldCompleted(field.key)
               return (
@@ -104,9 +107,9 @@ export function ChatProgress({ progress, businessData }: ChatProgressProps) {
         {progress > 0 && progress < 100 && (
           <div className="mt-3 p-2 bg-emerald-100 rounded-lg">
             <p className="text-xs text-emerald-800 text-center font-medium">
-              {progress < 50 ? "🚀 Excellent début !" : 
-               progress < 80 ? "⭐ Vous y êtes presque !" : 
-               "🎉 Dernière ligne droite !"}
+              {progress < 50 ? t('dashboard.chat.progress.motivation.start') : 
+               progress < 80 ? t('dashboard.chat.progress.motivation.middle') : 
+               t('dashboard.chat.progress.motivation.end')}
             </p>
           </div>
         )}

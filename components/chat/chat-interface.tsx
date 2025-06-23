@@ -10,6 +10,7 @@ import { ChatMessage } from "./chat-message"
 import { ChatProgress } from "./chat-progress"
 import { BusinessSummary } from "./business-summary"
 import { DebugPanel } from "./debug-panel"
+import { useLanguage } from "@/components/language-provider"
 
 export interface Message {
   id: string
@@ -32,6 +33,7 @@ export interface BusinessData {
 
 export function ChatInterface() {
   const { data: session } = useSession()
+  const { t } = useLanguage()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -45,11 +47,11 @@ export function ChatInterface() {
     const welcomeMessage: Message = {
       id: "welcome",
       role: "assistant",
-      content: "Bonjour ! Je suis votre assistant pour l'inscription de votre entreprise sur DzBusiness. Je vais vous accompagner étape par étape pour créer votre profil d'entreprise. Commençons par le nom de votre entreprise. Comment s'appelle-t-elle ?",
+      content: t('dashboard.chat.welcome'),
       timestamp: new Date()
     }
     setMessages([welcomeMessage])
-  }, [])
+  }, [t])
 
   useEffect(() => {
     scrollToBottom()
@@ -116,7 +118,7 @@ export function ChatInterface() {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: "Désolé, une erreur s'est produite. Pouvez-vous répéter votre message ?",
+        content: t('dashboard.chat.errorMessage'),
         timestamp: new Date()
       }
       setMessages(prev => [...prev, errorMessage])
@@ -245,7 +247,7 @@ export function ChatInterface() {
         <Card>
           <CardHeader>
             <CardTitle className="text-center text-2xl text-green-600">
-              🎉 Inscription terminée !
+              {t('dashboard.chat.completed.title')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -258,13 +260,13 @@ export function ChatInterface() {
                   setMessages([{
                     id: "restart",
                     role: "assistant", 
-                    content: "Parfait ! Recommençons. Quel est le nom de votre entreprise ?",
+                    content: t('dashboard.createBusinessAI.restartMessage'),
                     timestamp: new Date()
                   }])
                 }}
                 variant="outline"
               >
-                Modifier les informations
+                {t('dashboard.chat.completed.modify')}
               </Button>
               <Button 
                 onClick={handleCreateBusiness}
@@ -274,10 +276,10 @@ export function ChatInterface() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Création en cours...
+                    {t('dashboard.chat.completed.creating')}
                   </>
                 ) : (
-                  "Créer mon entreprise"
+                  t('dashboard.chat.completed.create')
                 )}
               </Button>
             </div>
@@ -296,7 +298,7 @@ export function ChatInterface() {
             <CardHeader className="flex-shrink-0 border-b">
               <CardTitle className="flex items-center gap-2">
                 <Bot className="h-5 w-5 text-emerald-600" />
-                Assistant d'inscription DzBusiness
+                {t('dashboard.chat.assistantTitle')}
               </CardTitle>
             </CardHeader>
             
@@ -310,7 +312,7 @@ export function ChatInterface() {
                   {isLoading && (
                     <div className="flex items-center space-x-2 text-gray-500 px-4 py-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">L'assistant réfléchit...</span>
+                      <span className="text-sm">{t('dashboard.chat.thinking')}</span>
                     </div>
                   )}
                   <div ref={messagesEndRef} />
@@ -323,7 +325,7 @@ export function ChatInterface() {
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Tapez votre message..."
+                    placeholder={t('dashboard.chat.inputPlaceholder')}
                     disabled={isLoading}
                     className="flex-1 bg-white"
                   />
@@ -349,24 +351,24 @@ export function ChatInterface() {
           
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm">💡 Conseils</CardTitle>
+              <CardTitle className="text-sm">{t('dashboard.chat.tips.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-gray-600 space-y-2">
               <div className="flex items-start space-x-2">
                 <span className="text-emerald-600">•</span>
-                <span>Répondez naturellement aux questions</span>
+                <span>{t('dashboard.chat.tips.natural')}</span>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="text-emerald-600">•</span>
-                <span>Soyez précis pour l'adresse (wilaya, commune)</span>
+                <span>{t('dashboard.chat.tips.precise')}</span>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="text-emerald-600">•</span>
-                <span>Vérifiez votre numéro de téléphone</span>
+                <span>{t('dashboard.chat.tips.phone')}</span>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="text-emerald-600">•</span>
-                <span>Indiquez vos horaires d'ouverture</span>
+                <span>{t('dashboard.chat.tips.hours')}</span>
               </div>
             </CardContent>
           </Card>
@@ -375,9 +377,9 @@ export function ChatInterface() {
             <CardContent className="pt-6">
               <div className="text-center">
                 <Bot className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                <p className="text-sm text-blue-700 font-medium mb-1">Assistant IA</p>
+                <p className="text-sm text-blue-700 font-medium mb-1">{t('dashboard.chat.aiInfo.title')}</p>
                 <p className="text-xs text-blue-600">
-                  Powered by OpenAI GPT-4
+                  {t('dashboard.chat.aiInfo.powered')}
                 </p>
               </div>
             </CardContent>

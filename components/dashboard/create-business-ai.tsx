@@ -54,7 +54,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
     const welcomeMessage: Message = {
       id: "welcome",
       role: "assistant",
-      content: t("createBusinessAI.welcomeMessage"),
+      content: t("dashboard.createBusinessAI.welcomeMessage"),
       timestamp: new Date()
     }
     setMessages([welcomeMessage])
@@ -125,7 +125,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: t("createBusinessAI.errorMessage"),
+        content: t("dashboard.createBusinessAI.errorMessage"),
         timestamp: new Date()
       }
       setMessages(prev => [...prev, errorMessage])
@@ -153,8 +153,8 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
       }
 
       toast({
-        title: "Succès !",
-        description: t("createBusinessAI.createSuccess"),
+        title: t("dashboard.createBusinessAI.toasts.successTitle"),
+        description: t("dashboard.createBusinessAI.createSuccess"),
       })
       
       router.push("/dashboard/businesses")
@@ -162,8 +162,8 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
     } catch (error) {
       console.error("Erreur:", error)
       toast({
-        title: "Erreur",
-        description: t("createBusinessAI.createError"),
+        title: t("dashboard.createBusinessAI.toasts.errorTitle"),
+        description: t("dashboard.createBusinessAI.createError"),
         variant: "destructive"
       })
     } finally {
@@ -191,12 +191,12 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
   if (isCompleted) {
     return (
       <div className="space-y-8">
-        <div className="flex items-center space-x-4">
-          <Button onClick={onBack} variant="ghost" size="sm" className="hover:bg-gray-100 rounded-xl">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            <span>{t("createBusinessAI.back")}</span>
-          </Button>
-        </div>
+              <div className="flex items-center space-x-4">
+        <Button onClick={onBack} variant="ghost" size="sm" className="hover:bg-gray-100 rounded-xl">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          <span>{t("dashboard.createBusinessAI.back")}</span>
+        </Button>
+      </div>
 
         <BusinessSummary businessData={businessData} />
         
@@ -208,14 +208,14 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
               setMessages([{
                 id: "restart",
                 role: "assistant", 
-                content: t("createBusinessAI.restartMessage"),
+                content: t("dashboard.createBusinessAI.restartMessage"),
                 timestamp: new Date()
               }])
             }}
             variant="outline"
             className="rounded-xl"
           >
-            {t("createBusinessAI.modify")}
+            {t("dashboard.createBusinessAI.modify")}
           </Button>
           <Button 
             onClick={handleCreateBusiness}
@@ -225,12 +225,12 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t("createBusinessAI.creating")}
+                {t("dashboard.createBusinessAI.creating")}
               </>
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                {t("createBusinessAI.create")}
+                {t("dashboard.createBusinessAI.create")}
               </>
             )}
           </Button>
@@ -244,7 +244,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
       <div className="flex items-center space-x-4">
         <Button onClick={onBack} variant="ghost" size="sm" className="hover:bg-gray-100 rounded-xl">
           <ArrowLeft className="h-4 w-4 mr-2" />
-          <span>{t("createBusinessAI.back")}</span>
+          <span>{t("dashboard.createBusinessAI.back")}</span>
         </Button>
       </div>
 
@@ -254,7 +254,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
             <CardHeader className="flex-shrink-0 border-b border-gray-200/50">
               <CardTitle className="flex items-center gap-2">
                 <Bot className="h-5 w-5 text-emerald-600" />
-                {t("createBusinessAI.assistantTitle")}
+                {t("dashboard.createBusinessAI.assistantTitle")}
               </CardTitle>
             </CardHeader>
             
@@ -267,7 +267,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
                   {isLoading && (
                     <div className="flex items-center space-x-2 text-gray-500 px-4 py-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">{t("createBusinessAI.thinking")}</span>
+                      <span className="text-sm">{t("dashboard.createBusinessAI.thinking")}</span>
                     </div>
                   )}
                   <div ref={messagesEndRef} />
@@ -279,7 +279,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder={t("createBusinessAI.inputPlaceholder")}
+                    placeholder={t("dashboard.createBusinessAI.inputPlaceholder")}
                     disabled={isLoading}
                     className="flex-1 bg-white rounded-xl"
                   />
@@ -304,20 +304,20 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
           
           <Card className="bg-white/70 backdrop-blur-sm border border-gray-200/50 shadow-lg shadow-gray-900/5">
             <CardHeader>
-              <CardTitle className="text-sm">{t("createBusinessAI.tips.title")}</CardTitle>
+              <CardTitle className="text-sm">{t("dashboard.createBusinessAI.tips.title")}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-gray-600 space-y-2">
               <div className="flex items-start space-x-2">
                 <span className="text-emerald-600">•</span>
-                <span>{t("createBusinessAI.tips.natural")}</span>
+                <span>{t("dashboard.createBusinessAI.tips.natural")}</span>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="text-emerald-600">•</span>
-                <span>{t("createBusinessAI.tips.precise")}</span>
+                <span>{t("dashboard.createBusinessAI.tips.precise")}</span>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="text-emerald-600">•</span>
-                <span>{t("createBusinessAI.tips.verify")}</span>
+                <span>{t("dashboard.createBusinessAI.tips.verify")}</span>
               </div>
             </CardContent>
           </Card>
