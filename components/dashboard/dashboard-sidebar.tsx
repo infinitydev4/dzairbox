@@ -67,7 +67,20 @@ export function DashboardSidebar({ isOpen, onClose, userRole }: DashboardSidebar
       {/* Desktop Sidebar */}
       <aside className="hidden lg:fixed lg:top-4 lg:left-4 lg:bottom-4 lg:block lg:w-64 lg:z-40">
         <div className="h-full bg-white/95 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg shadow-gray-900/5 overflow-hidden">
-          <div className="flex grow flex-col gap-y-5 px-6 pt-24 pb-6 h-full">
+          <div className="flex grow flex-col gap-y-5 px-6 pt-6 pb-6 h-full">
+            {/* Logo & Title */}
+            <div className="flex items-center space-x-3 pb-4 border-b border-gray-200/50">
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 via-emerald-700 to-green-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/25">
+                <span className="text-white font-bold text-sm">Dz</span>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  DzBusiness
+                </h2>
+                <p className="text-xs text-gray-500">Dashboard</p>
+              </div>
+            </div>
+
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>
@@ -117,9 +130,12 @@ export function DashboardSidebar({ isOpen, onClose, userRole }: DashboardSidebar
                 <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 via-emerald-700 to-green-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/25">
                   <span className="text-white font-bold text-sm">Dz</span>
                 </div>
-                <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                  Dashboard
-                </h2>
+                <div>
+                  <h2 className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                    DzBusiness
+                  </h2>
+                  <p className="text-xs text-gray-500">Dashboard</p>
+                </div>
               </div>
               <Button
                 variant="ghost"

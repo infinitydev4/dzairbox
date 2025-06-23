@@ -140,23 +140,162 @@
     "createBusinessSubtitle": "Veuillez patienter pendant que nous finalisons votre inscription.",
     "myBusinesses": {
       "title": "Mes Entreprises",
-      "description": "Gérez vos entreprises enregistrées"
+      "description": "Gérez vos entreprises enregistrées",
+      "button": "Voir mes entreprises"
     },
     "newBusiness": {
       "title": "Nouvelle Entreprise",
-      "description": "Enregistrez une nouvelle entreprise"
+      "description": "Enregistrez une nouvelle entreprise",
+      "manual": {
+        "title": "Création manuelle",
+        "description": "Remplissez un formulaire structuré étape par étape",
+        "feature1": "Contrôle total sur les informations",
+        "feature2": "Interface familière et intuitive",
+        "feature3": "Validation en temps réel",
+        "duration": "5-10 minutes",
+        "button": "Commencer le formulaire"
+      },
+      "ai": {
+        "title": "Assistant IA",
+        "description": "Laissez l'IA vous guider dans une conversation naturelle",
+        "feature1": "Conversation naturelle et guidée",
+        "feature2": "Suggestions personnalisées",
+        "feature3": "Aide à la rédaction",
+        "duration": "3-7 minutes",
+        "button": "Parler avec l'IA"
+      },
+      "help": {
+        "title": "Quelle méthode choisir ?",
+        "manual": {
+          "title": "Choisissez le formulaire si :",
+          "reason1": "Vous préférez les interfaces classiques",
+          "reason2": "Vous avez déjà toutes les informations",
+          "reason3": "Vous voulez aller directement au but"
+        },
+        "ai": {
+          "title": "Choisissez l'IA si :",
+          "reason1": "Vous voulez être guidé étape par étape",
+          "reason2": "Vous avez besoin d'aide pour la description",
+          "reason3": "Vous préférez les conversations naturelles"
+        }
+      },
+      "button": "Nouvelle entreprise"
     },
     "profile": {
       "title": "Mon Profil",
-      "description": "Gérez vos informations personnelles"
+      "description": "Gérez vos informations personnelles et de contact",
+      "loading": "Chargement du profil",
+      "loadingSubtitle": "Récupération de vos informations...",
+      "noName": "Nom non défini",
+      "personalInfo": "Informations personnelles",
+      "personalInfoDesc": "Gérez vos informations de profil et de contact",
+      "accountInfo": "Informations du compte",
+      "name": "Nom complet",
+      "namePlaceholder": "Votre nom complet",
+      "email": "Adresse email",
+      "emailPlaceholder": "votre@email.com",
+      "phone": "Numéro de téléphone",
+      "phonePlaceholder": "+213 XX XX XX XX",
+      "address": "Adresse",
+      "addressPlaceholder": "Votre adresse complète",
+      "city": "Ville",
+      "cityPlaceholder": "Votre ville",
+      "save": "Enregistrer les modifications",
+      "saving": "Enregistrement...",
+      "updateSuccess": "Profil mis à jour avec succès",
+      "updateError": "Erreur lors de la mise à jour du profil",
+      "memberId": "ID Membre",
+      "memberSince": "Membre depuis",
+      "accountStatus": "Statut du compte",
+      "active": "Actif",
+      "button": "Mon Profil",
+      "unsavedChanges": "Vous avez des modifications non sauvegardées",
+      "allSaved": "Toutes les modifications sont sauvegardées",
+      "security": {
+        "title": "Sécurité",
+        "comingSoon": "🔐 Fonctionnalités de sécurité à venir",
+        "description": "Nous travaillons sur des fonctionnalités avancées de sécurité pour protéger votre compte.",
+        "features": {
+          "password": "Changement de mot de passe sécurisé",
+          "sessions": "Gestion des sessions actives",
+          "twoFactor": "Authentification à deux facteurs"
+        }
+      }
     },
     "admin": {
       "title": "Administration",
-      "description": "Accès aux fonctions d'administration"
+      "description": "Accès aux fonctions d'administration",
+      "button": "Administration"
     },
     "settings": {
       "title": "Paramètres",
-      "description": "Configurer vos préférences"
+      "description": "Personnalisez vos préférences et paramètres de compte",
+      "language": {
+        "title": "Langue et région",
+        "description": "Choisissez votre langue préférée pour l'interface",
+        "french": "Français",
+        "arabic": "العربية"
+      },
+      "theme": {
+        "title": "Apparence",
+        "description": "Personnalisez l'apparence de votre interface",
+        "light": "Clair",
+        "dark": "Sombre",
+        "system": "Système",
+        "preview": "🎨 Aperçu du thème",
+        "previewDescription": "Les changements de thème seront bientôt disponibles pour personnaliser votre expérience."
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Gérez vos préférences de notification",
+        "enabled": "Activé",
+        "disabled": "Désactivé",
+        "email": {
+          "title": "Notifications par email",
+          "description": "Recevez des notifications importantes par email"
+        },
+        "push": {
+          "title": "Notifications push",
+          "description": "Recevez des notifications push sur votre navigateur"
+        },
+        "marketing": {
+          "title": "Communications marketing",
+          "description": "Recevez des nouvelles et offres spéciales"
+        }
+      },
+      "security": {
+        "title": "Sécurité",
+        "description": "Gérez la sécurité de votre compte",
+        "comingSoon": "🔐 Fonctionnalités de sécurité à venir",
+        "comingSoonDescription": "Nous développons des fonctionnalités avancées pour renforcer la sécurité de votre compte.",
+        "signingOut": "Déconnexion...",
+        "twoFactor": "Authentification à deux facteurs",
+        "loginHistory": "Historique des connexions",
+        "password": {
+          "title": "Mot de passe",
+          "description": "Modifiez votre mot de passe",
+          "change": "Changer"
+        },
+        "sessions": {
+          "title": "Sessions actives",
+          "description": "Gérez vos sessions de connexion",
+          "signOut": "Se déconnecter"
+        }
+      },
+      "danger": {
+        "title": "Zone de danger",
+        "description": "Actions irréversibles et suppression de compte",
+        "deleteAccount": {
+          "title": "Supprimer le compte",
+          "description": "Supprimez définitivement votre compte et toutes vos données",
+          "button": "Supprimer le compte",
+          "confirm": "Confirmer la suppression",
+          "cancel": "Annuler",
+          "warning": "Attention !",
+          "warningText": "Cette action est irréversible. Toutes vos données, y compris vos entreprises, seront définitivement supprimées."
+        }
+      },
+      "button": "Paramètres"
     },
     "user": "Utilisateur",
     "businesses": {
@@ -193,6 +332,7 @@
         "label": "Statut:"
       },
       "viewPage": "Voir la page",
+      "editBusiness": "Modifier",
       "address": "Adresse:",
       "phone": "Téléphone:",
       "hours": "Horaires:",
@@ -203,6 +343,143 @@
         "tip3": "• Répondez rapidement aux demandes de vos clients",
         "tip4": "• Mettez à jour vos horaires d'ouverture régulièrement"
       }
+    },
+    "editBusiness": {
+      "title": "Modifier l'entreprise",
+      "loading": "Chargement...",
+      "loadingSubtitle": "Récupération des données de l'entreprise",
+      "loadingBusiness": "Chargement de votre entreprise",
+      "loadingInterface": "Préparation de l'interface d'édition...",
+      "back": "Retour",
+      "delete": "Supprimer",
+      "deleting": "Suppression...",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette entreprise ? Cette action est irréversible.",
+      "modifyBusiness": "Modifier l'entreprise",
+      "customizeOnlinePresence": "Personnalisez votre présence en ligne",
+      "unsaved": "Non sauvegardé",
+      "deleteButton": "Supprimer",
+      
+      "tabs": {
+        "general": "Général",
+        "images": "Médias",
+        "contact": "Contact",
+        "hours": "Horaires"
+      },
+      
+      "generalInfo": {
+        "title": "Informations générales",
+        "businessName": "Nom de l'entreprise",
+        "businessNamePlaceholder": "Ex: Restaurant Le Délice",
+        "category": "Catégorie",
+        "categoryPlaceholder": "Sélectionnez une catégorie",
+        "selectCategory": "Sélectionnez une catégorie",
+        "description": "Description de l'activité",
+        "descriptionPlaceholder": "Décrivez votre activité, vos spécialités, votre savoir-faire...",
+        "services": "Services proposés",
+        "servicesPlaceholder": "Ex: Livraison, Vente à emporter, Réservation...",
+        "required": "*"
+      },
+      
+      "images": {
+        "title": "Galerie d'images",
+        "heroImageSet": "Image principale définie",
+        "noHeroImage": "Aucune image principale",
+        "saving": "Sauvegarde...",
+        "uploadPlaceholder": "Glissez vos images ici ou cliquez pour parcourir",
+        "uploadPlaceholderLimit": "Limite atteinte (8 images max)",
+        "yourImages": "Vos images",
+        "clickToSetMain": "Cliquez sur une image pour la définir comme image principale",
+        "principal": "PRINCIPAL",
+        "deleteImage": "Supprimer cette image",
+        "optimizeImages": "💡 Optimisez vos images",
+        "tips": {
+          "mainImage": "L'image principale sera affichée en grand sur votre page",
+          "highQuality": "Utilisez des images de haute qualité (min. 800x600px)",
+          "showProducts": "Montrez vos produits, services et ambiance"
+        },
+        "noImages": {
+          "title": "Aucune image ajoutée",
+          "subtitle": "Commencez par ajouter des images de votre entreprise"
+        }
+      },
+      
+      "contactInfo": {
+        "title": "Informations de contact",
+        "fullAddress": "Adresse complète",
+        "addressPlaceholder": "Ex: 123 Rue de la Paix, Alger, Algérie",
+        "phone": "Téléphone",
+        "phonePlaceholder": "Ex: +213 555 123 456",
+        "email": "Email",
+        "emailPlaceholder": "contact@monentreprise.com",
+        "website": "Site web",
+        "websitePlaceholder": "https://www.monentreprise.com"
+      },
+      
+      "hours": {
+        "title": "Horaires d'ouverture",
+        "subtitle": "Laissez vide pour les jours de fermeture",
+        "placeholder": "Ex: 09:00-18:00 ou Fermé",
+        "monday": "Lundi",
+        "tuesday": "Mardi",
+        "wednesday": "Mercredi",
+        "thursday": "Jeudi",
+        "friday": "Vendredi",
+        "saturday": "Samedi",
+        "sunday": "Dimanche"
+      },
+      
+      "actions": {
+        "cancel": "Annuler",
+        "update": "Mettre à jour",
+        "updating": "Mise à jour...",
+        "save": "Sauvegarder",
+        "saving": "Sauvegarde...",
+        "preview": "Aperçu",
+        "unsavedChanges": "Vous avez des modifications non sauvegardées",
+        "allSaved": "Toutes les modifications sont sauvegardées"
+      },
+      
+      "messages": {
+        "notFound": "Entreprise non trouvée",
+        "loadError": "Erreur lors du chargement de l'entreprise",
+        "requiredFields": "Veuillez remplir tous les champs obligatoires.",
+        "updateSuccess": "Entreprise mise à jour avec succès !",
+        "updateError": "Erreur lors de la mise à jour de l'entreprise.",
+        "deleteSuccess": "Entreprise supprimée avec succès !",
+        "deleteError": "Erreur lors de la suppression de l'entreprise.",
+        "unexpectedError": "Une erreur inattendue s'est produite.",
+        "imagesSaved": "✅ Images sauvegardées",
+        "imagesUpdated": "Vos images ont été mises à jour automatiquement",
+        "saveError": "❌ Erreur",
+        "cannotSaveImages": "Impossible de sauvegarder les images"
+      }
+    },
+    "createBusinessAI": {
+      "welcomeMessage": "Bonjour ! Je suis votre assistant IA pour créer votre entreprise sur DzBusiness. Je vais vous accompagner étape par étape. Commençons par le nom de votre entreprise. Comment s'appelle-t-elle ?",
+      "back": "Retour",
+      "modify": "Modifier",
+      "create": "Créer l'entreprise",
+      "creating": "Création...",
+      "assistantTitle": "Assistant IA DzBusiness",
+      "thinking": "L'assistant réfléchit...",
+      "inputPlaceholder": "Tapez votre message...",
+      "tips": {
+        "title": "💡 Conseils",
+        "natural": "Répondez naturellement",
+        "precise": "Soyez précis pour l'adresse",
+        "verify": "Vérifiez votre téléphone"
+      },
+      "errorMessage": "Désolé, une erreur s'est produite. Pouvez-vous répéter votre message ?",
+      "createSuccess": "Entreprise créée avec succès !",
+      "createError": "Erreur lors de la création de l'entreprise",
+      "restartMessage": "Parfait ! Recommençons. Quel est le nom de votre entreprise ?"
+    },
+    "tips": {
+      "title": "Conseils pour améliorer votre visibilité",
+      "tip1": "Assurez-vous que vos informations sont complètes et à jour",
+      "tip2": "Ajoutez des photos de qualité de votre entreprise",
+      "tip3": "Répondez rapidement aux demandes de vos clients",
+      "tip4": "Mettez à jour vos horaires d'ouverture régulièrement"
     }
   },
   "business": {
@@ -251,6 +528,32 @@
       "ownerDescription": "Inscrivez votre entreprise sur DzBusiness et obtenez votre page professionnelle",
       "registerButton": "Inscrire mon entreprise"
     }
+  },
+  "categories": {
+    "restaurant": "Restaurant",
+    "boulangerie": "Boulangerie",
+    "coiffeur": "Coiffeur",
+    "mécanicien": "Mécanicien",
+    "électricien": "Électricien",
+    "pharmacie": "Pharmacie",
+    "médecin": "Médecin",
+    "dentiste": "Dentiste",
+    "épicerie": "Épicerie",
+    "vêtements": "Vêtements",
+    "informatique": "Informatique",
+    "plombier": "Plombier",
+    "peintre": "Peintre",
+    "avocat": "Avocat",
+    "comptable": "Comptable"
+  },
+  "days": {
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "sunday": "Dimanche"
   },
   "common": {
     "loading": "Chargement...",

@@ -12,6 +12,7 @@ import { ChatProgress } from "@/components/chat/chat-progress"
 import { BusinessSummary } from "@/components/chat/business-summary"
 import { DebugPanel } from "@/components/chat/debug-panel"
 import { useToast } from "@/hooks/use-toast"
+import { useLanguage } from "@/components/language-provider"
 
 interface CreateBusinessAIProps {
   onBack: () => void
@@ -40,6 +41,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
   const { data: session } = useSession()
   const router = useRouter()
   const { toast } = useToast()
+  const { t } = useLanguage()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -52,11 +54,11 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
     const welcomeMessage: Message = {
       id: "welcome",
       role: "assistant",
-      content: "Bonjour ! Je suis votre assistant IA pour créer votre entreprise sur DzBusiness. Je vais vous accompagner étape par étape. Commençons par le nom de votre entreprise. Comment s'appelle-t-elle ?",
+      content: t("createBusinessAI.welcomeMessage"),
       timestamp: new Date()
     }
     setMessages([welcomeMessage])
-  }, [])
+  }, [t])
 
   useEffect(() => {
     scrollToBottom()
@@ -123,7 +125,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: "Désolé, une erreur s'est produite. Pouvez-vous répéter votre message ?",
+        content: t("createBusinessAI.errorMessage"),
         timestamp: new Date()
       }
       setMessages(prev => [...prev, errorMessage])
@@ -152,7 +154,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
 
       toast({
         title: "Succès !",
-        description: `Entreprise créée avec succès !`,
+        description: t("createBusinessAI.createSuccess"),
       })
       
       router.push("/dashboard/businesses")
@@ -161,7 +163,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
       console.error("Erreur:", error)
       toast({
         title: "Erreur",
-        description: "Erreur lors de la création de l'entreprise",
+        description: t("createBusinessAI.createError"),
         variant: "destructive"
       })
     } finally {
@@ -192,7 +194,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
         <div className="flex items-center space-x-4">
           <Button onClick={onBack} variant="ghost" size="sm" className="hover:bg-gray-100 rounded-xl">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            <span>Retour</span>
+            <span>{t("createBusinessAI.back")}</span>
           </Button>
         </div>
 
@@ -206,14 +208,14 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
               setMessages([{
                 id: "restart",
                 role: "assistant", 
-                content: "Parfait ! Recommençons. Quel est le nom de votre entreprise ?",
+                content: t("createBusinessAI.restartMessage"),
                 timestamp: new Date()
               }])
             }}
             variant="outline"
             className="rounded-xl"
           >
-            Modifier
+            {t("createBusinessAI.modify")}
           </Button>
           <Button 
             onClick={handleCreateBusiness}
@@ -223,12 +225,12 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Création...
+                {t("createBusinessAI.creating")}
               </>
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                Créer l'entreprise
+                {t("createBusinessAI.create")}
               </>
             )}
           </Button>
@@ -242,7 +244,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
       <div className="flex items-center space-x-4">
         <Button onClick={onBack} variant="ghost" size="sm" className="hover:bg-gray-100 rounded-xl">
           <ArrowLeft className="h-4 w-4 mr-2" />
-          <span>Retour</span>
+          <span>{t("createBusinessAI.back")}</span>
         </Button>
       </div>
 
@@ -252,7 +254,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
             <CardHeader className="flex-shrink-0 border-b border-gray-200/50">
               <CardTitle className="flex items-center gap-2">
                 <Bot className="h-5 w-5 text-emerald-600" />
-                Assistant IA DzBusiness
+                {t("createBusinessAI.assistantTitle")}
               </CardTitle>
             </CardHeader>
             
@@ -265,7 +267,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
                   {isLoading && (
                     <div className="flex items-center space-x-2 text-gray-500 px-4 py-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">L'assistant réfléchit...</span>
+                      <span className="text-sm">{t("createBusinessAI.thinking")}</span>
                     </div>
                   )}
                   <div ref={messagesEndRef} />
@@ -277,7 +279,7 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Tapez votre message..."
+                    placeholder={t("createBusinessAI.inputPlaceholder")}
                     disabled={isLoading}
                     className="flex-1 bg-white rounded-xl"
                   />
@@ -302,20 +304,20 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
           
           <Card className="bg-white/70 backdrop-blur-sm border border-gray-200/50 shadow-lg shadow-gray-900/5">
             <CardHeader>
-              <CardTitle className="text-sm">💡 Conseils</CardTitle>
+              <CardTitle className="text-sm">{t("createBusinessAI.tips.title")}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-gray-600 space-y-2">
               <div className="flex items-start space-x-2">
                 <span className="text-emerald-600">•</span>
-                <span>Répondez naturellement</span>
+                <span>{t("createBusinessAI.tips.natural")}</span>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="text-emerald-600">•</span>
-                <span>Soyez précis pour l'adresse</span>
+                <span>{t("createBusinessAI.tips.precise")}</span>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="text-emerald-600">•</span>
-                <span>Vérifiez votre téléphone</span>
+                <span>{t("createBusinessAI.tips.verify")}</span>
               </div>
             </CardContent>
           </Card>

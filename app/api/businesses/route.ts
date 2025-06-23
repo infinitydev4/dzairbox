@@ -125,7 +125,23 @@ export async function GET(req: NextRequest) {
       }
     })
 
-    return NextResponse.json(businesses)
+    // Parser les images pour chaque entreprise
+    const businessesWithParsedImages = businesses.map(business => {
+      let parsedImages = []
+      try {
+        parsedImages = business.images ? JSON.parse(business.images) : []
+      } catch (error) {
+        console.error("Erreur parsing images JSON pour business:", business.id, error)
+        parsedImages = []
+      }
+      
+      return {
+        ...business,
+        images: parsedImages
+      }
+    })
+
+    return NextResponse.json(businessesWithParsedImages)
 
   } catch (error) {
     console.error("Error fetching businesses:", error)

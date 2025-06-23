@@ -46,9 +46,10 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <Button asChild className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-lg shadow-emerald-600/25 rounded-xl">
-              <Link href="/dashboard/businesses">
-                {t('common.view')} {t('dashboard.myBusinesses.title').toLowerCase()}
+            <Button asChild className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-lg shadow-emerald-600/25 rounded-xl text-white font-medium py-6 text-base transition-all duration-300 hover:shadow-xl hover:shadow-emerald-600/30 hover:-translate-y-0.5">
+              <Link href="/dashboard/businesses" className="flex items-center justify-center space-x-2">
+                <Building2 className="h-5 w-5" />
+                <span>{t('dashboard.myBusinesses.button')}</span>
               </Link>
             </Button>
           </CardContent>
@@ -69,9 +70,10 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-600/25 rounded-xl" variant="default">
-              <Link href="/dashboard/create-business">
-                {t('dashboard.newBusiness.title')}
+            <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-600/25 rounded-xl text-white font-medium py-6 text-base transition-all duration-300 hover:shadow-xl hover:shadow-blue-600/30 hover:-translate-y-0.5" variant="default">
+              <Link href="/dashboard/create-business" className="flex items-center justify-center space-x-2">
+                <Plus className="h-5 w-5" />
+                <span>{t('dashboard.newBusiness.button')}</span>
               </Link>
             </Button>
           </CardContent>
@@ -92,9 +94,10 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <Button asChild className="w-full" variant="outline">
-              <Link href="/dashboard/profile">
-                {t('common.view')} {t('dashboard.profile.title').toLowerCase()}
+            <Button asChild className="w-full border-2 border-purple-200 hover:border-purple-300 hover:bg-purple-50 text-purple-700 hover:text-purple-800 font-medium py-6 text-base transition-all duration-300 hover:shadow-lg hover:shadow-purple-600/20 hover:-translate-y-0.5 rounded-xl" variant="outline">
+              <Link href="/dashboard/profile" className="flex items-center justify-center space-x-2">
+                <User className="h-5 w-5" />
+                <span>{t('dashboard.profile.button')}</span>
               </Link>
             </Button>
           </CardContent>
@@ -115,9 +118,10 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <Button asChild className="w-full" variant="outline">
-              <Link href="/dashboard/settings">
-                {t('dashboard.settings.title')}
+            <Button asChild className="w-full border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 hover:text-gray-800 font-medium py-6 text-base transition-all duration-300 hover:shadow-lg hover:shadow-gray-600/20 hover:-translate-y-0.5 rounded-xl" variant="outline">
+              <Link href="/dashboard/settings" className="flex items-center justify-center space-x-2">
+                <Settings className="h-5 w-5" />
+                <span>{t('dashboard.settings.button')}</span>
               </Link>
             </Button>
           </CardContent>
@@ -139,9 +143,10 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <Button asChild className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 shadow-lg shadow-orange-600/25 rounded-xl">
-                <Link href="/admin">
-                  {t('dashboard.admin.title')}
+              <Button asChild className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 shadow-lg shadow-orange-600/25 rounded-xl text-white font-medium py-6 text-base transition-all duration-300 hover:shadow-xl hover:shadow-orange-600/30 hover:-translate-y-0.5">
+                <Link href="/admin" className="flex items-center justify-center space-x-2">
+                  <Shield className="h-5 w-5" />
+                  <span>{t('dashboard.admin.button')}</span>
                 </Link>
               </Button>
             </CardContent>
@@ -154,26 +159,26 @@ export default function DashboardPage() {
         <CardHeader>
           <CardTitle className="text-xl font-bold text-gray-900 flex items-center space-x-2">
             <span>💡</span>
-            <span>Conseils pour améliorer votre visibilité</span>
+            <span>{t('dashboard.tips.title')}</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full mt-2 flex-shrink-0"></div>
-              <p>Assurez-vous que vos informations sont complètes et à jour</p>
+              <p>{t('dashboard.tips.tip1')}</p>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full mt-2 flex-shrink-0"></div>
-              <p>Ajoutez des photos de qualité de votre entreprise</p>
+              <p>{t('dashboard.tips.tip2')}</p>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full mt-2 flex-shrink-0"></div>
-              <p>Répondez rapidement aux demandes de vos clients</p>
+              <p>{t('dashboard.tips.tip3')}</p>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full mt-2 flex-shrink-0"></div>
-              <p>Mettez à jour vos horaires d'ouverture régulièrement</p>
+              <p>{t('dashboard.tips.tip4')}</p>
             </div>
           </div>
         </CardContent>
