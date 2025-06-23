@@ -66,6 +66,311 @@
     "doctor": "Médecins",
     "school": "Écoles"
   },
+  "servicesPage": {
+    "title": "Nos Services",
+    "subtitle": "Découvrez notre gamme complète de services pour développer votre présence en ligne et faire croître votre entreprise en Algérie.",
+    "categories": {
+      "all": "Tous les services",
+      "core": "Services principaux",
+      "marketing": "Marketing",
+      "tech": "Technique"
+    },
+    "stats": {
+      "businesses": "Entreprises",
+      "wilayas": "Wilayas",
+      "visitors": "Visiteurs/mois",
+      "satisfaction": "Satisfaction"
+    },
+    "directory": {
+      "title": "Annuaire des Entreprises",
+      "description": "Découvrez et trouvez facilement les entreprises algériennes avec notre annuaire complet et géolocalisé.",
+      "features": {
+        "search": "Recherche avancée par catégorie et localisation",
+        "geolocation": "Géolocalisation et cartes interactives",
+        "filters": "Filtres intelligents et tri personnalisé",
+        "details": "Informations détaillées des entreprises",
+        "mobile": "Interface mobile optimisée"
+      },
+      "price": "Gratuit",
+      "badge": "Populaire"
+    },
+    "businessPage": {
+      "title": "Création de Page Business",
+      "description": "Créez votre présence en ligne professionnelle avec une page business complète et personnalisée.",
+      "features": {
+        "customPage": "Page business personnalisée avec sous-domaine",
+        "gallery": "Galerie photos et présentation produits",
+        "contact": "Informations de contact et localisation",
+        "seo": "Optimisation SEO automatique",
+        "responsive": "Design responsive et moderne",
+        "stats": "Statistiques de visite"
+      },
+      "price": "À partir de 2,500 DA/mois",
+      "popular": "Populaire"
+    },
+    "advertising": {
+      "title": "Espace Publicitaire",
+      "description": "Augmentez votre visibilité avec nos solutions publicitaires ciblées et efficaces.",
+      "features": {
+        "banners": "Bannières publicitaires premium",
+        "featured": "Mise en avant dans les résultats de recherche",
+        "geolocated": "Publicités géolocalisées",
+        "targeted": "Campagnes ciblées par secteur",
+        "reports": "Rapports de performance détaillés",
+        "support": "Support marketing dédié"
+      },
+      "price": "À partir de 5,000 DA/mois"
+    },
+    "analytics": {
+      "title": "Analytics & Insights",
+      "description": "Analysez les performances de votre présence en ligne avec des statistiques détaillées.",
+      "features": {
+        "visits": "Statistiques de visites et engagement",
+        "behavior": "Analyse du comportement des visiteurs",
+        "reports": "Rapports de performance mensuel",
+        "conversions": "Suivi des conversions",
+        "recommendations": "Recommandations d'optimisation"
+      },
+      "price": "Inclus avec page business"
+    },
+    "seo": {
+      "title": "Optimisation SEO",
+      "description": "Améliorez votre référencement et votre visibilité sur les moteurs de recherche.",
+      "features": {
+        "keywords": "Optimisation des mots-clés",
+        "local": "Amélioration du référencement local",
+        "technical": "Optimisation technique du site",
+        "content": "Création de contenu SEO",
+        "tracking": "Suivi des positions Google"
+      },
+      "price": "À partir de 8,000 DA/mois"
+    },
+    "support": {
+      "title": "Support Premium",
+      "description": "Bénéficiez d'un accompagnement personnalisé pour optimiser votre présence en ligne.",
+      "features": {
+        "priority": "Support technique prioritaire",
+        "advice": "Conseils marketing personnalisés",
+        "training": "Formation à l'utilisation de la plateforme",
+        "content": "Assistance à la création de contenu",
+        "multichannel": "Support multicanal (chat, email, téléphone)"
+      },
+      "price": "À partir de 3,000 DA/mois"
+    },
+    "common": {
+      "featuresIncluded": "Fonctionnalités incluses :",
+      "startingFrom": "À partir de",
+      "learnMore": "En savoir plus"
+    },
+    "cta": {
+      "title": "Prêt à développer votre entreprise ?",
+      "subtitle": "Rejoignez des centaines d'entreprises algériennes qui font confiance à DzairBox pour leur présence en ligne.",
+      "createBusiness": "Créer ma page business",
+      "exploreDirectory": "Explorer l'annuaire"
+    },
+    "contact": {
+      "title": "Besoin d'aide ou d'informations ?",
+      "subtitle": "Notre équipe est là pour vous accompagner dans le choix des services les plus adaptés à vos besoins."
+    }
+  },
+  "contactPage": {
+    "title": "Contactez-nous",
+    "subtitle": "Nous sommes là pour vous aider à développer votre entreprise en ligne",
+    "hero": {
+      "title": "Une question ? Un projet ?",
+      "description": "Notre équipe d'experts est à votre disposition pour vous accompagner dans votre transformation digitale."
+    },
+    "form": {
+      "title": "Envoyez-nous un message",
+      "name": {
+        "label": "Nom complet",
+        "placeholder": "Votre nom complet"
+      },
+      "email": {
+        "label": "Adresse email",
+        "placeholder": "votre@email.com"
+      },
+      "phone": {
+        "label": "Numéro de téléphone",
+        "placeholder": "+213 XX XX XX XX"
+      },
+      "subject": {
+        "label": "Sujet",
+        "placeholder": "Sélectionnez un sujet",
+        "options": {
+          "general": "Demande générale",
+          "business": "Création de page business",
+          "support": "Support technique",
+          "partnership": "Partenariat",
+          "other": "Autre"
+        }
+      },
+      "message": {
+        "label": "Message",
+        "placeholder": "Décrivez votre demande en détail..."
+      },
+      "submit": "Envoyer le message",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé avec succès !",
+      "error": "Erreur lors de l'envoi. Veuillez réessayer."
+    },
+    "info": {
+      "title": "Informations de contact",
+      "address": {
+        "title": "Adresse",
+        "value": "Alger, Algérie"
+      },
+      "email": {
+        "title": "Email",
+        "value": "contact@dzairbox.com"
+      },
+      "phone": {
+        "title": "Téléphone",
+        "value": "+213 XXX XXX XXX"
+      },
+      "hours": {
+        "title": "Horaires d'ouverture",
+        "weekdays": "Dimanche - Jeudi: 8h00 - 18h00",
+        "weekend": "Vendredi - Samedi: Fermé"
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "items": {
+        "pricing": {
+          "question": "Quels sont vos tarifs ?",
+          "answer": "Nos tarifs varient selon le service choisi. L'annuaire est gratuit, les pages business commencent à 2,500 DA/mois. Contactez-nous pour un devis personnalisé."
+        },
+        "setup": {
+          "question": "Combien de temps faut-il pour créer ma page ?",
+          "answer": "Avec notre assistant IA, votre page peut être créée en moins de 5 minutes. Notre équipe vérifie ensuite le contenu sous 24h."
+        },
+        "support": {
+          "question": "Quel support proposez-vous ?",
+          "answer": "Nous offrons un support technique complet par chat, email et téléphone. Le support premium inclut des conseils marketing personnalisés."
+        },
+        "payment": {
+          "question": "Quels modes de paiement acceptez-vous ?",
+          "answer": "Nous acceptons les cartes bancaires, les virements et les paiements mobile (CCP, Baridimob, etc.)."
+        }
+      }
+    },
+    "cta": {
+      "title": "Prêt à commencer ?",
+      "subtitle": "Créez votre page business dès maintenant et rejoignez des centaines d'entreprises algériennes.",
+      "createBusiness": "Créer ma page",
+      "exploreServices": "Voir nos services"
+    }
+  },
+  "aboutPage": {
+    "title": "À Propos de DzairBox",
+    "subtitle": "Découvrez notre mission : connecter et faire prospérer les entreprises algériennes grâce au digital.",
+    "hero": {
+      "title": "Notre Mission",
+      "description": "Nous croyons en un avenir où chaque entreprise algérienne, qu'elle soit grande ou petite, peut prospérer grâce à une présence en ligne forte et accessible."
+    },
+    "story": {
+      "title": "Notre Histoire",
+      "description": "DzairBox est né d'une vision simple mais ambitieuse : démocratiser l'accès au digital pour toutes les entreprises algériennes. Fondée par une équipe passionnée de technologie et d'entrepreneuriat local, notre plateforme répond aux défis spécifiques du marché algérien.",
+      "founding": {
+        "title": "Fondation",
+        "year": "2024",
+        "description": "Lancement de DzairBox avec pour mission de digitaliser l'économie algérienne"
+      },
+      "growth": {
+        "title": "Croissance",
+        "year": "500+ entreprises",
+        "milestone": "500+ entreprises",
+        "description": "Adoption rapide par les entreprises locales dans toutes les wilayas"
+      },
+      "innovation": {
+        "title": "Innovation",
+        "year": "Assistant IA",
+        "feature": "Assistant IA",
+        "description": "Premier assistant IA conversationnel pour l'inscription d'entreprises en Algérie"
+      }
+    },
+    "values": {
+      "title": "Nos Valeurs",
+      "subtitle": "Les principes qui guident chacune de nos actions",
+      "accessibility": {
+        "title": "Accessibilité",
+        "description": "Rendre le digital accessible à toutes les entreprises, des plus petites aux plus grandes, avec des solutions adaptées à chaque budget."
+      },
+      "local": {
+        "title": "Ancrage Local",
+        "description": "Comprendre les spécificités du marché algérien et proposer des solutions parfaitement adaptées au contexte local."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "Utiliser les dernières technologies pour simplifier et améliorer l'expérience de nos utilisateurs."
+      },
+      "support": {
+        "title": "Accompagnement",
+        "description": "Offrir un support personnalisé pour aider chaque entreprise à réussir sa transformation digitale."
+      }
+    },
+    "team": {
+      "title": "Notre Équipe",
+      "subtitle": "Une équipe passionnée et dédiée au succès de nos clients",
+      "ceo": {
+        "name": "Ahmed Benali",
+        "role": "CEO & Fondateur",
+        "description": "Entrepreneur passionné avec 10 ans d'expérience dans le digital et l'e-commerce en Algérie."
+      },
+      "cto": {
+        "name": "Fatima Ouali",
+        "role": "CTO",
+        "description": "Ingénieure logiciel experte en intelligence artificielle et développement web moderne."
+      },
+      "marketing": {
+        "name": "Karim Messaoud",
+        "role": "Directeur Marketing",
+        "description": "Spécialiste du marketing digital avec une expertise approfondie du marché algérien."
+      }
+    },
+    "stats": {
+      "title": "DzairBox en Chiffres",
+      "businesses": {
+        "number": "500+",
+        "label": "Entreprises actives"
+      },
+      "wilayas": {
+        "number": "48",
+        "label": "Wilayas couvertes"
+      },
+      "visits": {
+        "number": "10K+",
+        "label": "Visites mensuelles"
+      },
+      "satisfaction": {
+        "number": "98%",
+        "label": "Taux de satisfaction"
+      }
+    },
+    "mission": {
+      "title": "Notre Vision pour l'Algérie",
+      "subtitle": "Construire ensemble l'écosystème digital de demain",
+      "digital": {
+        "title": "Transformation Digitale",
+        "description": "Accompagner la transformation digitale des entreprises algériennes avec des outils modernes et accessibles."
+      },
+      "economy": {
+        "title": "Économie Locale",
+        "description": "Stimuler l'économie locale en connectant les entreprises avec leurs clients potentiels."
+      },
+      "future": {
+        "title": "Avenir Numérique",
+        "description": "Préparer l'Algérie aux défis du numérique en formant et accompagnant les entrepreneurs."
+      }
+    },
+    "contact": {
+      "title": "Rejoignez l'Aventure",
+      "subtitle": "Vous partagez notre vision ? Contactez-nous pour découvrir comment nous pouvons travailler ensemble.",
+      "business": "Créer ma page business",
+      "partnership": "Devenir partenaire"
+    }
+  },
   "chatbot": {
     "welcome": "Bonjour ! Je vais vous aider à inscrire votre entreprise. Commençons par le nom de votre entreprise.",
     "placeholder": "Tapez votre message...",
@@ -440,7 +745,6 @@
       },
       
       "messages": {
-        "notFound": "Entreprise non trouvée",
         "loadError": "Erreur lors du chargement de l'entreprise",
         "requiredFields": "Veuillez remplir tous les champs obligatoires.",
         "updateSuccess": "Entreprise mise à jour avec succès !",

@@ -16,7 +16,8 @@ import {
   FileText,
   HelpCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  CreditCard
 } from "lucide-react"
 
 const navigationItems = [
@@ -55,6 +56,12 @@ const navigationItems = [
     href: "/admin/users",
     icon: Users,
     description: "Gestion des utilisateurs"
+  },
+  {
+    name: "Abonnements",
+    href: "/admin/subscriptions",
+    icon: CreditCard,
+    description: "Gestion des abonnements"
   },
   {
     name: "Rapports",

@@ -20,7 +20,10 @@ import {
   Edit3,
   UserCheck,
   Clock,
-  Sparkles
+  Sparkles,
+  Crown,
+  Star,
+  Award
 } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 
@@ -134,14 +137,14 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50 flex items-center justify-center">
         <div className="text-center space-y-6">
           <div className="relative">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/25 animate-pulse">
+            <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl flex items-center justify-center shadow-xl shadow-emerald-500/25 animate-pulse">
               <User className="h-10 w-10 text-white" />
             </div>
-            <div className="absolute -top-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
-              <Loader2 className="h-3 w-3 text-white animate-spin" />
+            <div className="absolute -top-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-emerald-500">
+              <Loader2 className="h-3 w-3 text-emerald-600 animate-spin" />
             </div>
           </div>
           <div>
@@ -158,48 +161,63 @@ export default function ProfilePage() {
       key: 'personal' as const,
       label: t('dashboard.profile.personalInfo'),
       icon: User,
-      color: 'blue'
+      color: 'emerald'
     },
     {
       key: 'account' as const,
       label: t('dashboard.profile.accountInfo'),
       icon: UserCheck,
-      color: 'emerald'
+      color: 'teal'
     },
     {
       key: 'security' as const,
       label: t('dashboard.profile.security.title'),
       icon: Shield,
-      color: 'purple'
+      color: 'cyan'
     }
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50 p-6">
       <div className="max-w-6xl mx-auto space-y-8">
-        {/* Header moderne */}
-        <div className="text-center space-y-4">
+        {/* Header Hero moderne */}
+        <div className="text-center space-y-6">
           <div className="relative inline-block">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-xl shadow-blue-500/25">
-              <User className="h-12 w-12 text-white" />
+            <div className="w-32 h-32 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl flex items-center justify-center shadow-xl shadow-emerald-500/25">
+              <User className="h-16 w-16 text-white" />
             </div>
-            <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+            <div className="absolute -bottom-3 -right-3 w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+              <Crown className="h-5 w-5 text-white" />
+            </div>
+            <div className="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
               <CheckCircle className="h-4 w-4 text-white" />
             </div>
           </div>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          
+          <div className="space-y-3">
+            <div className="inline-flex items-center px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium mb-2">
+              <Sparkles className="h-4 w-4 mr-2" />
+              Profil Vérifié
+            </div>
+            <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
               {profile?.name || t('dashboard.profile.noName')}
             </h1>
-            <p className="text-gray-600 flex items-center justify-center space-x-2 mt-2">
-              <Mail className="h-4 w-4" />
-              <span>{profile?.email}</span>
-            </p>
+            <div className="flex items-center justify-center space-x-4 text-gray-600">
+              <div className="flex items-center space-x-2">
+                <Mail className="h-4 w-4" />
+                <span>{profile?.email}</span>
+              </div>
+              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+              <div className="flex items-center space-x-2">
+                <Calendar className="h-4 w-4" />
+                <span>Membre depuis {profile?.createdAt ? new Date(profile.createdAt).getFullYear() : '-'}</span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Navigation par onglets moderne */}
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="flex flex-wrap justify-center gap-3">
           {tabs.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.key
@@ -207,14 +225,14 @@ export default function ProfilePage() {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex items-center space-x-3 px-6 py-3 rounded-2xl font-medium transition-all duration-300 ${
+                className={`flex items-center space-x-3 px-6 py-4 rounded-2xl font-medium transition-all duration-300 ${
                   isActive
-                    ? `bg-gradient-to-r from-${tab.color}-500 to-${tab.color}-600 text-white shadow-xl shadow-${tab.color}-500/25 scale-105`
-                    : 'bg-white/70 backdrop-blur-sm text-gray-600 hover:bg-white/90 hover:text-gray-900 hover:scale-105 shadow-lg shadow-black/5'
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-xl shadow-emerald-500/25 scale-105'
+                    : 'bg-white/80 backdrop-blur-sm text-gray-600 hover:bg-white hover:text-gray-900 hover:scale-105 shadow-lg border border-gray-200/50'
                 }`}
               >
                 <Icon className="h-5 w-5" />
-                <span>{tab.label}</span>
+                <span className="font-semibold">{tab.label}</span>
               </button>
             )
           })}
@@ -222,43 +240,43 @@ export default function ProfilePage() {
 
         {/* Contenu des onglets */}
         {activeTab === 'personal' && (
-          <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-xl shadow-black/5 rounded-2xl overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100/50">
-              <CardTitle className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-                  <User className="h-5 w-5 text-white" />
+          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-3xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-100/50 p-8">
+              <CardTitle className="flex items-center space-x-4">
+                <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg">
+                  <User className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <span className="text-blue-900">{t('dashboard.profile.personalInfo')}</span>
-                  <p className="text-sm text-blue-700 font-normal mt-1">
+                  <span className="text-2xl font-bold text-emerald-900">{t('dashboard.profile.personalInfo')}</span>
+                  <p className="text-emerald-700 font-normal mt-2 text-base">
                     {t('dashboard.profile.personalInfoDesc')}
                   </p>
                 </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Message */}
+            <CardContent className="p-8">
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Message de statut */}
                 {message && (
-                  <div className={`p-4 rounded-xl border flex items-center space-x-3 ${
+                  <div className={`p-6 rounded-2xl border-2 flex items-center space-x-4 ${
                     message.type === 'success' 
                       ? 'bg-emerald-50 border-emerald-200 text-emerald-800' 
                       : 'bg-red-50 border-red-200 text-red-800'
                   }`}>
                     {message.type === 'success' ? (
-                      <CheckCircle className="h-5 w-5" />
+                      <CheckCircle className="h-6 w-6" />
                     ) : (
-                      <AlertCircle className="h-5 w-5" />
+                      <AlertCircle className="h-6 w-6" />
                     )}
-                    <span className="font-medium">{message.text}</span>
+                    <span className="font-semibold text-base">{message.text}</span>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Nom */}
                   <div className="space-y-3">
-                    <label className="text-sm font-semibold text-gray-800 flex items-center space-x-2">
-                      <User className="h-4 w-4 text-blue-600" />
+                    <label className="text-sm font-bold text-gray-800 flex items-center space-x-2">
+                      <User className="h-5 w-5 text-emerald-600" />
                       <span>{t('dashboard.profile.name')}</span>
                       <span className="text-red-500">*</span>
                     </label>
@@ -267,15 +285,15 @@ export default function ProfilePage() {
                       value={formData.name}
                       onChange={(e) => handleChange('name', e.target.value)}
                       placeholder={t('dashboard.profile.namePlaceholder')}
-                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 h-12 text-base"
+                      className="rounded-2xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 h-14 text-base px-4"
                       required
                     />
                   </div>
 
                   {/* Email */}
                   <div className="space-y-3">
-                    <label className="text-sm font-semibold text-gray-800 flex items-center space-x-2">
-                      <Mail className="h-4 w-4 text-blue-600" />
+                    <label className="text-sm font-bold text-gray-800 flex items-center space-x-2">
+                      <Mail className="h-5 w-5 text-emerald-600" />
                       <span>{t('dashboard.profile.email')}</span>
                       <span className="text-red-500">*</span>
                     </label>
@@ -284,15 +302,15 @@ export default function ProfilePage() {
                       value={formData.email}
                       onChange={(e) => handleChange('email', e.target.value)}
                       placeholder={t('dashboard.profile.emailPlaceholder')}
-                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 h-12 text-base"
+                      className="rounded-2xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 h-14 text-base px-4"
                       required
                     />
                   </div>
 
                   {/* Téléphone */}
                   <div className="space-y-3">
-                    <label className="text-sm font-semibold text-gray-800 flex items-center space-x-2">
-                      <Phone className="h-4 w-4 text-blue-600" />
+                    <label className="text-sm font-bold text-gray-800 flex items-center space-x-2">
+                      <Phone className="h-5 w-5 text-emerald-600" />
                       <span>{t('dashboard.profile.phone')}</span>
                     </label>
                     <Input
@@ -300,14 +318,14 @@ export default function ProfilePage() {
                       value={formData.phone}
                       onChange={(e) => handleChange('phone', e.target.value)}
                       placeholder={t('dashboard.profile.phonePlaceholder')}
-                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 h-12 text-base"
+                      className="rounded-2xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 h-14 text-base px-4"
                     />
                   </div>
 
                   {/* Ville */}
                   <div className="space-y-3">
-                    <label className="text-sm font-semibold text-gray-800 flex items-center space-x-2">
-                      <MapPin className="h-4 w-4 text-blue-600" />
+                    <label className="text-sm font-bold text-gray-800 flex items-center space-x-2">
+                      <MapPin className="h-5 w-5 text-emerald-600" />
                       <span>{t('dashboard.profile.city')}</span>
                     </label>
                     <Input
@@ -315,15 +333,15 @@ export default function ProfilePage() {
                       value={formData.city}
                       onChange={(e) => handleChange('city', e.target.value)}
                       placeholder={t('dashboard.profile.cityPlaceholder')}
-                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 h-12 text-base"
+                      className="rounded-2xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 h-14 text-base px-4"
                     />
                   </div>
                 </div>
 
                 {/* Adresse complète */}
                 <div className="space-y-3">
-                  <label className="text-sm font-semibold text-gray-800 flex items-center space-x-2">
-                    <MapPin className="h-4 w-4 text-blue-600" />
+                  <label className="text-sm font-bold text-gray-800 flex items-center space-x-2">
+                    <MapPin className="h-5 w-5 text-emerald-600" />
                     <span>{t('dashboard.profile.address')}</span>
                   </label>
                   <Input
@@ -331,22 +349,32 @@ export default function ProfilePage() {
                     value={formData.address}
                     onChange={(e) => handleChange('address', e.target.value)}
                     placeholder={t('dashboard.profile.addressPlaceholder')}
-                    className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500/20 h-12 text-base"
+                    className="rounded-2xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 h-14 text-base px-4"
                   />
                 </div>
 
                 {/* Bouton de sauvegarde */}
-                <div className="flex items-center justify-between pt-4">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                <div className="flex items-center justify-between pt-6 border-t border-gray-100">
+                  <div className="flex items-center space-x-3">
                     {unsavedChanges ? (
                       <>
-                        <AlertCircle className="h-4 w-4 text-amber-500" />
-                        <span>{t('dashboard.profile.unsavedChanges')}</span>
+                        <div className="p-2 bg-amber-100 rounded-xl">
+                          <AlertCircle className="h-5 w-5 text-amber-600" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">{t('dashboard.profile.unsavedChanges')}</p>
+                          <p className="text-sm text-gray-600">Modifications en attente</p>
+                        </div>
                       </>
                     ) : (
                       <>
-                        <CheckCircle className="h-4 w-4 text-emerald-500" />
-                        <span>{t('dashboard.profile.allSaved')}</span>
+                        <div className="p-2 bg-emerald-100 rounded-xl">
+                          <CheckCircle className="h-5 w-5 text-emerald-600" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">{t('dashboard.profile.allSaved')}</p>
+                          <p className="text-sm text-gray-600">Tout est synchronisé</p>
+                        </div>
                       </>
                     )}
                   </div>
@@ -354,16 +382,16 @@ export default function ProfilePage() {
                   <Button
                     type="submit"
                     disabled={isSaving || !unsavedChanges}
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:scale-100"
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-8 py-4 rounded-2xl shadow-lg shadow-emerald-600/25 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:scale-100 font-semibold text-base"
                   >
                     {isSaving ? (
                       <>
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        <Loader2 className="h-5 w-5 animate-spin mr-3" />
                         {t('dashboard.profile.saving')}
                       </>
                     ) : (
                       <>
-                        <Save className="h-4 w-4 mr-2" />
+                        <Save className="h-5 w-5 mr-3" />
                         {t('dashboard.profile.save')}
                       </>
                     )}
@@ -375,55 +403,85 @@ export default function ProfilePage() {
         )}
 
         {activeTab === 'account' && (
-          <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-xl shadow-black/5 rounded-2xl overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-emerald-50 to-green-50 border-b border-emerald-100/50">
-              <CardTitle className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl shadow-lg">
-                  <UserCheck className="h-5 w-5 text-white" />
+          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-3xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100/50 p-8">
+              <CardTitle className="flex items-center space-x-4">
+                <div className="p-3 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl shadow-lg">
+                  <UserCheck className="h-6 w-6 text-white" />
                 </div>
-                <span className="text-emerald-900">{t('dashboard.profile.accountInfo')}</span>
+                <span className="text-2xl font-bold text-teal-900">{t('dashboard.profile.accountInfo')}</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 border border-gray-200/50">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="p-2 bg-blue-100 rounded-xl">
-                      <User className="h-5 w-5 text-blue-600" />
+            <CardContent className="p-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl p-6 border border-emerald-200/50 hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="p-3 bg-emerald-100 rounded-2xl">
+                      <User className="h-6 w-6 text-emerald-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{t('dashboard.profile.memberId')}</h3>
-                      <p className="text-sm text-gray-600 font-mono">{profile?.id}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-gray-50 to-emerald-50 rounded-2xl p-6 border border-gray-200/50">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="p-2 bg-emerald-100 rounded-xl">
-                      <Calendar className="h-5 w-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{t('dashboard.profile.memberSince')}</h3>
-                      <p className="text-sm text-gray-600">
-                        {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : '-'}
+                      <h3 className="font-bold text-gray-900 text-lg">{t('dashboard.profile.memberId')}</h3>
+                      <p className="text-sm text-gray-600 font-mono bg-white/80 px-3 py-1 rounded-lg mt-1">
+                        {profile?.id.slice(0, 8)}...
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-gray-50 to-green-50 rounded-2xl p-6 border border-gray-200/50">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="p-2 bg-green-100 rounded-xl">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-3xl p-6 border border-teal-200/50 hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="p-3 bg-teal-100 rounded-2xl">
+                      <Calendar className="h-6 w-6 text-teal-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{t('dashboard.profile.accountStatus')}</h3>
-                      <div className="flex items-center space-x-2 mt-1">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-green-600 font-medium">{t('dashboard.profile.active')}</span>
+                      <h3 className="font-bold text-gray-900 text-lg">{t('dashboard.profile.memberSince')}</h3>
+                      <p className="text-sm text-gray-600 bg-white/80 px-3 py-1 rounded-lg mt-1">
+                        {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString('fr-FR', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        }) : '-'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-3xl p-6 border border-emerald-200/50 hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="p-3 bg-emerald-100 rounded-2xl">
+                      <CheckCircle className="h-6 w-6 text-emerald-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 text-lg">{t('dashboard.profile.accountStatus')}</h3>
+                      <div className="flex items-center space-x-2 mt-2">
+                        <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse shadow-lg shadow-emerald-500/50"></div>
+                        <span className="text-sm text-emerald-600 font-semibold bg-emerald-100 px-3 py-1 rounded-lg">{t('dashboard.profile.active')}</span>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Section statistiques */}
+              <div className="mt-8 pt-8 border-t border-gray-100">
+                <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center space-x-3">
+                  <Award className="h-6 w-6 text-emerald-600" />
+                  <span>Statistiques du compte</span>
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl">
+                    <div className="text-3xl font-bold text-blue-600 mb-2">0</div>
+                    <div className="text-sm text-gray-600">Entreprises créées</div>
+                  </div>
+                  <div className="text-center p-6 bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl">
+                    <div className="text-3xl font-bold text-emerald-600 mb-2">1</div>
+                    <div className="text-sm text-gray-600">Profil complété</div>
+                  </div>
+                  <div className="text-center p-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl">
+                    <div className="text-3xl font-bold text-amber-600 mb-2">
+                      {Math.floor((Date.now() - new Date(profile?.createdAt || 0).getTime()) / (1000 * 60 * 60 * 24))}
+                    </div>
+                    <div className="text-sm text-gray-600">Jours d'ancienneté</div>
                   </div>
                 </div>
               </div>
@@ -432,42 +490,65 @@ export default function ProfilePage() {
         )}
 
         {activeTab === 'security' && (
-          <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-xl shadow-black/5 rounded-2xl overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-100/50">
-              <CardTitle className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl shadow-lg">
-                  <Shield className="h-5 w-5 text-white" />
+          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-3xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-cyan-50 to-blue-50 border-b border-cyan-100/50 p-8">
+              <CardTitle className="flex items-center space-x-4">
+                <div className="p-3 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl shadow-lg">
+                  <Shield className="h-6 w-6 text-white" />
                 </div>
-                <span className="text-purple-900">{t('dashboard.profile.security.title')}</span>
+                <span className="text-2xl font-bold text-cyan-900">{t('dashboard.profile.security.title')}</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/50 rounded-2xl p-6">
-                <div className="flex items-start space-x-4">
-                  <div className="p-2 bg-blue-100 rounded-xl">
-                    <Sparkles className="h-5 w-5 text-blue-600" />
+            <CardContent className="p-8">
+              <div className="space-y-6">
+                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200/50 rounded-3xl p-8">
+                  <div className="flex items-start space-x-6">
+                    <div className="p-4 bg-emerald-100 rounded-2xl">
+                      <Sparkles className="h-8 w-8 text-emerald-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">Sécurité renforcée</h3>
+                      <p className="text-gray-600 mb-6 leading-relaxed">
+                        Votre compte est protégé par nos systèmes de sécurité avancés. Nous recommandons d'utiliser un mot de passe fort et de garder vos informations à jour.
+                      </p>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <span className="text-emerald-600 font-semibold">Compte sécurisé</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-blue-900">
-                      {t('dashboard.profile.security.comingSoon')}
-                    </h4>
-                    <p className="text-sm text-blue-700">
-                      {t('dashboard.profile.security.description')}
-                    </p>
-                    <ul className="text-sm text-blue-700 space-y-2">
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                        <span>{t('dashboard.profile.security.features.password')}</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                        <span>{t('dashboard.profile.security.features.sessions')}</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                        <span>{t('dashboard.profile.security.features.twoFactor')}</span>
-                      </li>
-                    </ul>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-white/70 border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300">
+                    <div className="flex items-center space-x-4 mb-4">
+                      <div className="p-3 bg-blue-100 rounded-xl">
+                        <Mail className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Email vérifié</h4>
+                        <p className="text-sm text-gray-600">Votre adresse email est confirmée</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="h-4 w-4 text-emerald-500" />
+                      <span className="text-sm text-emerald-600 font-medium">Vérifié</span>
+                    </div>
+                  </div>
+
+                  <div className="bg-white/70 border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300">
+                    <div className="flex items-center space-x-4 mb-4">
+                      <div className="p-3 bg-amber-100 rounded-xl">
+                        <Settings className="h-5 w-5 text-amber-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Paramètres de sécurité</h4>
+                        <p className="text-sm text-gray-600">Gérez vos préférences de sécurité</p>
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm" className="rounded-xl border-gray-300 hover:border-emerald-500 hover:text-emerald-600">
+                      Configurer
+                    </Button>
                   </div>
                 </div>
               </div>
