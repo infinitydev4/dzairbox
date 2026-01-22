@@ -20,7 +20,7 @@ export function Header() {
           <div className="h-8 w-8 rounded-lg bg-emerald-600 flex items-center justify-center">
             <span className="text-white font-bold text-sm">Dz</span>
           </div>
-          <span className="font-bold text-xl">Business</span>
+          <span className="font-bold text-xl">Box</span>
         </Link>
 
         {/* Desktop Navigation */}

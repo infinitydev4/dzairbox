@@ -9,13 +9,15 @@ import {
   MapPin, 
   Phone, 
   Mail, 
-  Globe, 
   Clock, 
   Star, 
   Share2, 
   Navigation,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Facebook,
+  Instagram,
+  Youtube
 } from "lucide-react"
 
 interface Business {
@@ -26,7 +28,10 @@ interface Business {
   address: string
   phone: string | null
   email: string | null
-  website: string | null
+  facebook: string | null
+  instagram: string | null
+  tiktok: string | null
+  youtube: string | null
   hours: string | null
   services: string | null
   subdomain: string
@@ -48,6 +53,42 @@ export function BusinessPage({ business }: BusinessPageProps) {
   const services = business.services 
     ? business.services.split(',').map(s => s.trim()).filter(Boolean)
     : []
+
+  // Parser les horaires
+  const parseHours = (hours: string | null | any) => {
+    if (!hours) return null
+    
+    // Si c'est déjà un objet, le retourner directement
+    if (typeof hours === 'object' && hours !== null) {
+      return hours
+    }
+    
+    // Si c'est une string, essayer de parser
+    if (typeof hours === 'string') {
+      try {
+        const hoursData = JSON.parse(hours)
+        if (typeof hoursData === 'object' && hoursData !== null) {
+          return hoursData
+        }
+      } catch {
+        return null
+      }
+    }
+    
+    return null
+  }
+
+  const parsedHours = parseHours(business.hours)
+
+  const daysOfWeek = [
+    { key: "dimanche", label: t('days.sunday') },
+    { key: "lundi", label: t('days.monday') },
+    { key: "mardi", label: t('days.tuesday') },
+    { key: "mercredi", label: t('days.wednesday') },
+    { key: "jeudi", label: t('days.thursday') },
+    { key: "vendredi", label: t('days.friday') },
+    { key: "samedi", label: t('days.saturday') }
+  ]
 
   const handleShare = async () => {
     const url = getBusinessFullUrl(business.subdomain)
@@ -86,14 +127,29 @@ export function BusinessPage({ business }: BusinessPageProps) {
     window.open(`https://maps.google.com/?q=${query}`, '_blank')
   }
 
-  const handleWebsite = () => {
-    if (business.website) {
-      let url = business.website
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url
-      }
-      window.open(url, '_blank')
+  const handleSocialMedia = (platform: 'facebook' | 'instagram' | 'tiktok' | 'youtube', username: string) => {
+    if (!username) return
+    
+    // Nettoyer le username (enlever @ si présent)
+    const cleanUsername = username.replace('@', '').trim()
+    
+    let url = ''
+    switch (platform) {
+      case 'facebook':
+        url = `https://facebook.com/${cleanUsername}`
+        break
+      case 'instagram':
+        url = `https://instagram.com/${cleanUsername}`
+        break
+      case 'tiktok':
+        url = `https://tiktok.com/@${cleanUsername}`
+        break
+      case 'youtube':
+        url = `https://youtube.com/@${cleanUsername}`
+        break
     }
+    
+      window.open(url, '_blank')
   }
 
   return (
@@ -141,8 +197,7 @@ export function BusinessPage({ business }: BusinessPageProps) {
               
               <Button 
                 onClick={handleDirections}
-                variant="outline" 
-                className="border-white/50 text-black hover:bg-white/10 w-full sm:w-auto text-lg py-6 px-8 rounded-xl backdrop-blur-sm"
+                className="border-2 border-white/50 bg-white/10 text-white hover:bg-white/20 hover:text-white w-full sm:w-auto text-lg py-6 px-8 rounded-xl backdrop-blur-sm transition-all"
               >
                 <Navigation className="mr-2 h-5 w-5" />
                 {t('business.page.directions')}
@@ -150,8 +205,7 @@ export function BusinessPage({ business }: BusinessPageProps) {
               
               <Button 
                 onClick={handleShare}
-                variant="outline"
-                className="border-white/50 text-black hover:bg-white/10 w-full sm:w-auto text-lg py-6 px-8 rounded-xl backdrop-blur-sm"
+                className="border-2 border-white/50 bg-white/10 text-white hover:bg-white/20 hover:text-white w-full sm:w-auto text-lg py-6 px-8 rounded-xl backdrop-blur-sm transition-all"
               >
                 <Share2 className="mr-2 h-5 w-5" />
                 {copied ? t('business.page.copied') : t('business.page.share')}
@@ -235,10 +289,10 @@ export function BusinessPage({ business }: BusinessPageProps) {
           </div>
 
           {/* Right Column - Contact & Info */}
-          <div className="space-y-6">
+          <div className="space-y-6 sticky top-6 self-start">
             
             {/* Contact Card */}
-            <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm sticky top-6">
+            <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-xl">{t('business.page.contact')}</CardTitle>
                 <CardDescription>{t('business.page.contactDescription')}</CardDescription>
@@ -266,15 +320,59 @@ export function BusinessPage({ business }: BusinessPageProps) {
                   </Button>
                 )}
 
-                {business.website && (
+                {/* Réseaux sociaux */}
+                {(business.facebook || business.instagram || business.tiktok || business.youtube) && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-gray-700 mt-4">Réseaux sociaux</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {business.facebook && (
+                        <Button 
+                          onClick={() => handleSocialMedia('facebook', business.facebook!)}
+                          variant="outline" 
+                          size="sm"
+                          className="rounded-xl border-blue-200 hover:bg-blue-50"
+                        >
+                          <Facebook className="mr-2 h-4 w-4 text-blue-600" />
+                          Facebook
+                        </Button>
+                      )}
+                      {business.instagram && (
+                        <Button 
+                          onClick={() => handleSocialMedia('instagram', business.instagram!)}
+                          variant="outline" 
+                          size="sm"
+                          className="rounded-xl border-pink-200 hover:bg-pink-50"
+                        >
+                          <Instagram className="mr-2 h-4 w-4 text-pink-600" />
+                          Instagram
+                        </Button>
+                      )}
+                      {business.tiktok && (
+                        <Button 
+                          onClick={() => handleSocialMedia('tiktok', business.tiktok!)}
+                          variant="outline" 
+                          size="sm"
+                          className="rounded-xl border-gray-200 hover:bg-gray-50"
+                        >
+                          <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                          </svg>
+                          TikTok
+                        </Button>
+                      )}
+                      {business.youtube && (
                   <Button 
-                    onClick={handleWebsite}
+                          onClick={() => handleSocialMedia('youtube', business.youtube!)}
                     variant="outline" 
-                    className="w-full text-lg py-6 rounded-xl border-emerald-200 hover:bg-emerald-50"
+                          size="sm"
+                          className="rounded-xl border-red-200 hover:bg-red-50"
                   >
-                    <Globe className="mr-2 h-5 w-5" />
-                    {t('business.page.website')}
+                          <Youtube className="mr-2 h-4 w-4 text-red-600" />
+                          YouTube
                   </Button>
+                      )}
+                    </div>
+                  </div>
                 )}
 
                 <Button 
@@ -289,7 +387,7 @@ export function BusinessPage({ business }: BusinessPageProps) {
             </Card>
 
             {/* Hours Card */}
-            {business.hours && (
+            {parsedHours && Object.keys(parsedHours).length > 0 && (
               <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="text-xl flex items-center">
@@ -299,11 +397,23 @@ export function BusinessPage({ business }: BusinessPageProps) {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {business.hours.split(',').map((hour, index) => (
-                      <div key={index} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
-                        <span className="font-medium text-gray-700">{hour.trim()}</span>
-                      </div>
-                    ))}
+                    {daysOfWeek.map((day) => {
+                      const dayHours = parsedHours[day.key]
+                      // N'afficher que les jours qui ont des données
+                      if (!dayHours || (!dayHours.open && !dayHours.close && !dayHours.closed)) return null
+                      
+                      return (
+                        <div key={day.key} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
+                          <span className="font-medium text-gray-700">{day.label}</span>
+                          <span className="text-gray-600">
+                            {dayHours.closed 
+                              ? (t('dashboard.editBusiness.hours.closed') || 'Fermé')
+                              : `${dayHours.open || '00:00'} - ${dayHours.close || '00:00'}`
+                            }
+                          </span>
+                        </div>
+                      )
+                    })}
                   </div>
                 </CardContent>
               </Card>

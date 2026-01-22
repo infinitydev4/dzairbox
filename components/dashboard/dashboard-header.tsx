@@ -41,7 +41,7 @@ export function DashboardHeader({ user, onMenuClick }: DashboardHeaderProps) {
       case '/dashboard/businesses':
         return t('dashboard.myBusinesses.title')
       case '/dashboard/create-business':
-        return 'Nouvelle Entreprise'
+        return 'Nouveau Service'
       case '/dashboard/profile':
         return t('dashboard.profile.title')
       case '/dashboard/settings':
@@ -51,7 +51,7 @@ export function DashboardHeader({ user, onMenuClick }: DashboardHeaderProps) {
       default:
         // Gestion des routes dynamiques
         if (pathname.startsWith('/dashboard/create-business')) {
-          return 'Nouvelle Entreprise'
+          return 'Nouveau Service'
         }
         if (pathname.startsWith('/dashboard/businesses')) {
           return t('dashboard.myBusinesses.title')

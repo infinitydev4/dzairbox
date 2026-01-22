@@ -10,6 +10,9 @@ import { ImageUpload } from "@/components/ui/image-upload"
 import { S3Image } from "@/components/ui/s3-image"
 import { toast } from "@/hooks/use-toast"
 import { useLanguage } from "@/components/language-provider"
+import { PageBuilder } from "@/components/builder/page-builder"
+import { CustomPageBanner } from "@/components/dashboard/custom-page-banner"
+import { BusinessPageConfigData } from "@/types/template"
 import { 
   Building2, 
   MapPin, 
@@ -44,13 +47,13 @@ const businessCategories = [
 ]
 
 const daysOfWeek = [
-  { key: "monday", label: "monday" },
-  { key: "tuesday", label: "tuesday" },
-  { key: "wednesday", label: "wednesday" },
-  { key: "thursday", label: "thursday" },
-  { key: "friday", label: "friday" },
-  { key: "saturday", label: "saturday" },
-  { key: "sunday", label: "sunday" }
+  { key: "dimanche", label: "Dimanche" },
+  { key: "lundi", label: "Lundi" },
+  { key: "mardi", label: "Mardi" },
+  { key: "mercredi", label: "Mercredi" },
+  { key: "jeudi", label: "Jeudi" },
+  { key: "vendredi", label: "Vendredi" },
+  { key: "samedi", label: "Samedi" }
 ]
 
 export default function EditBusinessPage() {
@@ -63,6 +66,10 @@ export default function EditBusinessPage() {
   const [isSavingImages, setIsSavingImages] = useState(false)
   const [activeTab, setActiveTab] = useState('general')
   const [unsavedChanges, setUnsavedChanges] = useState(false)
+  
+  // State for custom page
+  const [useCustomPage, setUseCustomPage] = useState(false)
+  const [pageConfig, setPageConfig] = useState<BusinessPageConfigData | null>(null)
 
   const [formData, setFormData] = useState({
     name: "",
@@ -71,11 +78,14 @@ export default function EditBusinessPage() {
     address: "",
     phone: "",
     email: "",
-    website: "",
+    facebook: "",
+    instagram: "",
+    tiktok: "",
+    youtube: "",
     services: "",
     heroImage: "",
     images: [] as string[],
-    hours: {} as Record<string, string>
+    hours: {} as Record<string, { open: string; close: string; closed: boolean }>
   })
 
   // Fonction pour recharger les données depuis l'API
@@ -139,6 +149,9 @@ export default function EditBusinessPage() {
       
       const business = await response.json()
       
+      // Set useCustomPage state
+      setUseCustomPage(business.useCustomPage || false)
+      
       let parsedImages: string[] = []
       if (business.images) {
         if (typeof business.images === 'string') {
@@ -152,11 +165,26 @@ export default function EditBusinessPage() {
         }
       }
 
-      let parsedHours = {}
+      let parsedHours: Record<string, { open: string; close: string; closed: boolean }> = {}
       if (business.hours) {
         if (typeof business.hours === 'string') {
           try {
-            parsedHours = JSON.parse(business.hours)
+            const hoursData = JSON.parse(business.hours)
+            // Convertir l'ancien format en nouveau format si nécessaire
+            Object.keys(hoursData).forEach(key => {
+              if (typeof hoursData[key] === 'string') {
+                // Ancien format: "08:00-18:00" ou "Fermé"
+                if (hoursData[key] === 'Fermé') {
+                  parsedHours[key] = { open: '', close: '', closed: true }
+                } else {
+                  const [open, close] = hoursData[key].split('-')
+                  parsedHours[key] = { open: open || '', close: close || '', closed: false }
+                }
+              } else if (hoursData[key] && typeof hoursData[key] === 'object') {
+                // Nouveau format déjà
+                parsedHours[key] = hoursData[key]
+              }
+            })
           } catch {
             parsedHours = {}
           }
@@ -172,12 +200,30 @@ export default function EditBusinessPage() {
         address: business.address || "",
         phone: business.phone || "",
         email: business.email || "",
-        website: business.website || "",
+        facebook: business.facebook || "",
+        instagram: business.instagram || "",
+        tiktok: business.tiktok || "",
+        youtube: business.youtube || "",
         services: business.services || "",
         heroImage: business.heroImage || "",
         images: parsedImages.filter(img => img && typeof img === 'string'),
         hours: parsedHours
       })
+      
+      // Load page config if custom page is enabled
+      if (business.useCustomPage) {
+        try {
+          const configResponse = await fetch(`/api/businesses/${params.id}/page-config`)
+          if (configResponse.ok) {
+            const configData = await configResponse.json()
+            if (configData.config) {
+              setPageConfig(configData.config as BusinessPageConfigData)
+            }
+          }
+        } catch (error) {
+          console.error('Error loading page config:', error)
+        }
+      }
     } catch (error) {
       console.error("Erreur lors du chargement:", error)
       toast({
@@ -202,12 +248,46 @@ export default function EditBusinessPage() {
     setUnsavedChanges(true)
   }
 
-  const handleHoursChange = (day: string, value: string) => {
+  const handleHoursChange = (day: string, field: 'open' | 'close' | 'closed', value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
-      hours: { ...prev.hours, [day]: value }
+      hours: {
+        ...prev.hours,
+        [day]: {
+          ...prev.hours[day],
+          [field]: value
+        }
+      }
     }))
     setUnsavedChanges(true)
+  }
+
+  const applyToAllWeek = () => {
+    const dimancheHours = formData.hours['dimanche']
+    if (!dimancheHours) {
+      toast({
+        title: t('dashboard.editBusiness.hours.noSundayHours'),
+        description: t('dashboard.editBusiness.hours.setSundayFirst'),
+        variant: "destructive"
+      })
+      return
+    }
+
+    const newHours: Record<string, { open: string; close: string; closed: boolean }> = {}
+    daysOfWeek.forEach(day => {
+      newHours[day.key] = { ...dimancheHours }
+    })
+
+    setFormData(prev => ({
+      ...prev,
+      hours: newHours
+    }))
+    setUnsavedChanges(true)
+    
+    toast({
+      title: t('dashboard.editBusiness.hours.applied'),
+      description: t('dashboard.editBusiness.hours.appliedToAll')
+    })
   }
 
   // Fonction modifiée pour ajouter une image avec sauvegarde automatique
@@ -320,7 +400,8 @@ export default function EditBusinessPage() {
     { id: 'general', label: t('dashboard.editBusiness.tabs.general'), icon: Building2, color: 'emerald' },
     { id: 'images', label: t('dashboard.editBusiness.tabs.images'), icon: Camera, color: 'blue' },
     { id: 'contact', label: t('dashboard.editBusiness.tabs.contact'), icon: Phone, color: 'purple' },
-    { id: 'hours', label: t('dashboard.editBusiness.tabs.hours'), icon: Clock, color: 'orange' }
+    { id: 'hours', label: t('dashboard.editBusiness.tabs.hours'), icon: Clock, color: 'orange' },
+    { id: 'customize', label: t('dashboard.editBusiness.tabs.customize'), icon: Palette, color: 'pink' }
   ]
 
   return (
@@ -703,15 +784,63 @@ export default function EditBusinessPage() {
                   <div className="space-y-3">
                     <label className="text-sm font-semibold text-gray-800 flex items-center space-x-2">
                       <Globe className="h-4 w-4 text-purple-600" />
-                      <span>{t('dashboard.editBusiness.contactInfo.website')}</span>
+                      <span>{t('dashboard.editBusiness.contactInfo.socialMedia')}</span>
                     </label>
-                    <Input
-                      type="url"
-                      value={formData.website}
-                      onChange={(e) => handleInputChange("website", e.target.value)}
-                      placeholder={t('dashboard.editBusiness.contactInfo.websitePlaceholder')}
-                      className="rounded-xl border-gray-200 focus:border-purple-500 focus:ring-purple-500/20 h-12 text-base"
-                    />
+                    <p className="text-xs text-gray-500">{t('dashboard.editBusiness.contactInfo.socialMediaHint')}</p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">Facebook</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span>
+                          <Input
+                            value={formData.facebook}
+                            onChange={(e) => handleInputChange("facebook", e.target.value)}
+                            placeholder="username"
+                            className="rounded-xl border-gray-200 focus:border-purple-500 focus:ring-purple-500/20 h-12 text-base pl-8"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">Instagram</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span>
+                          <Input
+                            value={formData.instagram}
+                            onChange={(e) => handleInputChange("instagram", e.target.value)}
+                            placeholder="username"
+                            className="rounded-xl border-gray-200 focus:border-purple-500 focus:ring-purple-500/20 h-12 text-base pl-8"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">TikTok</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span>
+                          <Input
+                            value={formData.tiktok}
+                            onChange={(e) => handleInputChange("tiktok", e.target.value)}
+                            placeholder="username"
+                            className="rounded-xl border-gray-200 focus:border-purple-500 focus:ring-purple-500/20 h-12 text-base pl-8"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">YouTube</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span>
+                          <Input
+                            value={formData.youtube}
+                            onChange={(e) => handleInputChange("youtube", e.target.value)}
+                            placeholder="username"
+                            className="rounded-xl border-gray-200 focus:border-purple-500 focus:ring-purple-500/20 h-12 text-base pl-8"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -723,37 +852,122 @@ export default function EditBusinessPage() {
             <div className="space-y-6">
               <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-xl shadow-black/5 rounded-2xl overflow-hidden">
                 <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 border-b border-orange-100/50">
-                  <CardTitle className="flex items-center space-x-3">
-                    <div className="p-2 bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl shadow-lg">
-                      <Clock className="h-5 w-5 text-white" />
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl shadow-lg">
+                        <Clock className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <span className="text-orange-900">{t('dashboard.editBusiness.hours.title')}</span>
+                        <p className="text-sm text-orange-700 font-normal">
+                          {t('dashboard.editBusiness.hours.subtitle')}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-orange-900">{t('dashboard.editBusiness.hours.title')}</span>
-                      <p className="text-sm text-orange-700 font-normal">
-                        {t('dashboard.editBusiness.hours.subtitle')}
-                      </p>
-                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={applyToAllWeek}
+                      className="rounded-xl hover:bg-orange-50 hover:border-orange-300 hover:text-orange-700"
+                    >
+                      {t('dashboard.editBusiness.hours.applyToAll')}
+                    </Button>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {daysOfWeek.map((day) => (
-                      <div key={day.key} className="space-y-3">
-                        <label className="text-sm font-semibold text-gray-800 flex items-center space-x-2">
-                          <Clock className="h-4 w-4 text-orange-600" />
-                          <span>{t(`days.${day.label}`)}</span>
-                        </label>
-                        <Input
-                          value={formData.hours[day.key] || ''}
-                          onChange={(e) => handleHoursChange(day.key, e.target.value)}
-                          placeholder={t('dashboard.editBusiness.hours.placeholder')}
-                          className="rounded-xl border-gray-200 focus:border-orange-500 focus:ring-orange-500/20 h-12 text-base"
-                        />
-                      </div>
-                    ))}
+                  <div className="space-y-4">
+                    {daysOfWeek.map((day) => {
+                      const dayHours = formData.hours[day.key] || { open: '', close: '', closed: false }
+                      return (
+                        <div key={day.key} className="flex items-center gap-4 p-4 bg-gradient-to-r from-gray-50 to-orange-50/30 rounded-xl border border-gray-100">
+                          <div className="w-28">
+                            <label className="text-sm font-semibold text-gray-800">
+                              {day.label}
+                            </label>
+                          </div>
+                          
+                          <div className="flex items-center gap-3 flex-1">
+                            <label className="flex items-center space-x-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={dayHours.closed}
+                                onChange={(e) => handleHoursChange(day.key, 'closed', e.target.checked)}
+                                className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                              />
+                              <span className="text-sm font-medium text-gray-600">{t('dashboard.editBusiness.hours.closed')}</span>
+                            </label>
+                            
+                            {!dayHours.closed && (
+                              <>
+                                <div className="flex items-center gap-2">
+                                  <select
+                                    value={dayHours.open}
+                                    onChange={(e) => handleHoursChange(day.key, 'open', e.target.value)}
+                                    className="px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white"
+                                  >
+                                    <option value="">{t('dashboard.editBusiness.hours.opening')}</option>
+                                    {Array.from({ length: 24 }, (_, i) => {
+                                      const hour = i.toString().padStart(2, '0')
+                                      return (
+                                        <option key={`${hour}:00`} value={`${hour}:00`}>{`${hour}:00`}</option>
+                                      )
+                                    })}
+                                  </select>
+                                  
+                                  <span className="text-gray-400 font-medium">-</span>
+                                  
+                                  <select
+                                    value={dayHours.close}
+                                    onChange={(e) => handleHoursChange(day.key, 'close', e.target.value)}
+                                    className="px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white"
+                                  >
+                                    <option value="">{t('dashboard.editBusiness.hours.closing')}</option>
+                                    {Array.from({ length: 24 }, (_, i) => {
+                                      const hour = i.toString().padStart(2, '0')
+                                      return (
+                                        <option key={`${hour}:00`} value={`${hour}:00`}>{`${hour}:00`}</option>
+                                      )
+                                    })}
+                                  </select>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
                 </CardContent>
               </Card>
+            </div>
+          )}
+
+          {/* Onglet Personnaliser */}
+          {activeTab === 'customize' && (
+            <div className="space-y-6">
+              {/* Banner d'activation si pas encore activé */}
+              {!useCustomPage && (
+                <CustomPageBanner
+                  businessId={params.id as string}
+                  useCustomPage={useCustomPage}
+                  onActivated={() => {
+                    setUseCustomPage(true)
+                    refreshBusinessData()
+                  }}
+                />
+              )}
+
+              {/* Page Builder si activé */}
+              {useCustomPage && (
+                <PageBuilder
+                  businessId={params.id as string}
+                  currentConfig={pageConfig}
+                  businessImages={formData.images}
+                  heroImage={formData.heroImage}
+                  onSaved={() => refreshBusinessData()}
+                />
+              )}
             </div>
           )}
 

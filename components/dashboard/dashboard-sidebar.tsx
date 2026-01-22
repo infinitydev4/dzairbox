@@ -75,7 +75,7 @@ export function DashboardSidebar({ isOpen, onClose, userRole }: DashboardSidebar
               </div>
               <div>
                 <h2 className="text-lg font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                  DzBusiness
+                  DzBox
                 </h2>
                 <p className="text-xs text-gray-500">Dashboard</p>
               </div>

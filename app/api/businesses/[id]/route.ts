@@ -127,9 +127,9 @@ export async function PUT(
     // Si c'est une mise à jour d'images seulement
     if (isImageOnlyUpdate) {
       // Nettoyer les images avant la sauvegarde
-      let cleanImages = []
+      let cleanImages: string[] = []
       if (Array.isArray(businessData.images)) {
-        cleanImages = businessData.images.filter(img => img && typeof img === 'string' && img.trim() !== '')
+        cleanImages = businessData.images.filter((img: any) => img && typeof img === 'string' && img.trim() !== '')
       }
 
       updateData = {
@@ -139,18 +139,16 @@ export async function PUT(
       }
     } else {
       // Mise à jour complète
-      // Convertir les horaires en string si c'est un objet
+      // Convertir les horaires en string JSON si c'est un objet
       let hoursString = businessData.hours
       if (typeof businessData.hours === 'object' && businessData.hours !== null) {
-        hoursString = Object.entries(businessData.hours)
-          .map(([day, time]) => `${day}: ${time}`)
-          .join(', ')
+        hoursString = JSON.stringify(businessData.hours)
       }
 
       // Nettoyer les images avant la sauvegarde
-      let cleanImages = []
+      let cleanImages: string[] = []
       if (Array.isArray(businessData.images)) {
-        cleanImages = businessData.images.filter(img => img && typeof img === 'string' && img.trim() !== '')
+        cleanImages = businessData.images.filter((img: any) => img && typeof img === 'string' && img.trim() !== '')
       }
 
       updateData = {
@@ -160,7 +158,10 @@ export async function PUT(
         address: businessData.address,
         phone: businessData.phone,
         email: businessData.email || null,
-        website: businessData.website || null,
+        facebook: businessData.facebook || null,
+        instagram: businessData.instagram || null,
+        tiktok: businessData.tiktok || null,
+        youtube: businessData.youtube || null,
         hours: hoursString,
         services: Array.isArray(businessData.services) 
           ? businessData.services.join(", ") 

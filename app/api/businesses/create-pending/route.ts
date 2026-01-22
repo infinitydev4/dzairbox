@@ -65,7 +65,10 @@ export async function POST(req: NextRequest) {
         address: businessData.address,
         phone: businessData.phone,
         email: businessData.email || null,
-        website: businessData.website || null,
+        facebook: businessData.facebook || null,
+        instagram: businessData.instagram || null,
+        tiktok: businessData.tiktok || null,
+        youtube: businessData.youtube || null,
         hours: hoursString,
         services: Array.isArray(businessData.services) 
           ? businessData.services.join(", ") 

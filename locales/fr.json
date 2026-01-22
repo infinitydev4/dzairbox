@@ -12,22 +12,22 @@
   },
   "hero": {
     "title": "Développez votre activité locale en Algérie",
-    "subtitle": "Rejoignez des milliers d'entreprises qui font confiance à notre plateforme pour développer leur visibilité en ligne",
-    "register": "Inscrire mon entreprise",
+    "subtitle": "Rejoignez des milliers d'services qui font confiance à notre plateforme pour développer leur visibilité en ligne",
+    "register": "Inscrire mon service",
     "find": "Trouver un service",
-    "trustBadge": "+5000 entreprises nous font confiance",
+    "trustBadge": "+5000 services nous font confiance",
     "stats": {
-      "businesses": "Entreprises inscrites",
+      "businesses": "Services inscrites",
       "wilayas": "Wilayas couvertes",
       "rating": "Note moyenne"
     }
   },
   "features": {
-    "title": "Pourquoi choisir DzBusiness ?",
+    "title": "Pourquoi choisir DzBox ?",
     "subtitle": "Une plateforme complète pour développer votre présence en ligne en Algérie",
     "visibility": {
       "title": "Visibilité maximale",
-      "description": "Votre entreprise visible 24h/24 sur internet"
+      "description": "Votre service visible 24h/24 sur internet"
     },
     "seo": {
       "title": "SEO local optimisé",
@@ -53,6 +53,8 @@
   "services": {
     "title": "Services populaires",
     "subtitle": "Découvrez tous les services disponibles près de chez vous",
+    "exploreByCategory": "Explorez par catégorie",
+    "viewAll": "Voir tous les services",
     "electrician": "Électriciens",
     "mechanic": "Mécaniciens",
     "pharmacy": "Pharmacies",
@@ -68,7 +70,7 @@
   },
   "servicesPage": {
     "title": "Nos Services",
-    "subtitle": "Découvrez notre gamme complète de services pour développer votre présence en ligne et faire croître votre entreprise en Algérie.",
+    "subtitle": "Découvrez notre gamme complète de services pour développer votre présence en ligne et faire croître votre service en Algérie.",
     "categories": {
       "all": "Tous les services",
       "core": "Services principaux",
@@ -76,19 +78,19 @@
       "tech": "Technique"
     },
     "stats": {
-      "businesses": "Entreprises",
+      "businesses": "Services",
       "wilayas": "Wilayas",
       "visitors": "Visiteurs/mois",
       "satisfaction": "Satisfaction"
     },
     "directory": {
-      "title": "Annuaire des Entreprises",
-      "description": "Découvrez et trouvez facilement les entreprises algériennes avec notre annuaire complet et géolocalisé.",
+      "title": "Annuaire des Services",
+      "description": "Découvrez et trouvez facilement les services algériennes avec notre annuaire complet et géolocalisé.",
       "features": {
         "search": "Recherche avancée par catégorie et localisation",
         "geolocation": "Géolocalisation et cartes interactives",
         "filters": "Filtres intelligents et tri personnalisé",
-        "details": "Informations détaillées des entreprises",
+        "details": "Informations détaillées des services",
         "mobile": "Interface mobile optimisée"
       },
       "price": "Gratuit",
@@ -163,8 +165,8 @@
       "learnMore": "En savoir plus"
     },
     "cta": {
-      "title": "Prêt à développer votre entreprise ?",
-      "subtitle": "Rejoignez des centaines d'entreprises algériennes qui font confiance à DzairBox pour leur présence en ligne.",
+      "title": "Prêt à développer votre service ?",
+      "subtitle": "Rejoignez des centaines d'services algériennes qui font confiance à DzairBox pour leur présence en ligne.",
       "createBusiness": "Créer ma page business",
       "exploreDirectory": "Explorer l'annuaire"
     },
@@ -175,7 +177,7 @@
   },
   "contactPage": {
     "title": "Contactez-nous",
-    "subtitle": "Nous sommes là pour vous aider à développer votre entreprise en ligne",
+    "subtitle": "Nous sommes là pour vous aider à développer votre service en ligne",
     "hero": {
       "title": "Une question ? Un projet ?",
       "description": "Notre équipe d'experts est à votre disposition pour vous accompagner dans votre transformation digitale."
@@ -257,21 +259,21 @@
     },
     "cta": {
       "title": "Prêt à commencer ?",
-      "subtitle": "Créez votre page business dès maintenant et rejoignez des centaines d'entreprises algériennes.",
+      "subtitle": "Créez votre page business dès maintenant et rejoignez des centaines d'services algériennes.",
       "createBusiness": "Créer ma page",
       "exploreServices": "Voir nos services"
     }
   },
   "aboutPage": {
     "title": "À Propos de DzairBox",
-    "subtitle": "Découvrez notre mission : connecter et faire prospérer les entreprises algériennes grâce au digital.",
+    "subtitle": "Découvrez notre mission : connecter et faire prospérer les services algériennes grâce au digital.",
     "hero": {
       "title": "Notre Mission",
-      "description": "Nous croyons en un avenir où chaque entreprise algérienne, qu'elle soit grande ou petite, peut prospérer grâce à une présence en ligne forte et accessible."
+      "description": "Nous croyons en un avenir où chaque service algérienne, qu'elle soit grande ou petite, peut prospérer grâce à une présence en ligne forte et accessible."
     },
     "story": {
       "title": "Notre Histoire",
-      "description": "DzairBox est né d'une vision simple mais ambitieuse : démocratiser l'accès au digital pour toutes les entreprises algériennes. Fondée par une équipe passionnée de technologie et d'entrepreneuriat local, notre plateforme répond aux défis spécifiques du marché algérien.",
+      "description": "DzairBox est né d'une vision simple mais ambitieuse : démocratiser l'accès au digital pour toutes les services algériennes. Fondée par une équipe passionnée de technologie et d'entrepreneuriat local, notre plateforme répond aux défis spécifiques du marché algérien.",
       "founding": {
         "title": "Fondation",
         "year": "2024",
@@ -279,15 +281,15 @@
       },
       "growth": {
         "title": "Croissance",
-        "year": "500+ entreprises",
-        "milestone": "500+ entreprises",
-        "description": "Adoption rapide par les entreprises locales dans toutes les wilayas"
+        "year": "500+ services",
+        "milestone": "500+ services",
+        "description": "Adoption rapide par les services locales dans toutes les wilayas"
       },
       "innovation": {
         "title": "Innovation",
         "year": "Assistant IA",
         "feature": "Assistant IA",
-        "description": "Premier assistant IA conversationnel pour l'inscription d'entreprises en Algérie"
+        "description": "Premier assistant IA conversationnel pour l'inscription d'services en Algérie"
       }
     },
     "values": {
@@ -295,7 +297,7 @@
       "subtitle": "Les principes qui guident chacune de nos actions",
       "accessibility": {
         "title": "Accessibilité",
-        "description": "Rendre le digital accessible à toutes les entreprises, des plus petites aux plus grandes, avec des solutions adaptées à chaque budget."
+        "description": "Rendre le digital accessible à toutes les services, des plus petites aux plus grandes, avec des solutions adaptées à chaque budget."
       },
       "local": {
         "title": "Ancrage Local",
@@ -307,7 +309,7 @@
       },
       "support": {
         "title": "Accompagnement",
-        "description": "Offrir un support personnalisé pour aider chaque entreprise à réussir sa transformation digitale."
+        "description": "Offrir un support personnalisé pour aider chaque service à réussir sa transformation digitale."
       }
     },
     "team": {
@@ -333,7 +335,7 @@
       "title": "DzairBox en Chiffres",
       "businesses": {
         "number": "500+",
-        "label": "Entreprises actives"
+        "label": "Services actives"
       },
       "wilayas": {
         "number": "48",
@@ -353,11 +355,11 @@
       "subtitle": "Construire ensemble l'écosystème digital de demain",
       "digital": {
         "title": "Transformation Digitale",
-        "description": "Accompagner la transformation digitale des entreprises algériennes avec des outils modernes et accessibles."
+        "description": "Accompagner la transformation digitale des services algériennes avec des outils modernes et accessibles."
       },
       "economy": {
         "title": "Économie Locale",
-        "description": "Stimuler l'économie locale en connectant les entreprises avec leurs clients potentiels."
+        "description": "Stimuler l'économie locale en connectant les services avec leurs clients potentiels."
       },
       "future": {
         "title": "Avenir Numérique",
@@ -372,12 +374,12 @@
     }
   },
   "chatbot": {
-    "welcome": "Bonjour ! Je vais vous aider à inscrire votre entreprise. Commençons par le nom de votre entreprise.",
+    "welcome": "Bonjour ! Je vais vous aider à inscrire votre service. Commençons par le nom de votre service.",
     "placeholder": "Tapez votre message...",
     "send": "Envoyer"
   },
   "register": {
-    "title": "Inscrivez votre entreprise",
+    "title": "Inscrivez votre service",
     "subtitle": "Choisissez la méthode d'inscription qui vous convient le mieux. Notre assistant IA ou un formulaire classique - les deux vous guideront vers le succès !",
     "aiChat": {
       "title": "Assistant IA Conversationnel",
@@ -406,24 +408,24 @@
     }
   },
   "directory": {
-    "title": "Annuaire des Entreprises",
-    "subtitle": "Découvrez les entreprises algériennes présentes sur DzBusiness",
-    "search": "Rechercher une entreprise, catégorie ou ville...",
+    "title": "Annuaire des Services",
+    "subtitle": "Découvrez les services algériennes présentes sur DzBox",
+    "search": "Rechercher une service, catégorie ou ville...",
     "stats": {
-      "activeBusinesses": "Entreprises actives",
+      "activeBusinesses": "Services actives",
       "citiesCovered": "Villes couvertes",
       "categories": "Catégories"
     },
     "empty": {
-      "title": "Aucune entreprise active",
-      "subtitle": "Soyez la première entreprise à rejoindre notre plateforme !",
-      "button": "Inscrire mon entreprise"
+      "title": "Aucune service active",
+      "subtitle": "Soyez la première service à rejoindre notre plateforme !",
+      "button": "Inscrire mon service"
     },
     "viewPage": "Voir la page",
     "cta": {
-      "title": "Votre entreprise n'est pas listée ?",
-      "subtitle": "Rejoignez DzBusiness gratuitement et donnez plus de visibilité à votre entreprise. Créez votre page personnalisée en quelques minutes.",
-      "button": "Inscrire mon entreprise gratuitement"
+      "title": "Votre service n'est pas listée ?",
+      "subtitle": "Rejoignez DzBox gratuitement et donnez plus de visibilité à votre service. Créez votre page personnalisée en quelques minutes.",
+      "button": "Inscrire mon service gratuitement"
     }
   },
   "auth": {
@@ -441,16 +443,16 @@
     "welcome": "Bienvenue",
     "loading": "Chargement...",
     "unauthorized": "Vous devez être connecté pour accéder à cette page.",
-    "createBusiness": "Création de votre entreprise...",
+    "createBusiness": "Création de votre service...",
     "createBusinessSubtitle": "Veuillez patienter pendant que nous finalisons votre inscription.",
     "myBusinesses": {
-      "title": "Mes Entreprises",
-      "description": "Gérez vos entreprises enregistrées",
-      "button": "Voir mes entreprises"
+      "title": "Mes Services",
+      "description": "Gérez vos services enregistrées",
+      "button": "Voir mes services"
     },
     "newBusiness": {
-      "title": "Nouvelle Entreprise",
-      "description": "Enregistrez une nouvelle entreprise",
+      "title": "Nouveau Service",
+      "description": "Enregistrez un nouveau service",
       "manual": {
         "title": "Création manuelle",
         "description": "Remplissez un formulaire structuré étape par étape",
@@ -484,7 +486,141 @@
           "reason3": "Vous préférez les conversations naturelles"
         }
       },
-      "button": "Nouvelle entreprise"
+      "button": "Nouveau service"
+    },
+    "createForm": {
+      "back": "Retour",
+      "draft": {
+        "restored": "Brouillon restauré",
+        "restoredDesc": "Vos données précédentes ont été récupérées.",
+        "cleared": "Brouillon effacé",
+        "clearedDesc": "Le formulaire a été réinitialisé.",
+        "saving": "Sauvegarde...",
+        "saved": "Brouillon sauvegardé",
+        "clear": "Effacer le brouillon"
+      },
+      "general": {
+        "title": "Informations générales",
+        "name": "Nom du service",
+        "namePlaceholder": "Ex: Restaurant Chez Ali",
+        "category": "Catégorie",
+        "categoryPlaceholder": "Sélectionnez une catégorie",
+        "description": "Description",
+        "descriptionPlaceholder": "Décrivez votre service...",
+        "services": "Services proposés",
+        "servicesPlaceholder": "Ex: Réparation, Vente, Installation"
+      },
+      "location": {
+        "title": "Localisation",
+        "address": "Adresse",
+        "addressPlaceholder": "Ex: 123 Rue de la République, Alger",
+        "addressHelper": "L'adresse est utilisée pour la géolocalisation sur la carte"
+      },
+      "contact": {
+        "title": "Coordonnées",
+        "phone": "Téléphone",
+        "phonePlaceholder": "+213 XX XX XX XX",
+        "phoneHelper": "Format automatique : groupe de 3 chiffres",
+        "email": "Email",
+        "emailPlaceholder": "contact@exemple.com",
+        "emailOptional": "(Optionnel)"
+      },
+      "social": {
+        "title": "Réseaux sociaux",
+        "description": "Ajoutez vos liens de réseaux sociaux (optionnel)",
+        "facebook": "Page Facebook",
+        "facebookPlaceholder": "https://facebook.com/votrepage",
+        "instagram": "Instagram",
+        "instagramPlaceholder": "https://instagram.com/votrepage",
+        "tiktok": "TikTok",
+        "tiktokPlaceholder": "https://tiktok.com/@votrepage",
+        "youtube": "YouTube",
+        "youtubePlaceholder": "https://youtube.com/@votrepage"
+      },
+      "hours": {
+        "title": "Horaires d'ouverture",
+        "description": "Définissez vos horaires de travail",
+        "day": {
+          "monday": "Lundi",
+          "tuesday": "Mardi",
+          "wednesday": "Mercredi",
+          "thursday": "Jeudi",
+          "friday": "Vendredi",
+          "saturday": "Samedi",
+          "sunday": "Dimanche"
+        },
+        "closed": "Fermé",
+        "opening": "Ouverture",
+        "closing": "Fermeture"
+      },
+      "submit": {
+        "cancel": "Annuler",
+        "submit": "Créer le service",
+        "submitting": "Création en cours..."
+      },
+      "errors": {
+        "required": "Veuillez remplir tous les champs obligatoires.",
+        "unexpected": "Une erreur inattendue s'est produite.",
+        "title": "Erreur"
+      },
+      "success": {
+        "title": "Succès !",
+        "message": "Service créé avec succès !"
+      },
+      "categories": {
+        "restaurant": "Restaurant",
+        "cafe": "Café",
+        "boulangerie": "Boulangerie",
+        "patisserie": "Pâtisserie",
+        "coiffeur": "Coiffeur",
+        "beaute": "Salon de beauté",
+        "spa": "Spa",
+        "mecanicien": "Mécanicien",
+        "garage": "Garage",
+        "electricien": "Électricien",
+        "plombier": "Plombier",
+        "peintre": "Peintre",
+        "menuisier": "Menuisier",
+        "pharmacie": "Pharmacie",
+        "clinique": "Clinique",
+        "medecin": "Médecin",
+        "dentiste": "Dentiste",
+        "centremedical": "Centre médical",
+        "epicerie": "Épicerie",
+        "supermarche": "Supermarché",
+        "boucherie": "Boucherie",
+        "vetements": "Vêtements",
+        "chaussures": "Chaussures",
+        "bijouterie": "Bijouterie",
+        "informatique": "Informatique",
+        "electronique": "Électronique",
+        "telephonie": "Téléphonie",
+        "hotel": "Hôtel",
+        "maisondhotes": "Maison d'hôtes",
+        "agencevoyage": "Agence de voyage",
+        "avocat": "Avocat",
+        "comptable": "Comptable",
+        "notaire": "Notaire",
+        "autoecole": "Auto-école",
+        "ecole": "École",
+        "formation": "Formation",
+        "salledesport": "Salle de sport",
+        "sport": "Sport",
+        "librairie": "Librairie",
+        "papeterie": "Papeterie",
+        "artisanat": "Artisanat",
+        "decoration": "Décoration",
+        "entretien": "Entretien",
+        "menage": "Ménage",
+        "jardinage": "Jardinage",
+        "immobilier": "Immobilier",
+        "architecture": "Architecture",
+        "photographe": "Photographe",
+        "imprimerie": "Imprimerie",
+        "transport": "Transport",
+        "livraison": "Livraison",
+        "autre": "Autre"
+      }
     },
     "profile": {
       "title": "Mon Profil",
@@ -597,16 +733,16 @@
           "confirm": "Confirmer la suppression",
           "cancel": "Annuler",
           "warning": "Attention !",
-          "warningText": "Cette action est irréversible. Toutes vos données, y compris vos entreprises, seront définitivement supprimées."
+          "warningText": "Cette action est irréversible. Toutes vos données, y compris vos services, seront définitivement supprimées."
         }
       },
       "button": "Paramètres"
     },
     "user": "Utilisateur",
     "businesses": {
-      "title": "Mes Entreprises",
-      "subtitle": "Gérez vos entreprises enregistrées sur DzBusiness",
-      "newBusiness": "Nouvelle entreprise",
+      "title": "Mes Services",
+      "subtitle": "Gérez vos services enregistrées sur DzBox",
+      "newBusiness": "Nouvelle service",
       "search": {
         "placeholder": "Rechercher par nom, catégorie, description ou adresse..."
       },
@@ -619,17 +755,17 @@
         "clear": "Effacer les filtres"
       },
       "results": {
-        "total": "{{count}} entreprise(s) au total",
-        "filtered": "{{filtered}} sur {{total}} entreprise(s)"
+        "total": "{{count}} service(s) au total",
+        "filtered": "{{filtered}} sur {{total}} service(s)"
       },
       "noBusinesses": {
-        "title": "Aucune entreprise enregistrée",
-        "subtitle": "Vous n'avez pas encore enregistré d'entreprise. Commencez dès maintenant !",
-        "button": "Inscrire ma première entreprise"
+        "title": "Aucune service enregistrée",
+        "subtitle": "Vous n'avez pas encore enregistré d'service. Commencez dès maintenant !",
+        "button": "Inscrire ma première service"
       },
       "noResults": {
         "title": "Aucun résultat trouvé",
-        "subtitle": "Aucune entreprise ne correspond à vos critères de recherche. Essayez de modifier vos filtres."
+        "subtitle": "Aucune service ne correspond à vos critères de recherche. Essayez de modifier vos filtres."
       },
       "status": {
         "active": "Active",
@@ -644,22 +780,22 @@
       "tips": {
         "title": "💡 Comment optimiser votre visibilité ?",
         "tip1": "• Assurez-vous que vos informations sont complètes et à jour",
-        "tip2": "• Ajoutez des photos de qualité de votre entreprise",
+        "tip2": "• Ajoutez des photos de qualité de votre service",
         "tip3": "• Répondez rapidement aux demandes de vos clients",
         "tip4": "• Mettez à jour vos horaires d'ouverture régulièrement"
       }
     },
     "editBusiness": {
-      "title": "Modifier l'entreprise",
+      "title": "Modifier l'service",
       "loading": "Chargement...",
-      "loadingSubtitle": "Récupération des données de l'entreprise",
-      "loadingBusiness": "Chargement de votre entreprise",
+      "loadingSubtitle": "Récupération des données de l'service",
+      "loadingBusiness": "Chargement de votre service",
       "loadingInterface": "Préparation de l'interface d'édition...",
       "back": "Retour",
       "delete": "Supprimer",
       "deleting": "Suppression...",
-      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette entreprise ? Cette action est irréversible.",
-      "modifyBusiness": "Modifier l'entreprise",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette service ? Cette action est irréversible.",
+      "modifyBusiness": "Modifier l'service",
       "customizeOnlinePresence": "Personnalisez votre présence en ligne",
       "unsaved": "Non sauvegardé",
       "deleteButton": "Supprimer",
@@ -668,12 +804,13 @@
         "general": "Général",
         "images": "Médias",
         "contact": "Contact",
-        "hours": "Horaires"
+        "hours": "Horaires",
+        "customize": "Personnaliser"
       },
       
       "generalInfo": {
         "title": "Informations générales",
-        "businessName": "Nom de l'entreprise",
+        "businessName": "Nom de l'service",
         "businessNamePlaceholder": "Ex: Restaurant Le Délice",
         "category": "Catégorie",
         "categoryPlaceholder": "Sélectionnez une catégorie",
@@ -704,7 +841,7 @@
         },
         "noImages": {
           "title": "Aucune image ajoutée",
-          "subtitle": "Commencez par ajouter des images de votre entreprise"
+          "subtitle": "Commencez par ajouter des images de votre service"
         }
       },
       
@@ -715,15 +852,23 @@
         "phone": "Téléphone",
         "phonePlaceholder": "Ex: +213 555 123 456",
         "email": "Email",
-        "emailPlaceholder": "contact@monentreprise.com",
-        "website": "Site web",
-        "websitePlaceholder": "https://www.monentreprise.com"
+        "emailPlaceholder": "contact@monservice.com",
+        "socialMedia": "Réseaux sociaux",
+        "socialMediaHint": "Entrez uniquement le nom d'utilisateur (sans @ ni URL)"
       },
       
       "hours": {
         "title": "Horaires d'ouverture",
         "subtitle": "Laissez vide pour les jours de fermeture",
         "placeholder": "Ex: 09:00-18:00 ou Fermé",
+        "applyToAll": "Appliquer à toute la semaine",
+        "closed": "Fermé",
+        "opening": "Ouverture",
+        "closing": "Fermeture",
+        "noSundayHours": "Aucun horaire pour le dimanche",
+        "setSundayFirst": "Veuillez d'abord définir les horaires du dimanche",
+        "applied": "Horaires appliqués",
+        "appliedToAll": "Les horaires du dimanche ont été appliqués à toute la semaine",
         "monday": "Lundi",
         "tuesday": "Mardi",
         "wednesday": "Mercredi",
@@ -745,12 +890,12 @@
       },
       
       "messages": {
-        "loadError": "Erreur lors du chargement de l'entreprise",
+        "loadError": "Erreur lors du chargement de l'service",
         "requiredFields": "Veuillez remplir tous les champs obligatoires.",
-        "updateSuccess": "Entreprise mise à jour avec succès !",
-        "updateError": "Erreur lors de la mise à jour de l'entreprise.",
-        "deleteSuccess": "Entreprise supprimée avec succès !",
-        "deleteError": "Erreur lors de la suppression de l'entreprise.",
+        "updateSuccess": "Service mise à jour avec succès !",
+        "updateError": "Erreur lors de la mise à jour de l'service.",
+        "deleteSuccess": "Service supprimée avec succès !",
+        "deleteError": "Erreur lors de la suppression de l'service.",
         "unexpectedError": "Une erreur inattendue s'est produite.",
         "imagesSaved": "✅ Images sauvegardées",
         "imagesUpdated": "Vos images ont été mises à jour automatiquement",
@@ -758,13 +903,58 @@
         "cannotSaveImages": "Impossible de sauvegarder les images"
       }
     },
+    "builder": {
+      "title": "Personnalisation de la Page",
+      "selectTemplate": "Choisir un template",
+      "theme": "Apparence",
+      "sections": "Sections",
+      "preview": "Aperçu",
+      "saveDraft": "Enregistrer brouillon",
+      "publish": "Publier",
+      "publishing": "Publication...",
+      "saveSuccess": "Configuration sauvegardée",
+      "publishSuccess": "Page publiée avec succès !",
+      "templates": {
+        "sidebarRight": "Sidebar Droite",
+        "sidebarLeft": "Sidebar Gauche",
+        "heroFull": "Hero Complet",
+        "sidebarRightDesc": "Layout classique avec sidebar fixe à droite",
+        "sidebarLeftDesc": "Layout moderne avec sidebar à gauche",
+        "heroFullDesc": "Hero pleine largeur sans sidebar permanent"
+      },
+      "themeEditor": {
+        "title": "Couleurs et Thème",
+        "primaryColor": "Couleur principale",
+        "secondaryColor": "Couleur secondaire",
+        "accentColor": "Couleur d'accent",
+        "gradient": "Dégradé"
+      },
+      "sectionEditor": {
+        "title": "Sections",
+        "enableSection": "Activer",
+        "services": "Services",
+        "about": "À propos",
+        "contact": "Contact",
+        "hours": "Horaires",
+        "address": "Adresse",
+        "displayMode": "Mode d'affichage",
+        "grid": "Grille",
+        "list": "Liste"
+      },
+      "banner": {
+        "title": "Nouveau : Personnalisez votre Landing Page",
+        "description": "Choisissez parmi 3 templates modernes et personnalisez les couleurs, sections et mise en page.",
+        "activate": "Activer la personnalisation",
+        "activating": "Activation..."
+      }
+    },
     "createBusinessAI": {
-      "welcomeMessage": "Bonjour ! Je suis votre assistant IA pour créer votre entreprise sur DzBusiness. Je vais vous accompagner étape par étape. Commençons par le nom de votre entreprise. Comment s'appelle-t-elle ?",
+      "welcomeMessage": "Bonjour ! Je suis votre assistant IA pour créer votre service sur DzBox. Je vais vous accompagner étape par étape. Commençons par le nom de votre service. Comment s'appelle-t-elle ?",
       "back": "Retour",
       "modify": "Modifier",
-      "create": "Créer l'entreprise",
+      "create": "Créer l'service",
       "creating": "Création...",
-      "assistantTitle": "Assistant IA DzBusiness",
+      "assistantTitle": "Assistant IA DzBox",
       "thinking": "L'assistant réfléchit...",
       "inputPlaceholder": "Tapez votre message...",
       "tips": {
@@ -774,17 +964,17 @@
         "verify": "Vérifiez votre téléphone"
       },
       "errorMessage": "Désolé, une erreur s'est produite. Pouvez-vous répéter votre message ?",
-      "createSuccess": "Entreprise créée avec succès !",
-      "createError": "Erreur lors de la création de l'entreprise",
-      "restartMessage": "Parfait ! Recommençons. Quel est le nom de votre entreprise ?",
+      "createSuccess": "Service créée avec succès !",
+      "createError": "Erreur lors de la création de l'service",
+      "restartMessage": "Parfait ! Recommençons. Quel est le nom de votre service ?",
       "toasts": {
         "successTitle": "Succès !",
         "errorTitle": "Erreur"
       }
     },
     "chat": {
-      "welcome": "Bonjour ! Je suis votre assistant pour l'inscription de votre entreprise sur DzBusiness. Je vais vous accompagner étape par étape pour créer votre profil d'entreprise. Commençons par le nom de votre entreprise. Comment s'appelle-t-elle ?",
-      "assistantTitle": "Assistant d'inscription DzBusiness",
+      "welcome": "Bonjour ! Je suis votre assistant pour l'inscription de votre service sur DzBox. Je vais vous accompagner étape par étape pour créer votre profil d'service. Commençons par le nom de votre service. Comment s'appelle-t-elle ?",
+      "assistantTitle": "Assistant d'inscription DzBox",
       "thinking": "L'assistant réfléchit...",
       "inputPlaceholder": "Tapez votre message...",
       "send": "Envoyer",
@@ -792,7 +982,7 @@
       "completed": {
         "title": "🎉 Inscription terminée !",
         "modify": "Modifier les informations",
-        "create": "Créer mon entreprise",
+        "create": "Créer mon service",
         "creating": "Création en cours..."
       },
       "progress": {
@@ -827,30 +1017,29 @@
         "powered": "Powered by OpenAI GPT-4"
       },
       "summary": {
-        "title": "Récapitulatif de votre entreprise",
+        "title": "Récapitulatif de votre service",
         "nextSteps": {
           "title": "Prochaines étapes",
-          "description": "Après validation, votre entreprise sera visible sur DzBusiness avec un sous-domaine dédié. Vous pourrez gérer votre profil depuis votre tableau de bord."
+          "description": "Après validation, votre service sera visible sur DzBox avec un sous-domaine dédié. Vous pourrez gérer votre profil depuis votre tableau de bord."
         }
       }
     },
     "tips": {
       "title": "Conseils pour améliorer votre visibilité",
       "tip1": "Assurez-vous que vos informations sont complètes et à jour",
-      "tip2": "Ajoutez des photos de qualité de votre entreprise",
+      "tip2": "Ajoutez des photos de qualité de votre service",
       "tip3": "Répondez rapidement aux demandes de vos clients",
       "tip4": "Mettez à jour vos horaires d'ouverture régulièrement"
     }
   },
   "business": {
-    "notFound": "Entreprise non trouvée",
     "backToDirectory": "Retour à l'annuaire",
     "meta": {
-      "notFoundTitle": "Entreprise non trouvée - DzBusiness",
+      "notFoundTitle": "Service non trouvée - DzBox",
       "discover": "Découvrez"
     },
     "page": {
-      "activeStatus": "Entreprise active",
+      "activeStatus": "Service active",
       "call": "Appeler",
       "directions": "Itinéraire",
       "share": "Partager",
@@ -860,7 +1049,7 @@
       "showMore": "Voir plus",
       "others": "autres",
       "about": "À propos",
-      "aboutDefault": "est une entreprise spécialisée en",
+      "aboutDefault": "est une service spécialisée en",
       "locatedAt": ", située à",
       "contact": "Contact",
       "contactDescription": "Prenez contact avec nous",
@@ -869,24 +1058,24 @@
       "hours": "Horaires",
       "address": "Adresse",
       "openInMaps": "Ouvrir dans Maps",
-      "hostedOn": "Cette page est hébergée sur DzBusiness",
-      "createMyPage": "Créer ma page entreprise"
+      "hostedOn": "Cette page est hébergée sur DzBox",
+      "createMyPage": "Créer ma page service"
     },
     "notFound": {
-      "title": "Entreprise non trouvée",
-      "description": "L'entreprise que vous recherchez n'existe pas ou n'est pas encore active.",
+      "title": "Service non trouvée",
+      "description": "L'service que vous recherchez n'existe pas ou n'est pas encore active.",
       "whatHappened": "Que s'est-il passé ?",
       "reasons": {
-        "notActivated": "L'entreprise n'a pas encore été activée par nos équipes",
+        "notActivated": "L'service n'a pas encore été activée par nos équipes",
         "misspelled": "Le sous-domaine a été mal orthographié",
-        "removed": "L'entreprise a été supprimée ou désactivée"
+        "removed": "L'service a été supprimée ou désactivée"
       },
       "whatCanYouDo": "Que pouvez-vous faire ?",
-      "homeButton": "Accueil DzBusiness",
-      "searchButton": "Rechercher une entreprise",
-      "ownerTitle": "🏢 Vous êtes propriétaire d'une entreprise ?",
-      "ownerDescription": "Inscrivez votre entreprise sur DzBusiness et obtenez votre page professionnelle",
-      "registerButton": "Inscrire mon entreprise"
+      "homeButton": "Accueil DzBox",
+      "searchButton": "Rechercher une service",
+      "ownerTitle": "🏢 Vous êtes propriétaire d'une service ?",
+      "ownerDescription": "Inscrivez votre service sur DzBox et obtenez votre page professionnelle",
+      "registerButton": "Inscrire mon service"
     }
   },
   "categories": {
@@ -930,5 +1119,23 @@
     "close": "Fermer",
     "open": "Ouvrir",
     "url": "URL"
+  },
+  "footer": {
+    "description": "La plateforme de référence pour trouver et promouvoir les services algériennes partout en Algérie.",
+    "quickLinks": "Liens rapides",
+    "directory": "Annuaire",
+    "createPage": "Créer ma page",
+    "login": "Connexion",
+    "support": "Support",
+    "contactUs": "Nous contacter",
+    "faq": "FAQ",
+    "helpCenter": "Centre d'aide",
+    "contact": "Contact",
+    "location": "Alger, Algérie",
+    "copyright": "Tous droits réservés.",
+    "legalNotice": "Mentions légales",
+    "terms": "Conditions générales",
+    "privacy": "Politique de confidentialité",
+    "cookies": "Politique des cookies"
   }
 } 

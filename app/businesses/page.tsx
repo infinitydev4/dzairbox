@@ -10,11 +10,11 @@ import { getBusinessUrl } from "@/lib/business-url"
 import { useLanguage } from "@/components/language-provider"
 import { BusinessFiltersDrawer, BusinessFilters } from "@/components/business-filters-drawer"
 import { BusinessMap } from "@/components/business-map"
+import { useSearchParams } from "next/navigation"
 import { 
   MapPin, 
   Phone, 
   Mail, 
-  Globe, 
   Search,
   Building2,
   ExternalLink,
@@ -24,7 +24,9 @@ import {
   Map,
   Star,
   Eye,
-  ChevronDown
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react"
 import Link from "next/link"
 
@@ -36,7 +38,11 @@ interface Business {
   address: string
   phone: string | null
   email: string | null
-  website: string | null
+  facebook: string | null
+  instagram: string | null
+  tiktok: string | null
+  youtube: string | null
+  heroImage: string | null
   subdomain: string
 }
 
@@ -44,22 +50,40 @@ type ViewMode = 'grid' | 'list' | 'map'
 
 export default function BusinessesPage() {
   const { t } = useLanguage()
+  const searchParams = useSearchParams()
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
-  const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null)
+  const [selectedBusiness, setSelectedBusiness] = useState<any>(null)
   const [showMobileStats, setShowMobileStats] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(9)
   const [filters, setFilters] = useState<BusinessFilters>({
     search: '',
     category: '',
     city: '',
     hasPhone: false,
     hasEmail: false,
-    hasWebsite: false,
+    hasSocial: false,
     sortBy: 'name'
   })
+
+  // Initialiser les filtres depuis l'URL
+  useEffect(() => {
+    const urlSearch = searchParams.get('search')
+    const urlCategory = searchParams.get('category')
+    
+    if (urlSearch) {
+      setSearchTerm(urlSearch)
+      setFilters(prev => ({ ...prev, search: urlSearch }))
+    }
+    
+    if (urlCategory) {
+      setFilters(prev => ({ ...prev, category: urlCategory }))
+    }
+  }, [searchParams])
 
   useEffect(() => {
     fetchBusinesses()
@@ -114,8 +138,10 @@ export default function BusinessesPage() {
     if (filters.hasEmail) {
       filtered = filtered.filter(business => business.email)
     }
-    if (filters.hasWebsite) {
-      filtered = filtered.filter(business => business.website)
+    if (filters.hasSocial) {
+      filtered = filtered.filter(business => 
+        business.facebook || business.instagram || business.tiktok || business.youtube
+      )
     }
 
     // Tri
@@ -134,6 +160,27 @@ export default function BusinessesPage() {
     return filtered
   }, [businesses, searchTerm, filters])
 
+  // Pagination
+  const totalPages = Math.ceil(filteredBusinesses.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedBusinesses = filteredBusinesses.slice(startIndex, endIndex)
+
+  // Réinitialiser la page quand les filtres changent
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm, filters, itemsPerPage])
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value)
+    setCurrentPage(1)
+  }
+
   const handleFiltersChange = (newFilters: BusinessFilters) => {
     setFilters(newFilters)
   }
@@ -145,7 +192,7 @@ export default function BusinessesPage() {
     if (filters.city) count++
     if (filters.hasPhone) count++
     if (filters.hasEmail) count++
-    if (filters.hasWebsite) count++
+    if (filters.hasSocial) count++
     if (filters.sortBy !== 'name') count++
     return count
   }
@@ -306,9 +353,9 @@ export default function BusinessesPage() {
                     <Eye className="h-4 w-4 sm:h-6 sm:w-6 text-emerald-600" />
                   </div>
                   <div className="text-xl sm:text-3xl font-bold text-gray-900 mb-1">
-                    {filteredBusinesses.filter(b => b.website).length}
+                    {filteredBusinesses.filter(b => b.facebook || b.instagram || b.tiktok || b.youtube).length}
                   </div>
-                  <div className="text-xs sm:text-sm text-gray-600 font-medium">Sites web</div>
+                  <div className="text-xs sm:text-sm text-gray-600 font-medium">Réseaux sociaux</div>
                 </CardContent>
               </Card>
             </div>
@@ -318,9 +365,9 @@ export default function BusinessesPage() {
           {viewMode === 'map' ? (
             <div className="h-[500px] sm:h-[600px] lg:h-[700px] rounded-lg overflow-hidden shadow-lg">
               <BusinessMap 
-                businesses={filteredBusinesses}
+                businesses={filteredBusinesses as any}
                 selectedBusiness={selectedBusiness}
-                onBusinessSelect={setSelectedBusiness}
+                onBusinessSelect={setSelectedBusiness as any}
               />
             </div>
           ) : (
@@ -351,74 +398,220 @@ export default function BusinessesPage() {
                   </CardContent>
                 </Card>
               ) : (
-                <div className={
-                  viewMode === 'grid' 
-                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" 
-                    : "space-y-3 sm:space-y-4"
-                }>
-                  {filteredBusinesses.map((business) => (
-                    <Card key={business.id} className={`group hover:shadow-xl transition-all duration-300 border-gray-200 bg-white hover:scale-105 ${
+                <>
+                  <div className={
+                    viewMode === 'grid' 
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" 
+                      : "space-y-3 sm:space-y-4"
+                  }>
+                    {paginatedBusinesses.map((business) => (
+                    <Card key={business.id} className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 bg-white ${
                       viewMode === 'list' ? 'flex flex-col sm:flex-row' : ''
                     }`}>
-                      <CardHeader className={`${viewMode === 'list' ? 'sm:flex-1' : ''} p-4 sm:p-6`}>
-                        <CardTitle className="flex items-start justify-between">
-                          <span className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2 group-hover:text-emerald-600 transition-colors">
-                            {business.name}
-                          </span>
-                        </CardTitle>
-                        <CardDescription>
-                          <Badge variant="secondary" className="text-xs bg-emerald-100 text-emerald-700">
+                      {/* Hero Image */}
+                      {business.heroImage ? (
+                        <div className={`relative ${viewMode === 'list' ? 'sm:w-72 sm:h-full' : 'h-48 sm:h-56'} overflow-hidden bg-gradient-to-br from-emerald-50 to-green-100`}>
+                          <img
+                            src={business.heroImage}
+                            alt={business.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            onError={(e) => {
+                              console.error('Erreur de chargement image:', business.heroImage)
+                              // Cache l'image et affiche le parent comme fallback
+                              const parent = e.currentTarget.parentElement
+                              if (parent) {
+                                parent.innerHTML = `
+                                  <div class="w-full h-full bg-gradient-to-br from-emerald-500 via-emerald-600 to-green-600 flex items-center justify-center">
+                                    <svg class="h-16 w-16 sm:h-20 sm:w-20 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                    </svg>
+                                  </div>
+                                  <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+                                  <span class="absolute top-3 left-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-emerald-700 border-0 shadow-lg">
+                                    ${business.category}
+                                  </span>
+                                `
+                              }
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                          <Badge variant="secondary" className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-emerald-700 border-0 shadow-lg">
                             {business.category}
                           </Badge>
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className={`space-y-3 sm:space-y-4 p-4 pt-0 sm:p-6 sm:pt-0 ${viewMode === 'list' ? 'sm:flex-1' : ''}`}>
-                        {business.description && (
-                          <p className="text-gray-600 text-xs sm:text-sm line-clamp-2">
-                            {business.description}
-                          </p>
-                        )}
-                        
-                        <div className={`space-y-2 ${viewMode === 'list' ? 'sm:flex sm:flex-wrap sm:gap-4 sm:space-y-0' : ''}`}>
-                          <div className="flex items-center text-xs sm:text-sm text-gray-600">
-                            <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-emerald-500 flex-shrink-0" />
-                            <span className="line-clamp-1">{business.address}</span>
-                          </div>
-                          
-                          {business.phone && (
-                            <div className="flex items-center text-xs sm:text-sm text-gray-600">
-                              <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-gray-500 flex-shrink-0" />
-                              <span>{business.phone}</span>
-                            </div>
-                          )}
-                          
-                          {business.email && (
-                            <div className="flex items-center text-xs sm:text-sm text-gray-600">
-                              <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-gray-500 flex-shrink-0" />
-                              <span className="line-clamp-1">{business.email}</span>
-                            </div>
-                          )}
-                          
-                          {business.website && (
-                            <div className="flex items-center text-xs sm:text-sm text-gray-600">
-                              <Globe className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-gray-500 flex-shrink-0" />
-                              <span className="line-clamp-1">{business.website}</span>
-                            </div>
-                          )}
                         </div>
+                      ) : (
+                        <div className={`relative ${viewMode === 'list' ? 'sm:w-72 sm:h-full' : 'h-48 sm:h-56'} overflow-hidden bg-gradient-to-br from-emerald-500 via-emerald-600 to-green-600 flex items-center justify-center`}>
+                          <Building2 className="h-16 w-16 sm:h-20 sm:w-20 text-white/30" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+                          <Badge variant="secondary" className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-emerald-700 border-0 shadow-lg">
+                            {business.category}
+                          </Badge>
+                        </div>
+                      )}
+                      
+                      <div className="flex-1 flex flex-col">
+                        <CardHeader className="p-4 sm:p-6 pb-3">
+                          <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 line-clamp-1 group-hover:text-emerald-600 transition-colors">
+                            {business.name}
+                          </CardTitle>
+                        </CardHeader>
+                        
+                        <CardContent className="flex-1 space-y-3 p-4 pt-0 sm:p-6 sm:pt-0">
+                          {business.description && (
+                            <p className="text-gray-600 text-sm sm:text-base line-clamp-2 leading-relaxed">
+                              {business.description}
+                            </p>
+                          )}
+                          
+                          <div className="space-y-2">
+                            <div className="flex items-start text-sm text-gray-700">
+                              <MapPin className="h-4 w-4 mr-2 text-emerald-500 flex-shrink-0 mt-0.5" />
+                              <span className="line-clamp-1 font-medium">{business.address}</span>
+                            </div>
+                            
+                            {business.phone && (
+                              <div className="flex items-center text-sm text-gray-600">
+                                <Phone className="h-4 w-4 mr-2 text-gray-400 flex-shrink-0" />
+                                <span>{business.phone}</span>
+                              </div>
+                            )}
+                            
+                            {business.email && (
+                              <div className="flex items-center text-sm text-gray-600">
+                                <Mail className="h-4 w-4 mr-2 text-gray-400 flex-shrink-0" />
+                                <span className="line-clamp-1">{business.email}</span>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
 
-                        <div className="pt-3 sm:pt-4 border-t">
-                          <Button asChild className="w-full bg-emerald-600 hover:bg-emerald-700 text-white h-9 sm:h-10 text-sm">
+                        <div className="p-4 sm:p-6 pt-0">
+                          <Button asChild className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white shadow-lg h-11 text-base font-medium group">
                             <Link href={getBusinessUrl(business.subdomain)}>
-                              <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
-                              {t('directory.viewPage')}
+                              Voir la page
+                              <ExternalLink className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                             </Link>
                           </Button>
                         </div>
-                      </CardContent>
+                      </div>
                     </Card>
                   ))}
                 </div>
+
+                {/* Pagination */}
+                {filteredBusinesses.length > 0 && (
+                  <div className="mt-8 space-y-4">
+                    {/* Items per page selector et info */}
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <span>Affichage</span>
+                        <select
+                          value={itemsPerPage}
+                          onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                          className="px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                        >
+                          <option value={9}>9</option>
+                          <option value={30}>30</option>
+                          <option value={50}>50</option>
+                          <option value={100}>100</option>
+                        </select>
+                        <span>par page</span>
+                      </div>
+                      
+                      <div className="text-sm text-gray-600">
+                        {filteredBusinesses.length > 0 && (
+                          <span>
+                            Affichage <span className="font-semibold">{startIndex + 1}</span> à{' '}
+                            <span className="font-semibold">{Math.min(endIndex, filteredBusinesses.length)}</span> sur{' '}
+                            <span className="font-semibold">{filteredBusinesses.length}</span> résultat{filteredBusinesses.length > 1 ? 's' : ''}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Pagination buttons */}
+                    {totalPages > 1 && (
+                      <div className="flex items-center justify-center gap-2">
+                        <Button
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          disabled={currentPage === 1}
+                          variant="outline"
+                          size="sm"
+                          className="h-9"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                          <span className="hidden sm:inline ml-1">Précédent</span>
+                        </Button>
+
+                        <div className="flex items-center gap-1">
+                          {/* Première page */}
+                          {currentPage > 3 && (
+                            <>
+                              <Button
+                                onClick={() => handlePageChange(1)}
+                                variant={currentPage === 1 ? "default" : "outline"}
+                                size="sm"
+                                className={`h-9 w-9 ${currentPage === 1 ? 'bg-emerald-600 text-white hover:bg-emerald-700' : ''}`}
+                              >
+                                1
+                              </Button>
+                              {currentPage > 4 && (
+                                <span className="px-2 text-gray-500">...</span>
+                              )}
+                            </>
+                          )}
+
+                          {/* Pages autour de la page courante */}
+                          {Array.from({ length: totalPages }, (_, i) => i + 1)
+                            .filter(page => {
+                              // Afficher 5 pages max : 2 avant, la courante, 2 après
+                              return page >= currentPage - 2 && page <= currentPage + 2
+                            })
+                            .map(page => (
+                              <Button
+                                key={page}
+                                onClick={() => handlePageChange(page)}
+                                variant={currentPage === page ? "default" : "outline"}
+                                size="sm"
+                                className={`h-9 w-9 ${currentPage === page ? 'bg-emerald-600 text-white hover:bg-emerald-700' : ''}`}
+                              >
+                                {page}
+                              </Button>
+                            ))}
+
+                          {/* Dernière page */}
+                          {currentPage < totalPages - 2 && (
+                            <>
+                              {currentPage < totalPages - 3 && (
+                                <span className="px-2 text-gray-500">...</span>
+                              )}
+                              <Button
+                                onClick={() => handlePageChange(totalPages)}
+                                variant={currentPage === totalPages ? "default" : "outline"}
+                                size="sm"
+                                className={`h-9 w-9 ${currentPage === totalPages ? 'bg-emerald-600 text-white hover:bg-emerald-700' : ''}`}
+                              >
+                                {totalPages}
+                              </Button>
+                            </>
+                          )}
+                        </div>
+
+                        <Button
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                          variant="outline"
+                          size="sm"
+                          className="h-9"
+                        >
+                          <span className="hidden sm:inline mr-1">Suivant</span>
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
               )}
             </>
           )}

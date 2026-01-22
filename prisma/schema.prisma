@@ -71,7 +71,10 @@ model Business {
   address     String
   phone       String?
   email       String?
-  website     String?
+  facebook    String?
+  instagram   String?
+  tiktok      String?
+  youtube     String?
   hours       String?
   services    String?
   images      String?  // JSON string pour stocker le tableau d'images
@@ -80,8 +83,48 @@ model Business {
   isActive    Boolean  @default(false)
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Templates system
+  templateId    String?
+  template      Template? @relation(fields: [templateId], references: [id])
+  pageConfig    BusinessPageConfig?
+  useCustomPage Boolean  @default(false)
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Template {
+  id          String   @id @default(cuid())
+  key         String   @unique // "sidebar-right", "sidebar-left", "hero-full"
+  name        String
+  description String?
+  version     String   @default("1.0")
+  schema      Json     // JSON schema définissant la structure
+  preview     String?  // URL image preview
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  businesses  Business[]
+}
+
+model BusinessPageConfig {
+  id          String   @id @default(cuid())
+  businessId  String   @unique
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  
+  // Configuration JSON-driven
+  config      Json     // JSON complet de la config
+  draft       Json?    // Version draft (null si pas de draft)
+  
+  // Metadata
+  configVersion Int     @default(1)
+  publishedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@index([businessId])
 }
 
 enum Role {

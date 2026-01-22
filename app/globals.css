@@ -118,3 +118,65 @@ html {
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* Google Places Autocomplete styling */
+.pac-container {
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  margin-top: 4px;
+  font-family: inherit;
+  z-index: 9999 !important;
+}
+
+.pac-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border: none;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.pac-item:hover {
+  background-color: #f3f4f6;
+}
+
+.pac-item-selected,
+.pac-item:active {
+  background-color: #ecfdf5 !important;
+}
+
+.pac-icon {
+  margin-top: 0.25rem;
+}
+
+.pac-item-query {
+  font-weight: 600;
+  color: #059669;
+}
+
+.pac-matched {
+  font-weight: 700;
+}
+
+/* Phone input with country code styling */
+input[type="tel"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+/* Animation pour le point indicateur */
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

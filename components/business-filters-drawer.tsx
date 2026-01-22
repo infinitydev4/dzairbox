@@ -32,7 +32,7 @@ export interface BusinessFilters {
   city: string
   hasPhone: boolean
   hasEmail: boolean
-  hasWebsite: boolean
+  hasSocial: boolean
   sortBy: 'name' | 'category' | 'newest'
 }
 
@@ -50,7 +50,7 @@ export function BusinessFiltersDrawer({
     city: '',
     hasPhone: false,
     hasEmail: false,
-    hasWebsite: false,
+    hasSocial: false,
     sortBy: 'name'
   })
 
@@ -76,7 +76,7 @@ export function BusinessFiltersDrawer({
       city: '',
       hasPhone: false,
       hasEmail: false,
-      hasWebsite: false,
+      hasSocial: false,
       sortBy: 'name'
     }
     setFilters(emptyFilters)
@@ -90,7 +90,7 @@ export function BusinessFiltersDrawer({
     if (filters.city) count++
     if (filters.hasPhone) count++
     if (filters.hasEmail) count++
-    if (filters.hasWebsite) count++
+    if (filters.hasSocial) count++
     if (filters.sortBy !== 'name') count++
     return count
   }
@@ -271,11 +271,11 @@ export function BusinessFiltersDrawer({
                   <label className="flex items-center space-x-3 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={filters.hasWebsite}
-                      onChange={(e) => handleFilterChange('hasWebsite', e.target.checked)}
+                      checked={filters.hasSocial}
+                      onChange={(e) => handleFilterChange('hasSocial', e.target.checked)}
                       className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
                     />
-                    <span className="text-sm text-gray-700">Site web</span>
+                    <span className="text-sm text-gray-700">Réseaux sociaux</span>
                   </label>
                 </div>
               </CardContent>

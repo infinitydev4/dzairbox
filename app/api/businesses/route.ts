@@ -45,13 +45,11 @@ export async function POST(req: NextRequest) {
     // Générer un sous-domaine unique basé sur le nom de l'entreprise
     const subdomain = await generateUniqueSubdomain(businessData.name)
 
-    // Convertir les horaires en string si c'est un objet
+    // Convertir les horaires en string JSON si c'est un objet
     let hoursString = businessData.hours
     if (typeof businessData.hours === 'object' && businessData.hours !== null) {
-      // Convertir l'objet en format lisible
-      hoursString = Object.entries(businessData.hours)
-        .map(([day, time]) => `${day}: ${time}`)
-        .join(', ')
+      // Convertir l'objet en JSON string
+      hoursString = JSON.stringify(businessData.hours)
     }
 
     // Créer l'entreprise en base de données
@@ -66,7 +64,10 @@ export async function POST(req: NextRequest) {
         address: businessData.address,
         phone: businessData.phone,
         email: businessData.email || null,
-        website: businessData.website || null,
+        facebook: businessData.facebook || null,
+        instagram: businessData.instagram || null,
+        tiktok: businessData.tiktok || null,
+        youtube: businessData.youtube || null,
         hours: hoursString,
         services: Array.isArray(businessData.services) 
           ? businessData.services.join(", ") 

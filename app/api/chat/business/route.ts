@@ -152,7 +152,10 @@ CHAMPS À EXTRAIRE ET CORRIGER:
 - address: Adresse complète avec wilaya et commune (normalise les noms de lieux)
 - phone: Numéro de téléphone algérien (format: 05XX XX XX XX ou 07XX XX XX XX)
 - email: Adresse email valide
-- website: Site web (ajoute https:// si manquant)
+- facebook: Nom d'utilisateur Facebook (sans @ ni URL)
+- instagram: Nom d'utilisateur Instagram (sans @ ni URL)
+- tiktok: Nom d'utilisateur TikTok (sans @ ni URL)
+- youtube: Nom d'utilisateur YouTube (sans @ ni URL)
 - hours: Horaires d'ouverture structurés
 - services: Services proposés (array de chaînes)
 
