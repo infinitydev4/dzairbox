@@ -37,11 +37,11 @@ export function PublicBusinessPage({ business, useCustomPage, config }: PublicBu
   }
 
   // Afficher l'éditeur en mode live
-  if (isEditing && config) {
+  if (isEditing) {
     return (
       <LivePageEditor
         business={business}
-        initialConfig={config}
+        initialConfig={config || null}
         onClose={() => setIsEditing(false)}
       />
     )
