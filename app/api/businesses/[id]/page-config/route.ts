@@ -5,6 +5,9 @@ import { prisma } from "@/lib/prisma"
 import { validateConfigStrict } from "@/lib/template-validator"
 import { revalidatePath } from "next/cache"
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }

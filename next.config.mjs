@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Ne PAS utiliser output: 'export' pour permettre le rendu dynamique
   images: {
     remotePatterns: [
       {
@@ -20,11 +21,9 @@ const nextConfig = {
     serverComponentsExternalPackages: ['@aws-sdk/client-s3'],
   },
   eslint: {
-    // Ignorer les erreurs ESLint lors du build
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Ignorer les erreurs TypeScript lors du build
     ignoreBuildErrors: true,
   },
   webpack: (config) => {

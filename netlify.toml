@@ -4,6 +4,12 @@
 
 [build.environment]
   SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
+  # Force Next.js runtime mode
+  NEXT_PRIVATE_TARGET = "server"
+
+# Plugin Netlify pour Next.js runtime
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [[redirects]]
   from = "/*"
