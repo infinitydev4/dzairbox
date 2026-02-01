@@ -192,6 +192,13 @@ export default function EditBusinessPage() {
           parsedHours = business.hours
         }
       }
+      
+      // Initialiser tous les jours de la semaine avec des valeurs par défaut si non présents
+      daysOfWeek.forEach(day => {
+        if (!parsedHours[day.key]) {
+          parsedHours[day.key] = { open: '', close: '', closed: false }
+        }
+      })
 
       setFormData({
         name: business.name || "",
