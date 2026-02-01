@@ -85,7 +85,8 @@ export default function EditBusinessPage() {
     services: "",
     heroImage: "",
     images: [] as string[],
-    hours: {} as Record<string, { open: string; close: string; closed: boolean }>
+    hours: {} as Record<string, { open: string; close: string; closed: boolean }>,
+    subdomain: ""
   })
 
   // Fonction pour recharger les données depuis l'API
@@ -214,7 +215,8 @@ export default function EditBusinessPage() {
         services: business.services || "",
         heroImage: business.heroImage || "",
         images: parsedImages.filter(img => img && typeof img === 'string'),
-        hours: parsedHours
+        hours: parsedHours,
+        subdomain: business.subdomain || ""
       })
       
       // Load page config if custom page is enabled
@@ -999,7 +1001,7 @@ export default function EditBusinessPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => router.push(`/business/${params.id}`)}
+                  onClick={() => router.push(`/business/${formData.subdomain}`)}
                   className="flex-1 sm:flex-none rounded-xl border-gray-300 hover:bg-gray-50"
                 >
                   <Eye className="h-4 w-4 mr-2" />
