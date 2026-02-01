@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: BusinessPageProps): Promise<M
   }
 }
 
-export const revalidate = 3600 // ISR: revalidate every hour
+export const revalidate = 0 // Force dynamic rendering
 
 export default async function Page({ params }: BusinessPageProps) {
   const business = await getBusiness(params.subdomain)
