@@ -154,6 +154,15 @@ export async function POST(
       update: data
     })
 
+    // CRITIQUE: Activer useCustomPage lors de la publication
+    if (publish) {
+      await prisma.business.update({
+        where: { id: params.id },
+        data: { useCustomPage: true }
+      })
+      console.log('✅ useCustomPage activé pour le business')
+    }
+
     // Synchroniser heroImage du Business avec config.hero.backgroundImage
     if (config.hero?.backgroundImage) {
       await prisma.business.update({
