@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma"
 import { getDefaultConfig } from "@/types/template"
 import { revalidatePath } from "next/cache"
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }

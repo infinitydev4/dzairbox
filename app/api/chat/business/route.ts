@@ -4,6 +4,8 @@ import { ConversationChain } from "langchain/chains"
 import { BufferMemory } from "langchain/memory"
 import { PromptTemplate } from "@langchain/core/prompts"
 
+export const dynamic = 'force-dynamic'
+
 // Store des sessions en mémoire (en production, utiliser Redis ou une DB)
 const sessionStore = new Map<string, BufferMemory>()
 
