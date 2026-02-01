@@ -1,18 +1,9 @@
 /**
  * Génère l'URL d'une entreprise selon l'environnement
- * En développement: /business/[subdomain]  
- * En production: https://[subdomain].dzbusiness.dz
+ * Utilise toujours le format /business/[subdomain]
  */
 export function getBusinessUrl(subdomain: string): string {
-  // En développement (localhost ou mode dev)
-  if (process.env.NODE_ENV === 'development' || 
-      (typeof window !== 'undefined' && window.location.hostname === 'localhost')) {
-    return `/business/${subdomain}`
-  }
-  
-  // En production avec sous-domaines
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dzbusiness.dz'
-  return `https://${subdomain}.${baseUrl.replace('https://', '')}`
+  return `/business/${subdomain}`
 }
 
 /**
@@ -31,6 +22,6 @@ export function getBusinessFullUrl(subdomain: string): string {
     return `http://localhost:3000/business/${subdomain}`
   }
   
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dzbusiness.dz'
-  return `https://${subdomain}.${baseUrl.replace('https://', '')}`
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://dzairbox.com'
+  return `${baseUrl}/business/${subdomain}`
 } 
