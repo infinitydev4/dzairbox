@@ -85,9 +85,19 @@ export default async function Page({ params }: BusinessPageProps) {
   let config: BusinessPageConfigData | undefined = undefined
   let useCustomPage = false
 
-  if (business.useCustomPage && business.pageConfig && business.pageConfig.publishedAt) {
+  // Si une config est publiée, l'utiliser (même si useCustomPage n'est pas encore activé pour la rétro-compatibilité)
+  if (business.pageConfig && business.pageConfig.publishedAt && business.pageConfig.config) {
     config = business.pageConfig.config as unknown as BusinessPageConfigData
     useCustomPage = true
+    
+    // Migration : activer useCustomPage si une config publiée existe mais que le flag n'est pas activé
+    if (!business.useCustomPage) {
+      console.log('🔄 Migration: activation de useCustomPage pour', business.subdomain)
+      await prisma.business.update({
+        where: { id: business.id },
+        data: { useCustomPage: true }
+      })
+    }
   } else if (business.pageConfig && business.pageConfig.draft) {
     // Si pas encore publié mais qu'il y a un draft, le passer au composant pour l'édition
     config = business.pageConfig.draft as unknown as BusinessPageConfigData
