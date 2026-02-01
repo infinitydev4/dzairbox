@@ -74,18 +74,22 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
       
       if (publish) {
         setJustPublished(true)
-        // Animation de succès
-        setTimeout(() => setJustPublished(false), 3000)
+        
+        toast({
+          title: "✅ Configuration publiée",
+          description: "Vos modifications sont maintenant visibles publiquement. Rechargement...",
+        })
+        
+        // Recharger la page pour afficher la version publiée depuis le serveur
+        setTimeout(() => {
+          window.location.reload()
+        }, 1500)
+      } else {
+        toast({
+          title: "💾 Brouillon sauvegardé",
+          description: "Vos modifications ont été sauvegardées",
+        })
       }
-      
-      toast({
-        title: publish ? "✅ Configuration publiée" : "💾 Brouillon sauvegardé",
-        description: publish 
-          ? "Vos modifications sont maintenant visibles publiquement"
-          : "Vos modifications ont été sauvegardées",
-      })
-
-      // L'aperçu est déjà à jour en temps réel, pas besoin de recharger !
       
     } catch (error) {
       console.error("Erreur lors de la sauvegarde:", error)
