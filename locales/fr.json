@@ -197,7 +197,7 @@
       },
       "phone": {
         "label": "Numéro de téléphone",
-        "placeholder": "+213 XX XX XX XX"
+        "placeholder": "+213 655 409 260"
       },
       "subject": {
         "label": "Sujet",
@@ -223,7 +223,7 @@
       "title": "Informations de contact",
       "address": {
         "title": "Adresse",
-        "value": "Alger, Algérie"
+        "value": "Bejaia, Algérie"
       },
       "email": {
         "title": "Email",
@@ -231,7 +231,7 @@
       },
       "phone": {
         "title": "Téléphone",
-        "value": "+213 XXX XXX XXX"
+        "value": "+213 655 409 260"
       },
       "hours": {
         "title": "Horaires d'ouverture",
@@ -1273,7 +1273,7 @@
     "faq": "FAQ",
     "helpCenter": "Centre d'aide",
     "contact": "Contact",
-    "location": "Alger, Algérie",
+    "location": "Bejaia, Algérie",
     "copyright": "Tous droits réservés.",
     "legalNotice": "Mentions légales",
     "terms": "Conditions générales",

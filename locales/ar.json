@@ -197,7 +197,7 @@
       },
       "phone": {
         "label": "رقم الهاتف",
-        "placeholder": "+213 XX XX XX XX"
+        "placeholder": "+213 655 409 260"
       },
       "subject": {
         "label": "الموضوع",
@@ -223,7 +223,7 @@
       "title": "معلومات الاتصال",
       "address": {
         "title": "العنوان",
-        "value": "الجزائر العاصمة، الجزائر"
+        "value": "بيجاية، الجزائر"
       },
       "email": {
         "title": "البريد الإلكتروني",
@@ -231,7 +231,7 @@
       },
       "phone": {
         "title": "الهاتف",
-        "value": "+213 XXX XXX XXX"
+        "value": "+213 655 409 260"
       },
       "hours": {
         "title": "ساعات العمل",
@@ -516,7 +516,7 @@
       "location": {
         "title": "الموقع",
         "address": "العنوان",
-        "addressPlaceholder": "مثال: 123 شارع الجمهورية، الجزائر",
+        "addressPlaceholder": "مثال: 123 شارع الجمهورية، بيجاية",
         "addressHelper": "يستخدم العنوان لتحديد الموقع الجغرافي على الخريطة"
       },
       "contact": {
@@ -639,7 +639,7 @@
       "email": "عنوان البريد الإلكتروني",
       "emailPlaceholder": "your@email.com",
       "phone": "رقم الهاتف",
-      "phonePlaceholder": "+213 XX XX XX XX",
+      "phonePlaceholder": "+213 655 409 260",
       "address": "العنوان",
       "addressPlaceholder": "عنوانك الكامل",
       "city": "المدينة",
