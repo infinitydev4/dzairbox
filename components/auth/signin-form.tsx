@@ -17,15 +17,54 @@ interface SigninFormProps {
 export function SigninForm({ callbackUrl, hasPendingBusiness }: SigninFormProps) {
   const { t } = useLanguage()
   const [isLoading, setIsLoading] = useState(false)
+  const [isResending, setIsResending] = useState(false)
+  const [showResendButton, setShowResendButton] = useState(false)
+  const [unverifiedEmail, setUnverifiedEmail] = useState("")
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   })
   const { toast } = useToast()
 
+  const handleResendVerification = async () => {
+    setIsResending(true)
+    try {
+      const response = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: unverifiedEmail }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        toast({
+          title: "Email envoyé",
+          description: "Un nouvel email de vérification a été envoyé. Vérifiez votre boîte de réception.",
+        })
+        setShowResendButton(false)
+      } else {
+        toast({
+          title: "Erreur",
+          description: data.message || "Impossible d'envoyer l'email",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue",
+        variant: "destructive",
+      })
+    } finally {
+      setIsResending(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setShowResendButton(false)
 
     try {
       const result = await signIn("credentials", {
@@ -44,11 +83,22 @@ export function SigninForm({ callbackUrl, hasPendingBusiness }: SigninFormProps)
         })
         window.location.href = callbackUrl || "/dashboard"
       } else {
-        toast({
-          title: t('auth.signin.error'),
-          description: t('auth.signin.errorMessage'),
-          variant: "destructive",
-        })
+        // Vérifier si l'erreur est liée à l'email non vérifié
+        if (result?.error && result.error.includes("vérifier votre email")) {
+          setUnverifiedEmail(formData.email)
+          setShowResendButton(true)
+          toast({
+            title: "Email non vérifié",
+            description: result.error,
+            variant: "destructive",
+          })
+        } else {
+          toast({
+            title: t('auth.signin.error'),
+            description: result?.error || t('auth.signin.errorMessage'),
+            variant: "destructive",
+          })
+        }
       }
     } catch (error) {
       toast({
@@ -119,6 +169,23 @@ export function SigninForm({ callbackUrl, hasPendingBusiness }: SigninFormProps)
             {isLoading ? t('auth.signin.submitting') : t('auth.signin.submit')}
           </Button>
         </form>
+
+        {showResendButton && (
+          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <p className="text-sm text-amber-800 mb-3">
+              Votre email n'a pas encore été vérifié. Consultez votre boîte de réception ou cliquez ci-dessous pour recevoir un nouvel email.
+            </p>
+            <Button
+              onClick={handleResendVerification}
+              disabled={isResending}
+              variant="outline"
+              className="w-full"
+            >
+              {isResending ? "Envoi en cours..." : "Renvoyer l'email de vérification"}
+            </Button>
+          </div>
+        )}
+
         <div className="mt-4 text-center text-sm">
           {t('auth.signin.noAccount')}{" "}
           <Link 

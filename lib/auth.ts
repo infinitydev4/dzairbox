@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null
+          throw new Error("Email et mot de passe requis")
         }
 
         const user = await prisma.user.findUnique({
@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (!user) {
-          return null
+          throw new Error("Email ou mot de passe incorrect")
         }
 
         const isPasswordValid = await bcrypt.compare(
@@ -35,7 +35,12 @@ export const authOptions: NextAuthOptions = {
         )
 
         if (!isPasswordValid) {
-          return null
+          throw new Error("Email ou mot de passe incorrect")
+        }
+
+        // Vérifier si l'email est vérifié
+        if (!user.emailVerified) {
+          throw new Error("Veuillez vérifier votre email avant de vous connecter. Consultez votre boîte de réception.")
         }
 
         return {

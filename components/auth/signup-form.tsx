@@ -62,31 +62,18 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
       })
 
       if (res.ok) {
+        const data = await res.json()
+        
         toast({
           title: t('auth.signup.success'),
-          description: hasPendingBusiness 
-            ? t('auth.signup.successPending')
-            : t('auth.signup.successRedirect'),
+          description: data.message || "Veuillez vérifier votre email pour activer votre compte.",
         })
 
-        // Se connecter automatiquement après inscription
-        const result = await signIn("credentials", {
-          email: formData.email,
-          password: formData.password,
-          callbackUrl: callbackUrl || "/dashboard",
-          redirect: false,
-        })
-
-        if (result?.ok) {
+        // Ne pas se connecter automatiquement, rediriger vers la page de connexion
+        setTimeout(() => {
           // Rediriger vers l'URL de callback ou dashboard
-          window.location.href = callbackUrl || "/dashboard"
-        } else {
-          toast({
-            title: t('auth.signup.error'),
-            description: t('auth.signup.errorLogin'),
-            variant: "destructive"
-          })
-        }
+          window.location.href = "/auth/signin"
+        }, 2000)
       } else {
         const error = await res.json()
         toast({
