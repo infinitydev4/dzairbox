@@ -14,7 +14,7 @@
 
 ### 3. Configurer le domaine d'envoi
 - Dans Resend, allez dans "Domains"
-- Ajoutez votre domaine `dzbusiness.dz`
+- Ajoutez votre domaine `dzairbox.com`
 - Configurez les enregistrements DNS (SPF, DKIM, DMARC)
 - Attendez la vérification
 
@@ -24,9 +24,9 @@ RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxx
 ```
 
 ### 5. En développement (sans domaine vérifié)
-Si vous n'avez pas encore configuré le domaine, vous pouvez utiliser l'email de test Resend :
-- Changez `from: 'DzairBox <noreply@dzbusiness.dz>'` 
-- En `from: 'DzairBox <onboarding@resend.dev>'` dans `/lib/email.ts`
+Le code est déjà configuré pour utiliser automatiquement :
+- En développement : `onboarding@resend.dev` (email de test Resend)
+- En production : `noreply@dzairbox.com` (votre domaine vérifié)
 
 ## Fonctionnalités implémentées
 
@@ -75,6 +75,6 @@ Le template inclut :
 
 Pour la production sur Netlify :
 1. Ajoutez `RESEND_API_KEY` dans les variables d'environnement Netlify
-2. Configurez le domaine vérifié dans Resend
-3. Mettez à jour `NEXTAUTH_URL` avec l'URL de production
-4. Le logo doit être accessible à `https://dzairbox.dz/logo-dzairbox.png`
+2. Configurez le domaine `dzairbox.com` vérifié dans Resend
+3. Mettez à jour `NEXTAUTH_URL` avec l'URL de production (`https://dzairbox.com`)
+4. Le logo doit être accessible à `https://dzairbox.com/logo-dzairbox.png`

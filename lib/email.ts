@@ -10,9 +10,9 @@ export async function sendVerificationEmail(email: string, token: string, name?:
   const verificationUrl = `${process.env.NEXTAUTH_URL}/auth/verify-email?token=${token}`
   
   // En développement, utiliser l'email de test Resend
-  // En production, utiliser le domaine vérifié
+  // En production, utiliser le domaine vérifié dzairbox.com
   const fromEmail = process.env.NODE_ENV === 'production' 
-    ? 'DzairBox <noreply@dzbusiness.dz>'
+    ? 'DzairBox <noreply@dzairbox.com>'
     : 'DzairBox <onboarding@resend.dev>'
   
   try {
@@ -53,7 +53,7 @@ function getVerificationEmailTemplate(verificationUrl: string, name: string): st
           <!-- Header avec logo et gradient -->
           <tr>
             <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; border-radius: 16px 16px 0 0;">
-              <img src="https://dzairbox.dz/logo-dzairbox.png" alt="DzairBox" style="height: 50px; width: auto; margin-bottom: 20px;">
+              <img src="https://dzairbox.com/logo-dzairbox.png" alt="DzairBox" style="height: 50px; width: auto; margin-bottom: 20px;">
               <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
                 Bienvenue sur DzairBox !
               </h1>
@@ -138,7 +138,7 @@ function getVerificationEmailTemplate(verificationUrl: string, name: string): st
                   </td>
                   <td style="padding: 0 10px; color: #d1d5db;">|</td>
                   <td style="padding: 0 10px;">
-                    <a href="https://dzairbox.dz/contact" style="color: #10b981; text-decoration: none; font-size: 12px;">
+                    <a href="https://dzairbox.com/contact" style="color: #10b981; text-decoration: none; font-size: 12px;">
                       Contact
                     </a>
                   </td>
