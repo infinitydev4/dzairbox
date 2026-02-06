@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useLanguage } from "@/components/language-provider"
 import { Header } from "@/components/header"
+import { useSession } from "next-auth/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,6 +27,7 @@ import Link from "next/link"
 
 export default function ContactPage() {
   const { t, language } = useLanguage()
+  const { data: session } = useSession()
   const isRTL = language === "ar"
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -36,6 +38,7 @@ export default function ContactPage() {
     subject: 'general',
     message: ''
   })
+  const createServiceUrl = session ? '/dashboard/create-business' : '/create-service'
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -343,7 +346,7 @@ export default function ContactPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" className="bg-white text-emerald-600 hover:bg-gray-100 text-lg px-8 py-3">
-                <Link href="/register">
+                <Link href={createServiceUrl}>
                   <Building2 className="h-5 w-5 mr-2" />
                   {t('contactPage.cta.createBusiness')}
                 </Link>

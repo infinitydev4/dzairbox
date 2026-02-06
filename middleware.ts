@@ -36,6 +36,7 @@ export default withAuth(
             pathname.startsWith("/api/contact") ||
             pathname.startsWith("/api/images/proxy") ||
             pathname.startsWith("/register") ||
+            pathname.startsWith("/create-service") ||
             pathname.startsWith("/businesses") ||
             pathname.startsWith("/business") ||
             pathname.startsWith("/about") ||

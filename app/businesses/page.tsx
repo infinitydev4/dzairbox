@@ -11,6 +11,7 @@ import { useLanguage } from "@/components/language-provider"
 import { BusinessFiltersDrawer, BusinessFilters } from "@/components/business-filters-drawer"
 import { BusinessMap } from "@/components/business-map"
 import { useSearchParams } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { 
   MapPin, 
   Phone, 
@@ -50,6 +51,7 @@ type ViewMode = 'grid' | 'list' | 'map'
 
 export default function BusinessesPage() {
   const { t } = useLanguage()
+  const { data: session } = useSession()
   const searchParams = useSearchParams()
   const [businesses, setBusinesses] = useState<Business[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -69,6 +71,8 @@ export default function BusinessesPage() {
     hasSocial: false,
     sortBy: 'name'
   })
+  
+  const createServiceUrl = session ? '/dashboard/create-business' : '/create-service'
 
   // Initialiser les filtres depuis l'URL
   useEffect(() => {
@@ -390,7 +394,7 @@ export default function BusinessesPage() {
                     </p>
                     {!searchTerm && getActiveFiltersCount() === 0 && (
                       <Button asChild size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                        <Link href="/register">
+                        <Link href={createServiceUrl}>
                           {t('directory.empty.button')}
                         </Link>
                       </Button>
@@ -629,7 +633,7 @@ export default function BusinessesPage() {
                 {t('directory.cta.subtitle')}
               </p>
               <Button asChild size="lg" className="bg-white text-emerald-600 hover:bg-gray-100 text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3">
-                <Link href="/register">
+                <Link href={createServiceUrl}>
                   {t('directory.cta.button')}
                 </Link>
               </Button>

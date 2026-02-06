@@ -44,11 +44,11 @@ export function SidebarRightTemplate({ business, config }: SidebarRightTemplateP
       {/* Footer */}
       <div className="text-center py-8 border-t border-gray-200 mt-12">
         <p className="text-gray-600 mb-2">
-          Cette page est hébergée sur DzBox
+          Cette page est hébergée sur Dzairbox
         </p>
         <div className="flex items-center justify-center space-x-4">
           <a 
-            href="https://dzbusiness.dz" 
+            href="/create-service" 
             className="font-medium transition-colors hover:underline"
             style={{ 
               color: config.theme.primaryColor 

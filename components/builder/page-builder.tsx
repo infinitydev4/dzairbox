@@ -118,7 +118,7 @@ export function PageBuilder({ businessId, currentConfig, businessImages = [], he
                 <TabsTrigger value="template">{t('dashboard.builder.selectTemplate')}</TabsTrigger>
                 <TabsTrigger value="theme">{t('dashboard.builder.theme')}</TabsTrigger>
                 <TabsTrigger value="sections">{t('dashboard.builder.sections')}</TabsTrigger>
-                <TabsTrigger value="images">Images</TabsTrigger>
+                <TabsTrigger value="images">{t('dashboard.builder.images')}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="template" className="mt-6">

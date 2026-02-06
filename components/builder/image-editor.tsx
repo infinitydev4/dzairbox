@@ -101,22 +101,22 @@ export function ImageEditor({ config, businessImages, heroImage, onChange }: Ima
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-2">Images et Galerie</h3>
-        <p className="text-sm text-gray-600">Gérez l'image du hero et la galerie photo</p>
+        <h3 className="text-lg font-semibold mb-2">{t('dashboard.builder.imageEditor.title')}</h3>
+        <p className="text-sm text-gray-600">{t('dashboard.builder.imageEditor.subtitle')}</p>
       </div>
 
       {/* Hero Image */}
       <Card>
         <CardContent className="p-4 space-y-4">
           <div>
-            <Label className="text-base font-medium">Image de fond du Hero</Label>
-            <p className="text-sm text-gray-500 mt-1">Image affichée en arrière-plan du hero</p>
+            <Label className="text-base font-medium">{t('dashboard.builder.imageEditor.heroImage')}</Label>
+            <p className="text-sm text-gray-500 mt-1">{t('dashboard.builder.imageEditor.heroImageDesc')}</p>
           </div>
 
           <ImageUpload
             value={config.hero.backgroundImage}
             onChange={handleHeroImageChange}
-            placeholder="Cliquez pour ajouter une image de fond"
+            placeholder={t('dashboard.builder.imageEditor.heroImagePlaceholder')}
             aspectRatio="video"
           />
 
@@ -128,7 +128,7 @@ export function ImageEditor({ config, businessImages, heroImage, onChange }: Ima
               className="w-full"
             >
               <ImageIcon className="mr-2 h-4 w-4" />
-              Utiliser l'image hero de l'entreprise
+              {t('dashboard.builder.imageEditor.useBusinessHero')}
             </Button>
           )}
         </CardContent>
@@ -139,9 +139,9 @@ export function ImageEditor({ config, businessImages, heroImage, onChange }: Ima
         <CardContent className="p-4 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label className="text-base font-medium">Galerie photo</Label>
+              <Label className="text-base font-medium">{t('dashboard.builder.imageEditor.gallery')}</Label>
               <p className="text-sm text-gray-500 mt-1">
-                {galleryImages.length} image(s)
+                {galleryImages.length} {t('dashboard.builder.imageEditor.galleryCount')}
               </p>
             </div>
             {businessImages.length > 0 && (
@@ -150,7 +150,7 @@ export function ImageEditor({ config, businessImages, heroImage, onChange }: Ima
                 variant="outline"
                 size="sm"
               >
-                Utiliser les images de l'entreprise ({businessImages.length})
+                {t('dashboard.builder.imageEditor.useBusinessImages')} ({businessImages.length})
               </Button>
             )}
           </div>
@@ -185,7 +185,7 @@ export function ImageEditor({ config, businessImages, heroImage, onChange }: Ima
             <ImageUpload
               value={tempGalleryImage}
               onChange={handleGalleryImageUpload}
-              placeholder="Ajouter une image à la galerie"
+              placeholder={t('dashboard.builder.imageEditor.addToGallery')}
               aspectRatio="square"
             />
           </div>

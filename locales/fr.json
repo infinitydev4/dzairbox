@@ -10,6 +10,9 @@
     "dashboard": "Tableau de bord",
     "logout": "Se déconnecter"
   },
+  "mobileNav": {
+    "create": "Créer"
+  },
   "hero": {
     "title": "Développez votre activité locale en Algérie",
     "subtitle": "Rejoignez des milliers d'services qui font confiance à notre plateforme pour développer leur visibilité en ligne",
@@ -23,7 +26,7 @@
     }
   },
   "features": {
-    "title": "Pourquoi choisir DzBox ?",
+    "title": "Pourquoi choisir Dzairbox ?",
     "subtitle": "Une plateforme complète pour développer votre présence en ligne en Algérie",
     "visibility": {
       "title": "Visibilité maximale",
@@ -409,7 +412,7 @@
   },
   "directory": {
     "title": "Annuaire des Services",
-    "subtitle": "Découvrez les services algériennes présentes sur DzBox",
+    "subtitle": "Découvrez les services algériennes présentes sur Dzairbox",
     "search": "Rechercher une service, catégorie ou ville...",
     "stats": {
       "activeBusinesses": "Services actives",
@@ -424,7 +427,7 @@
     "viewPage": "Voir la page",
     "cta": {
       "title": "Votre service n'est pas listée ?",
-      "subtitle": "Rejoignez DzBox gratuitement et donnez plus de visibilité à votre service. Créez votre page personnalisée en quelques minutes.",
+      "subtitle": "Rejoignez Dzairbox gratuitement et donnez plus de visibilité à votre service. Créez votre page personnalisée en quelques minutes.",
       "button": "Inscrire mon service gratuitement"
     }
   },
@@ -741,7 +744,7 @@
     "user": "Utilisateur",
     "businesses": {
       "title": "Mes Services",
-      "subtitle": "Gérez vos services enregistrées sur DzBox",
+      "subtitle": "Gérez vos services enregistrées sur Dzairbox",
       "newBusiness": "Nouvelle service",
       "search": {
         "placeholder": "Rechercher par nom, catégorie, description ou adresse..."
@@ -869,13 +872,13 @@
         "setSundayFirst": "Veuillez d'abord définir les horaires du dimanche",
         "applied": "Horaires appliqués",
         "appliedToAll": "Les horaires du dimanche ont été appliqués à toute la semaine",
+        "sunday": "Dimanche",
         "monday": "Lundi",
         "tuesday": "Mardi",
         "wednesday": "Mercredi",
         "thursday": "Jeudi",
         "friday": "Vendredi",
-        "saturday": "Samedi",
-        "sunday": "Dimanche"
+        "saturday": "Samedi"
       },
       
       "actions": {
@@ -906,14 +909,34 @@
     "builder": {
       "title": "Personnalisation de la Page",
       "selectTemplate": "Choisir un template",
+      "selectTemplateDesc": "Choisissez le layout de votre page",
       "theme": "Apparence",
+      "themeShort": "Thème",
       "sections": "Sections",
+      "images": "Images",
       "preview": "Aperçu",
       "saveDraft": "Enregistrer brouillon",
+      "save": "Sauvegarder",
       "publish": "Publier",
       "publishing": "Publication...",
       "saveSuccess": "Configuration sauvegardée",
       "publishSuccess": "Page publiée avec succès !",
+      "liveEditor": {
+        "title": "Mode Personnalisation",
+        "unsavedChanges": "Modifications non sauvegardées",
+        "publishedSuccess": "Publié avec succès !",
+        "publishedMessage": "Vos modifications sont maintenant visibles publiquement. Rechargement...",
+        "draftSaved": "Brouillon sauvegardé",
+        "draftSavedMessage": "Vos modifications ont été sauvegardées",
+        "customizeTitle": "Personnalisation",
+        "customizeDesc": "Personnalisez votre page en temps réel",
+        "helpTitle": "Guide rapide",
+        "helpTemplate": "Choisissez un <strong>Template</strong> pour le layout de votre page",
+        "helpTheme": "Personnalisez les <strong>Couleurs</strong> et le style dans l'onglet Thème",
+        "helpSections": "Activez/désactivez des <strong>Sections</strong> selon vos besoins",
+        "helpImages": "Ajoutez vos <strong>Images</strong> pour le hero et la galerie",
+        "helpSave": "<strong>Sauvegardez</strong> pour garder un brouillon ou <strong>Publiez</strong> pour rendre visible"
+      },
       "templates": {
         "sidebarRight": "Sidebar Droite",
         "sidebarLeft": "Sidebar Gauche",
@@ -924,37 +947,64 @@
       },
       "themeEditor": {
         "title": "Couleurs et Thème",
+        "subtitle": "Personnalisez les couleurs de votre page",
         "primaryColor": "Couleur principale",
         "secondaryColor": "Couleur secondaire",
         "accentColor": "Couleur d'accent",
-        "gradient": "Dégradé"
+        "gradient": "Dégradé",
+        "gradientFrom": "De",
+        "gradientTo": "À"
       },
       "sectionEditor": {
         "title": "Sections",
+        "subtitle": "Activez ou désactivez les sections",
         "enableSection": "Activer",
         "services": "Services",
         "about": "À propos",
+        "gallery": "Galerie photo",
         "contact": "Contact",
+        "phone": "Téléphone",
+        "email": "Email",
         "hours": "Horaires",
         "address": "Adresse",
         "displayMode": "Mode d'affichage",
         "grid": "Grille",
         "list": "Liste"
       },
+      "imageEditor": {
+        "title": "Images et Galerie",
+        "subtitle": "Gérez l'image du hero et la galerie photo",
+        "heroImage": "Image de fond du Hero",
+        "heroImageDesc": "Image affichée en arrière-plan du hero",
+        "heroImagePlaceholder": "Cliquez pour ajouter une image de fond",
+        "useBusinessHero": "Utiliser l'image hero de l'entreprise",
+        "gallery": "Galerie photo",
+        "galleryCount": "image(s)",
+        "useBusinessImages": "Utiliser les images de l'entreprise",
+        "addToGallery": "Ajouter une image à la galerie"
+      },
       "banner": {
         "title": "Nouveau : Personnalisez votre Landing Page",
         "description": "Choisissez parmi 3 templates modernes et personnalisez les couleurs, sections et mise en page.",
         "activate": "Activer la personnalisation",
-        "activating": "Activation..."
+        "activating": "Activation...",
+        "templates": "3 templates modernes",
+        "customization": "Personnalisation complète",
+        "error": "Erreur",
+        "errorMessage": "Impossible d'activer la personnalisation"
+      },
+      "ownerBanner": {
+        "title": "Vous êtes le propriétaire de cette page",
+        "customize": "Personnaliser cette page"
       }
     },
     "createBusinessAI": {
-      "welcomeMessage": "Bonjour ! Je suis votre assistant IA pour créer votre service sur DzBox. Je vais vous accompagner étape par étape. Commençons par le nom de votre service. Comment s'appelle-t-elle ?",
+      "welcomeMessage": "Bonjour ! Je suis votre assistant IA pour créer votre service sur Dzairbox. Je vais vous accompagner étape par étape. Commençons par le nom de votre service. Comment s'appelle-t-elle ?",
       "back": "Retour",
       "modify": "Modifier",
       "create": "Créer l'service",
       "creating": "Création...",
-      "assistantTitle": "Assistant IA DzBox",
+      "assistantTitle": "Assistant IA Dzairbox",
       "thinking": "L'assistant réfléchit...",
       "inputPlaceholder": "Tapez votre message...",
       "tips": {
@@ -973,8 +1023,8 @@
       }
     },
     "chat": {
-      "welcome": "Bonjour ! Je suis votre assistant pour l'inscription de votre service sur DzBox. Je vais vous accompagner étape par étape pour créer votre profil d'service. Commençons par le nom de votre service. Comment s'appelle-t-elle ?",
-      "assistantTitle": "Assistant d'inscription DzBox",
+      "welcome": "Bonjour ! Je suis votre assistant pour l'inscription de votre service sur Dzairbox. Je vais vous accompagner étape par étape pour créer votre profil d'service. Commençons par le nom de votre service. Comment s'appelle-t-elle ?",
+      "assistantTitle": "Assistant d'inscription Dzairbox",
       "thinking": "L'assistant réfléchit...",
       "inputPlaceholder": "Tapez votre message...",
       "send": "Envoyer",
@@ -1020,7 +1070,7 @@
         "title": "Récapitulatif de votre service",
         "nextSteps": {
           "title": "Prochaines étapes",
-          "description": "Après validation, votre service sera visible sur DzBox avec un sous-domaine dédié. Vous pourrez gérer votre profil depuis votre tableau de bord."
+          "description": "Après validation, votre service sera visible sur Dzairbox avec un sous-domaine dédié. Vous pourrez gérer votre profil depuis votre tableau de bord."
         }
       }
     },
@@ -1035,7 +1085,7 @@
   "business": {
     "backToDirectory": "Retour à l'annuaire",
     "meta": {
-      "notFoundTitle": "Service non trouvée - DzBox",
+      "notFoundTitle": "Service non trouvée - Dzairbox",
       "discover": "Découvrez"
     },
     "page": {
@@ -1058,7 +1108,7 @@
       "hours": "Horaires",
       "address": "Adresse",
       "openInMaps": "Ouvrir dans Maps",
-      "hostedOn": "Cette page est hébergée sur DzBox",
+      "hostedOn": "Cette page est hébergée sur Dzairbox",
       "createMyPage": "Créer ma page service"
     },
     "notFound": {
@@ -1071,29 +1121,121 @@
         "removed": "L'service a été supprimée ou désactivée"
       },
       "whatCanYouDo": "Que pouvez-vous faire ?",
-      "homeButton": "Accueil DzBox",
+      "homeButton": "Accueil Dzairbox",
       "searchButton": "Rechercher une service",
       "ownerTitle": "🏢 Vous êtes propriétaire d'une service ?",
-      "ownerDescription": "Inscrivez votre service sur DzBox et obtenez votre page professionnelle",
+      "ownerDescription": "Inscrivez votre service sur Dzairbox et obtenez votre page professionnelle",
       "registerButton": "Inscrire mon service"
     }
   },
   "categories": {
     "restaurant": "Restaurant",
+    "café": "Café",
     "boulangerie": "Boulangerie",
-    "coiffeur": "Coiffeur",
-    "mécanicien": "Mécanicien",
-    "électricien": "Électricien",
-    "pharmacie": "Pharmacie",
+    "pâtisserie": "Pâtisserie",
+    "pizzeria": "Pizzeria",
+    "fast-food": "Fast-food",
+    "traiteur": "Traiteur",
+    "épicerie": "Épicerie",
+    "supermarché": "Supermarché",
+    "boucherie": "Boucherie",
+    "poissonnerie": "Poissonnerie",
+    "fromagerie": "Fromagerie",
     "médecin": "Médecin",
     "dentiste": "Dentiste",
-    "épicerie": "Épicerie",
-    "vêtements": "Vêtements",
-    "informatique": "Informatique",
+    "pharmacie": "Pharmacie",
+    "opticien": "Opticien",
+    "kinésithérapeute": "Kinésithérapeute",
+    "infirmier": "Infirmier",
+    "laboratoire": "Laboratoire d'analyses",
+    "psychologue": "Psychologue",
+    "diététicien": "Diététicien",
+    "ostéopathe": "Ostéopathe",
+    "sage-femme": "Sage-femme",
+    "coiffeur": "Coiffeur",
+    "barbier": "Barbier",
+    "esthéticienne": "Esthéticienne",
+    "spa": "Spa",
+    "massage": "Salon de massage",
+    "manucure": "Manucure",
+    "maquillage": "Maquillage",
+    "électricien": "Électricien",
     "plombier": "Plombier",
+    "mécanicien": "Mécanicien",
+    "menuisier": "Menuisier",
     "peintre": "Peintre",
+    "maçon": "Maçon",
+    "serrurier": "Serrurier",
+    "vitrier": "Vitrier",
+    "climatisation": "Climatisation",
+    "chauffagiste": "Chauffagiste",
+    "carreleur": "Carreleur",
+    "vêtements": "Vêtements",
+    "chaussures": "Chaussures",
+    "bijouterie": "Bijouterie",
+    "parfumerie": "Parfumerie",
+    "librairie": "Librairie",
+    "papeterie": "Papeterie",
+    "électroménager": "Électroménager",
+    "meubles": "Meubles",
+    "décoration": "Décoration",
+    "jouets": "Jouets",
+    "sport": "Articles de sport",
+    "fleuriste": "Fleuriste",
     "avocat": "Avocat",
-    "comptable": "Comptable"
+    "notaire": "Notaire",
+    "comptable": "Comptable",
+    "architecte": "Architecte",
+    "agence-immobilière": "Agence immobilière",
+    "assurance": "Assurance",
+    "banque": "Banque",
+    "traduction": "Traduction",
+    "formation": "Formation",
+    "informatique": "Informatique",
+    "réparation-téléphone": "Réparation téléphone",
+    "développement-web": "Développement web",
+    "graphisme": "Graphisme",
+    "photographie": "Photographie",
+    "vidéographie": "Vidéographie",
+    "imprimerie": "Imprimerie",
+    "garage": "Garage",
+    "carrosserie": "Carrosserie",
+    "lavage-auto": "Lavage auto",
+    "location-voiture": "Location de voiture",
+    "pièces-auto": "Pièces auto",
+    "promotion-immobilière": "Promotion immobilière",
+    "agence-location": "Agence de location",
+    "syndic": "Syndic",
+    "déménagement": "Déménagement",
+    "école": "École",
+    "université": "Université",
+    "cours-particuliers": "Cours particuliers",
+    "crèche": "Crèche",
+    "auto-école": "Auto-école",
+    "salle-sport": "Salle de sport",
+    "piscine": "Piscine",
+    "cinéma": "Cinéma",
+    "théâtre": "Théâtre",
+    "musée": "Musée",
+    "bibliothèque": "Bibliothèque",
+    "agence-voyage": "Agence de voyage",
+    "hôtel": "Hôtel",
+    "restaurant-événementiel": "Restaurant événementiel",
+    "ménage": "Service de ménage",
+    "jardinage": "Jardinage",
+    "garde-enfants": "Garde d'enfants",
+    "aide-domicile": "Aide à domicile",
+    "bricolage": "Bricolage",
+    "pressing": "Pressing",
+    "cordonnerie": "Cordonnerie",
+    "couture": "Couture",
+    "taxi": "Taxi",
+    "transport": "Transport",
+    "location-matériel": "Location de matériel",
+    "sécurité": "Sécurité",
+    "nettoyage-industriel": "Nettoyage industriel",
+    "événementiel": "Événementiel",
+    "wedding-planner": "Wedding planner"
   },
   "days": {
     "monday": "Lundi",
@@ -1137,5 +1279,91 @@
     "terms": "Conditions générales",
     "privacy": "Politique de confidentialité",
     "cookies": "Politique des cookies"
+  },
+  "createService": {
+    "step1": {
+      "title": "Informations du service",
+      "success": "Service enregistré",
+      "successDesc": "Passons maintenant à la création de votre compte",
+      "continue": "Continuer"
+    },
+    "step2": {
+      "title": "Créez votre compte",
+      "description": "Dernière étape pour finaliser l'inscription de votre service",
+      "name": "Nom complet",
+      "namePlaceholder": "Ex: Mohamed Benali",
+      "email": "Email",
+      "emailPlaceholder": "votre@email.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Minimum 8 caractères",
+      "passwordHelper": "Minimum 8 caractères",
+      "confirmPassword": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Retapez votre mot de passe",
+      "infoMessage": "En créant votre compte, vous pourrez gérer votre service depuis votre tableau de bord.",
+      "submit": "Créer mon compte et finaliser",
+      "submitting": "Création en cours...",
+      "success": {
+        "title": "Inscription réussie !",
+        "message": "Votre compte et votre service ont été créés avec succès. Redirection..."
+      },
+      "errors": {
+        "title": "Erreur",
+        "required": "Tous les champs sont obligatoires",
+        "passwordMismatch": "Les mots de passe ne correspondent pas",
+        "passwordLength": "Le mot de passe doit contenir au moins 8 caractères",
+        "unexpected": "Une erreur inattendue s'est produite"
+      }
+    }
+  },
+  "auth": {
+    "signin": {
+      "title": "Se connecter",
+      "description": "Entrez vos identifiants pour vous connecter",
+      "pendingBusiness": "Connectez-vous pour finaliser l'inscription de votre service",
+      "pendingBadge": "Inscription de service en attente",
+      "pendingMessage": "Votre service sera créé automatiquement après connexion",
+      "email": "Email",
+      "emailPlaceholder": "votre.email@example.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Se connecter",
+      "submitting": "Connexion en cours...",
+      "noAccount": "Pas encore de compte ?",
+      "signup": "Créer un compte",
+      "success": "Connexion réussie !",
+      "successRedirect": "Redirection vers votre tableau de bord...",
+      "successPending": "Redirection pour finaliser votre service...",
+      "error": "Erreur de connexion",
+      "errorMessage": "Email ou mot de passe incorrect",
+      "errorUnexpected": "Une erreur est survenue lors de la connexion"
+    },
+    "signup": {
+      "title": "Créer un compte",
+      "description": "Entrez vos informations pour créer un compte",
+      "pendingBusiness": "Créez votre compte pour finaliser l'inscription de votre service",
+      "pendingBadge": "Inscription de service en attente",
+      "pendingMessage": "Votre service sera créé automatiquement après inscription",
+      "name": "Nom complet",
+      "namePlaceholder": "Votre nom complet",
+      "email": "Email",
+      "emailPlaceholder": "votre.email@example.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "confirmPassword": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submit": "Créer mon compte",
+      "submitting": "Création en cours...",
+      "hasAccount": "Déjà un compte ?",
+      "signin": "Se connecter",
+      "success": "Compte créé !",
+      "successRedirect": "Connexion en cours...",
+      "successPending": "Connexion en cours pour finaliser votre service...",
+      "error": "Erreur",
+      "errorPasswordMismatch": "Les mots de passe ne correspondent pas",
+      "errorPasswordLength": "Le mot de passe doit contenir au moins 6 caractères",
+      "errorCreation": "Erreur lors de la création du compte",
+      "errorLogin": "Compte créé mais erreur de connexion. Veuillez vous connecter manuellement.",
+      "errorUnexpected": "Une erreur est survenue"
+    }
   }
 } 

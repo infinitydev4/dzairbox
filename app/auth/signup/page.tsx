@@ -32,17 +32,6 @@ export default function SignUpPage() {
             callbackUrl={callbackUrl || undefined} 
             hasPendingBusiness={hasPendingBusiness}
           />
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              {t('auth.signup.hasAccount')}{" "}
-              <Link 
-                href="/auth/signin" 
-                className="text-emerald-600 hover:text-emerald-700 font-medium"
-              >
-                {t('auth.signup.signin')}
-              </Link>
-            </p>
-          </div>
         </div>
       </main>
     </div>

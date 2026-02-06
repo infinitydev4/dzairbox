@@ -72,7 +72,7 @@ export default function BusinessNotFound() {
                     {t('business.notFound.ownerDescription')}
                   </p>
                   <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
-                    <Link href="/register">
+                    <Link href="/create-service">
                       {t('business.notFound.registerButton')}
                     </Link>
                   </Button>

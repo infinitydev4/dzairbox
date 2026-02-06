@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useSession, signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Globe, User } from "lucide-react"
@@ -17,10 +18,14 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-lg bg-emerald-600 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">Dz</span>
-          </div>
-          <span className="font-bold text-xl">Box</span>
+          <Image 
+            src="/logo-dzairbox.png" 
+            alt="DzairBox" 
+            width={240} 
+            height={40}
+            className="h-36 w-auto"
+            priority
+          />
         </Link>
 
         {/* Desktop Navigation */}
@@ -31,12 +36,12 @@ export function Header() {
           <Link href="/businesses" className="text-sm font-medium hover:text-emerald-600 transition-colors">
             {t("nav.directory")}
           </Link>
-          <Link href="/services" className="text-sm font-medium hover:text-emerald-600 transition-colors">
+          {/* <Link href="/services" className="text-sm font-medium hover:text-emerald-600 transition-colors">
             {t("nav.services")}
-          </Link>
-          <Link href="/about" className="text-sm font-medium hover:text-emerald-600 transition-colors">
+          </Link> */}
+          {/* <Link href="/about" className="text-sm font-medium hover:text-emerald-600 transition-colors">
             {t("nav.about")}
-          </Link>
+          </Link> */}
           <Link href="/contact" className="text-sm font-medium hover:text-emerald-600 transition-colors">
             {t("nav.contact")}
           </Link>

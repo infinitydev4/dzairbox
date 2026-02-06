@@ -10,9 +10,7 @@ import { ImageUpload } from "@/components/ui/image-upload"
 import { S3Image } from "@/components/ui/s3-image"
 import { toast } from "@/hooks/use-toast"
 import { useLanguage } from "@/components/language-provider"
-import { PageBuilder } from "@/components/builder/page-builder"
-import { CustomPageBanner } from "@/components/dashboard/custom-page-banner"
-import { BusinessPageConfigData } from "@/types/template"
+import { businessCategories, daysOfWeek } from "@/lib/constants"
 import { 
   Building2, 
   MapPin, 
@@ -36,25 +34,9 @@ import {
   AlertCircle,
   Sparkles,
   Zap,
-  Shield,
-  Palette
+  Shield
 } from "lucide-react"
 
-const businessCategories = [
-  "restaurant", "boulangerie", "coiffeur", "mécanicien", "électricien",
-  "pharmacie", "médecin", "dentiste", "épicerie", "vêtements",
-  "informatique", "plombier", "peintre", "avocat", "comptable"
-]
-
-const daysOfWeek = [
-  { key: "dimanche", label: "Dimanche" },
-  { key: "lundi", label: "Lundi" },
-  { key: "mardi", label: "Mardi" },
-  { key: "mercredi", label: "Mercredi" },
-  { key: "jeudi", label: "Jeudi" },
-  { key: "vendredi", label: "Vendredi" },
-  { key: "samedi", label: "Samedi" }
-]
 
 export default function EditBusinessPage() {
   const router = useRouter()
@@ -66,10 +48,6 @@ export default function EditBusinessPage() {
   const [isSavingImages, setIsSavingImages] = useState(false)
   const [activeTab, setActiveTab] = useState('general')
   const [unsavedChanges, setUnsavedChanges] = useState(false)
-  
-  // State for custom page
-  const [useCustomPage, setUseCustomPage] = useState(false)
-  const [pageConfig, setPageConfig] = useState<BusinessPageConfigData | null>(null)
 
   const [formData, setFormData] = useState({
     name: "",
@@ -150,9 +128,6 @@ export default function EditBusinessPage() {
       
       const business = await response.json()
       
-      // Set useCustomPage state
-      setUseCustomPage(business.useCustomPage || false)
-      
       let parsedImages: string[] = []
       if (business.images) {
         if (typeof business.images === 'string') {
@@ -189,7 +164,7 @@ export default function EditBusinessPage() {
           } catch {
             parsedHours = {}
           }
-        } else {
+        } else if (typeof business.hours === 'object') {
           parsedHours = business.hours
         }
       }
@@ -218,21 +193,6 @@ export default function EditBusinessPage() {
         hours: parsedHours,
         subdomain: business.subdomain || ""
       })
-      
-      // Load page config if custom page is enabled
-      if (business.useCustomPage) {
-        try {
-          const configResponse = await fetch(`/api/businesses/${params.id}/page-config`)
-          if (configResponse.ok) {
-            const configData = await configResponse.json()
-            if (configData.config) {
-              setPageConfig(configData.config as BusinessPageConfigData)
-            }
-          }
-        } catch (error) {
-          console.error('Error loading page config:', error)
-        }
-      }
     } catch (error) {
       console.error("Erreur lors du chargement:", error)
       toast({
@@ -409,8 +369,7 @@ export default function EditBusinessPage() {
     { id: 'general', label: t('dashboard.editBusiness.tabs.general'), icon: Building2, color: 'emerald' },
     { id: 'images', label: t('dashboard.editBusiness.tabs.images'), icon: Camera, color: 'blue' },
     { id: 'contact', label: t('dashboard.editBusiness.tabs.contact'), icon: Phone, color: 'purple' },
-    { id: 'hours', label: t('dashboard.editBusiness.tabs.hours'), icon: Clock, color: 'orange' },
-    { id: 'customize', label: t('dashboard.editBusiness.tabs.customize'), icon: Palette, color: 'pink' }
+    { id: 'hours', label: t('dashboard.editBusiness.tabs.hours'), icon: Clock, color: 'orange' }
   ]
 
   return (
@@ -888,11 +847,12 @@ export default function EditBusinessPage() {
                   <div className="space-y-4">
                     {daysOfWeek.map((day) => {
                       const dayHours = formData.hours[day.key] || { open: '', close: '', closed: false }
+                      const dayLabel = t(`dashboard.editBusiness.hours.${day.key}`)
                       return (
                         <div key={day.key} className="flex items-center gap-4 p-4 bg-gradient-to-r from-gray-50 to-orange-50/30 rounded-xl border border-gray-100">
                           <div className="w-28">
                             <label className="text-sm font-semibold text-gray-800">
-                              {day.label}
+                              {dayLabel}
                             </label>
                           </div>
                           
@@ -953,33 +913,6 @@ export default function EditBusinessPage() {
           )}
 
           {/* Onglet Personnaliser */}
-          {activeTab === 'customize' && (
-            <div className="space-y-6">
-              {/* Banner d'activation si pas encore activé */}
-              {!useCustomPage && (
-                <CustomPageBanner
-                  businessId={params.id as string}
-                  useCustomPage={useCustomPage}
-                  onActivated={() => {
-                    setUseCustomPage(true)
-                    refreshBusinessData()
-                  }}
-                />
-              )}
-
-              {/* Page Builder si activé */}
-              {useCustomPage && (
-                <PageBuilder
-                  businessId={params.id as string}
-                  currentConfig={pageConfig}
-                  businessImages={formData.images}
-                  heroImage={formData.heroImage}
-                  onSaved={() => refreshBusinessData()}
-                />
-              )}
-            </div>
-          )}
-
           {/* Boutons d'action fixes en bas */}
           <div className="sticky bottom-0 z-40 bg-white/90 backdrop-blur-xl border-t border-white/20 shadow-lg shadow-black/5 p-4 rounded-t-2xl">
             <div className="flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0 sm:space-x-4">

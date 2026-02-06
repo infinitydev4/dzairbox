@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
+import { useLanguage } from "@/components/language-provider"
 import Link from "next/link"
 
 interface SignupFormProps {
@@ -14,6 +15,7 @@ interface SignupFormProps {
 }
 
 export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps) {
+  const { t } = useLanguage()
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
@@ -28,8 +30,8 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
     
     if (formData.password !== formData.confirmPassword) {
       toast({
-        title: "Erreur",
-        description: "Les mots de passe ne correspondent pas",
+        title: t('auth.signup.error'),
+        description: t('auth.signup.errorPasswordMismatch'),
         variant: "destructive"
       })
       return
@@ -37,8 +39,8 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
 
     if (formData.password.length < 6) {
       toast({
-        title: "Erreur", 
-        description: "Le mot de passe doit contenir au moins 6 caractères",
+        title: t('auth.signup.error'), 
+        description: t('auth.signup.errorPasswordLength'),
         variant: "destructive"
       })
       return
@@ -61,10 +63,10 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
 
       if (res.ok) {
         toast({
-          title: "Compte créé !",
+          title: t('auth.signup.success'),
           description: hasPendingBusiness 
-            ? "Connexion en cours pour finaliser votre entreprise..." 
-            : "Connexion en cours...",
+            ? t('auth.signup.successPending')
+            : t('auth.signup.successRedirect'),
         })
 
         // Se connecter automatiquement après inscription
@@ -80,23 +82,23 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
           window.location.href = callbackUrl || "/dashboard"
         } else {
           toast({
-            title: "Erreur de connexion",
-            description: "Compte créé mais erreur de connexion. Veuillez vous connecter manuellement.",
+            title: t('auth.signup.error'),
+            description: t('auth.signup.errorLogin'),
             variant: "destructive"
           })
         }
       } else {
         const error = await res.json()
         toast({
-          title: "Erreur",
-          description: error.message || "Erreur lors de la création du compte",
+          title: t('auth.signup.error'),
+          description: error.message || t('auth.signup.errorCreation'),
           variant: "destructive",
         })
       }
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue",
+        title: t('auth.signup.error'),
+        description: t('auth.signup.errorUnexpected'),
         variant: "destructive",
       })
     } finally {
@@ -107,11 +109,11 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl text-center">Créer un compte</CardTitle>
+        <CardTitle className="text-2xl text-center">{t('auth.signup.title')}</CardTitle>
         <CardDescription className="text-center">
           {hasPendingBusiness 
-            ? "Créez votre compte pour finaliser l'inscription de votre entreprise"
-            : "Entrez vos informations pour créer un compte"
+            ? t('auth.signup.pendingBusiness')
+            : t('auth.signup.description')
           }
         </CardDescription>
         {hasPendingBusiness && (
@@ -119,11 +121,11 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
             <div className="flex items-center space-x-2">
               <span className="text-emerald-600">🏢</span>
               <span className="text-sm text-emerald-700 font-medium">
-                Inscription d'entreprise en attente
+                {t('auth.signup.pendingBadge')}
               </span>
             </div>
             <p className="text-xs text-emerald-600 mt-1">
-              Votre entreprise sera créée automatiquement après inscription
+              {t('auth.signup.pendingMessage')}
             </p>
           </div>
         )}
@@ -132,12 +134,12 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="name" className="text-sm font-medium">
-              Nom complet
+              {t('auth.signup.name')}
             </label>
             <Input
               id="name"
               type="text"
-              placeholder="Votre nom complet"
+              placeholder={t('auth.signup.namePlaceholder')}
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               disabled={isLoading}
@@ -146,12 +148,12 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
           </div>
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-medium">
-              Email
+              {t('auth.signup.email')}
             </label>
             <Input
               id="email"
               type="email"
-              placeholder="votre.email@example.com"
+              placeholder={t('auth.signup.emailPlaceholder')}
               value={formData.email}
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
               disabled={isLoading}
@@ -160,12 +162,12 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
           </div>
           <div className="space-y-2">
             <label htmlFor="password" className="text-sm font-medium">
-              Mot de passe
+              {t('auth.signup.password')}
             </label>
             <Input
               id="password"
               type="password"
-              placeholder="••••••••"
+              placeholder={t('auth.signup.passwordPlaceholder')}
               value={formData.password}
               onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
               disabled={isLoading}
@@ -174,12 +176,12 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
           </div>
           <div className="space-y-2">
             <label htmlFor="confirmPassword" className="text-sm font-medium">
-              Confirmer le mot de passe
+              {t('auth.signup.confirmPassword')}
             </label>
             <Input
               id="confirmPassword"
               type="password"
-              placeholder="••••••••"
+              placeholder={t('auth.signup.confirmPasswordPlaceholder')}
               value={formData.confirmPassword}
               onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
               disabled={isLoading}
@@ -187,16 +189,16 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
             />
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Création en cours..." : "Créer mon compte"}
+            {isLoading ? t('auth.signup.submitting') : t('auth.signup.submit')}
           </Button>
         </form>
         <div className="mt-4 text-center text-sm">
-          Déjà un compte ?{" "}
+          {t('auth.signup.hasAccount')}{" "}
           <Link 
             href={`/auth/signin${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`} 
             className="text-emerald-600 hover:underline"
           >
-            Se connecter
+            {t('auth.signup.signin')}
           </Link>
         </div>
       </CardContent>

@@ -73,7 +73,7 @@ export function SectionEditor({ config, onChange }: SectionEditorProps) {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold mb-2">{t('dashboard.builder.sectionEditor.title')}</h3>
-        <p className="text-sm text-gray-600">Activez ou désactivez les sections</p>
+        <p className="text-sm text-gray-600">{t('dashboard.builder.sectionEditor.subtitle')}</p>
       </div>
 
       <div className="space-y-4">
@@ -142,7 +142,7 @@ export function SectionEditor({ config, onChange }: SectionEditorProps) {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="gallery-toggle" className="text-base font-medium">
-                Galerie photo
+                {t('dashboard.builder.sectionEditor.gallery')}
               </Label>
               <Switch
                 id="gallery-toggle"
@@ -165,7 +165,7 @@ export function SectionEditor({ config, onChange }: SectionEditorProps) {
                 </div>
                 <div className="space-y-2 ml-4">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="contact-phone" className="text-sm">Téléphone</Label>
+                    <Label htmlFor="contact-phone" className="text-sm">{t('dashboard.builder.sectionEditor.phone')}</Label>
                     <Switch
                       id="contact-phone"
                       checked={config.sidebar.contact.phone}
@@ -173,7 +173,7 @@ export function SectionEditor({ config, onChange }: SectionEditorProps) {
                     />
                   </div>
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="contact-email" className="text-sm">Email</Label>
+                    <Label htmlFor="contact-email" className="text-sm">{t('dashboard.builder.sectionEditor.email')}</Label>
                     <Switch
                       id="contact-email"
                       checked={config.sidebar.contact.email}

@@ -44,18 +44,35 @@ export async function GET(
       parsedImages = []
     }
 
-    const businessWithParsedImages = {
+    // Parser les horaires si elles sont stockées en JSON
+    let parsedHours = null
+    try {
+      if (business.hours && typeof business.hours === 'string') {
+        parsedHours = JSON.parse(business.hours)
+        console.log("🔍 Horaires parsées:", parsedHours)
+      } else {
+        parsedHours = business.hours
+      }
+    } catch (error) {
+      console.error("Erreur parsing hours JSON:", error)
+      parsedHours = null
+    }
+
+    const businessWithParsedData = {
       ...business,
-      images: parsedImages
+      images: parsedImages,
+      hours: parsedHours
     }
 
     console.log("📤 Réponse API GET business:", {
       id: business.id,
-      images: businessWithParsedImages.images,
-      heroImage: businessWithParsedImages.heroImage
+      category: business.category,
+      images: businessWithParsedData.images,
+      heroImage: businessWithParsedData.heroImage,
+      hours: businessWithParsedData.hours
     })
 
-    return NextResponse.json(businessWithParsedImages)
+    return NextResponse.json(businessWithParsedData)
 
   } catch (error) {
     console.error("Error fetching business:", error)

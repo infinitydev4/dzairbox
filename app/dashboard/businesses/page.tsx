@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Plus, Building2, Clock, CheckCircle, ExternalLink, Loader2, Search, Filter, X, Edit } from "lucide-react"
+import { Plus, Building2, Clock, CheckCircle, ExternalLink, Loader2, Search, Filter, X, Edit, Eye, Palette, MapPin, Phone } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { getBusinessUrl, isDevelopment } from "@/lib/business-url"
 import Link from "next/link"
@@ -23,6 +23,8 @@ interface Business {
   services?: string
   subdomain: string
   isActive: boolean
+  heroImage?: string
+  images?: string
   createdAt: string
   updatedAt: string
 }
@@ -280,99 +282,116 @@ export default function BusinessesPage() {
           ) : (
         <>
           {/* Businesses Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredBusinesses.map((business) => (
-              <Card key={business.id} className="hover:shadow-xl transition-all duration-300 border border-gray-200/50 bg-white/70 backdrop-blur-sm hover:scale-[1.02]">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                      <CardTitle className="text-lg text-gray-900 mb-1">{business.name}</CardTitle>
-                        <CardDescription className="text-sm text-gray-600">
-                          {business.category}
-                        </CardDescription>
-                      </div>
-                      <div className="flex items-center">
-                        {business.isActive ? (
-                        <div className="w-10 h-10 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center">
-                          <CheckCircle className="h-5 w-5 text-green-600" />
-                        </div>
-                        ) : (
-                        <div className="w-10 h-10 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-2xl flex items-center justify-center">
-                          <Clock className="h-5 w-5 text-orange-500" />
-                        </div>
-                        )}
-                      </div>
+              <Card key={business.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-0 bg-white hover:scale-[1.02]">
+                {/* Image de bannière */}
+                <div className="relative h-48 bg-gradient-to-br from-emerald-100 via-green-50 to-blue-100 overflow-hidden">
+                  {business.heroImage ? (
+                    <img 
+                      src={business.heroImage} 
+                      alt={business.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Building2 className="h-16 w-16 text-emerald-300" />
                     </div>
-                  </CardHeader>
+                  )}
                   
-                  <CardContent className="space-y-4">
-                  <p className="text-sm text-gray-700 line-clamp-2 leading-relaxed">
-                      {business.description}
-                    </p>
-                    
-                  <div className="space-y-3 text-xs">
-                    <div className="flex items-center space-x-3">
-                      <span className="font-medium text-gray-700 min-w-[60px]">{t('dashboard.businesses.address')}</span>
-                      <span className="text-gray-600 truncate">{business.address}</span>
+                  {/* Badge de statut */}
+                  <div className="absolute top-3 right-3">
+                    {business.isActive ? (
+                      <div className="flex items-center space-x-1 bg-green-500/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
+                        <CheckCircle className="h-3 w-3" />
+                        <span>{t('dashboard.businesses.status.active')}</span>
                       </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="font-medium text-gray-700 min-w-[60px]">{t('dashboard.businesses.phone')}</span>
-                      <span className="text-gray-600">{business.phone}</span>
+                    ) : (
+                      <div className="flex items-center space-x-1 bg-orange-500/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
+                        <Clock className="h-3 w-3" />
+                        <span>{t('dashboard.businesses.status.pending')}</span>
                       </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="font-medium text-gray-700 min-w-[60px]">{t('dashboard.businesses.hours')}</span>
-                      <span className="text-gray-600 truncate">{business.hours}</span>
-                    </div>
-                    </div>
+                    )}
+                  </div>
+                </div>
 
-                  <div className="pt-4 border-t border-gray-200/50">
-                    <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs font-medium text-gray-500">
-                        {t('dashboard.businesses.status.label')}
-                        </span>
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                          business.isActive 
-                          ? "bg-gradient-to-r from-green-100 to-emerald-100 text-green-800" 
-                          : "bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-800"
-                        }`}>
-                        {business.isActive ? t('dashboard.businesses.status.active') : t('dashboard.businesses.status.pending')}
-                        </span>
-                      </div>
+                <CardContent className="p-5">
+                  {/* En-tête */}
+                  <div className="mb-4">
+                    <h3 className="text-xl font-bold text-gray-900 mb-1">{business.name}</h3>
+                    <p className="text-sm text-emerald-600 font-medium">{t(`categories.${business.category}`)}</p>
+                  </div>
 
-                    <div className="space-y-3">
-                        {business.isActive && (
-                        <Button asChild variant="outline" size="sm" className="w-full hover:bg-emerald-50 border-emerald-200 rounded-xl">
-                            <Link 
-                            href={getBusinessUrl(business.subdomain)}
-                            target={!isDevelopment() ? "_blank" : "_self"}
-                            className="flex items-center space-x-2"
-                          >
-                            <ExternalLink className="h-3 w-3" />
-                            <span>{t('dashboard.businesses.viewPage')}</span>
-                            </Link>
-                          </Button>
-                        )}
-                        
-                      <Button asChild variant="outline" size="sm" className="w-full hover:bg-blue-50 border-blue-200 rounded-xl">
+                  {/* Description */}
+                  <p className="text-sm text-gray-600 line-clamp-2 mb-4">
+                    {business.description}
+                  </p>
+
+                  {/* Infos rapides */}
+                  <div className="space-y-2 mb-4 pb-4 border-b border-gray-100">
+                    <div className="flex items-center text-xs text-gray-600">
+                      <MapPin className="h-3.5 w-3.5 mr-2 text-gray-400 flex-shrink-0" />
+                      <span className="truncate">{business.address}</span>
+                    </div>
+                    <div className="flex items-center text-xs text-gray-600">
+                      <Phone className="h-3.5 w-3.5 mr-2 text-gray-400 flex-shrink-0" />
+                      <span dir="ltr">{business.phone}</span>
+                    </div>
+                  </div>
+
+                  {/* Boutons d'action */}
+                  <div className="flex items-center gap-2">
+                    {business.isActive && (
+                      <Button 
+                        asChild 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex-1 hover:bg-emerald-50 hover:text-emerald-600"
+                      >
                         <Link 
-                          href={`/dashboard/businesses/${business.id}/edit`}
-                          className="flex items-center space-x-2"
+                          href={getBusinessUrl(business.subdomain)}
+                          target={!isDevelopment() ? "_blank" : "_self"}
+                          className="flex items-center justify-center"
                         >
-                          <Edit className="h-3 w-3" />
-                          <span>{t('dashboard.businesses.editBusiness')}</span>
+                          <Eye className="h-4 w-4" />
                         </Link>
                       </Button>
-                      
-                      <div className="text-xs text-gray-500 text-center py-2 bg-gray-50/50 rounded-lg">
-                        {t('common.url')}: {isDevelopment() 
-                          ? `localhost:3000/${business.subdomain}` 
-                          : `${business.subdomain}.dzbusiness.dz`}
-                      </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    )}
+                    
+                    <Button 
+                      asChild 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex-1 hover:bg-blue-50 hover:text-blue-600"
+                    >
+                      <Link 
+                        href={`/dashboard/businesses/${business.id}/edit`}
+                        className="flex items-center justify-center"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Link>
+                    </Button>
+
+                    {business.isActive && (
+                      <Button 
+                        asChild 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex-1 hover:bg-purple-50 hover:text-purple-600"
+                      >
+                        <Link 
+                          href={getBusinessUrl(business.subdomain)}
+                          target={!isDevelopment() ? "_blank" : "_self"}
+                          className="flex items-center justify-center"
+                        >
+                          <Palette className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
             </div>
 
           {/* Tips Section */}

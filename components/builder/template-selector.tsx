@@ -38,7 +38,7 @@ export function TemplateSelector({ selected, onChange }: TemplateSelectorProps) 
     <div className="space-y-4">
       <div>
         <h3 className="text-lg font-semibold mb-2">{t('dashboard.builder.selectTemplate')}</h3>
-        <p className="text-sm text-gray-600">Choisissez le layout de votre page</p>
+        <p className="text-sm text-gray-600">{t('dashboard.builder.selectTemplateDesc')}</p>
       </div>
       
       <div className="grid grid-cols-1 gap-4">

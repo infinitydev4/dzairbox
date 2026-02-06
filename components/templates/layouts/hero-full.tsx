@@ -16,7 +16,7 @@ interface HeroFullTemplateProps {
 }
 
 export function HeroFullTemplate({ business, config }: HeroFullTemplateProps) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const handleCall = () => {
     if (business.phone) window.location.href = `tel:${business.phone}`
@@ -68,7 +68,7 @@ export function HeroFullTemplate({ business, config }: HeroFullTemplateProps) {
                     }}
                   >
                     <Phone className="mr-2 h-5 w-5" />
-                    {business.phone}
+                    <span dir="ltr">{business.phone}</span>
                   </Button>
                 )}
                 
@@ -138,11 +138,11 @@ export function HeroFullTemplate({ business, config }: HeroFullTemplateProps) {
       {/* Footer */}
       <div className="text-center py-8 border-t border-gray-200 mt-12">
         <p className="text-gray-600 mb-2">
-          Cette page est hébergée sur DzBox
+          Cette page est hébergée sur Dzairbox
         </p>
         <div className="flex items-center justify-center space-x-4">
           <a 
-            href="https://dzbusiness.dz" 
+            href="/create-service" 
             className="font-medium transition-colors hover:underline"
             style={{ 
               color: config.theme.primaryColor 

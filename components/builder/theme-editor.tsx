@@ -31,7 +31,7 @@ export function ThemeEditor({ theme, onChange }: ThemeEditorProps) {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold mb-2">{t('dashboard.builder.themeEditor.title')}</h3>
-        <p className="text-sm text-gray-600">Personnalisez les couleurs de votre page</p>
+        <p className="text-sm text-gray-600">{t('dashboard.builder.themeEditor.subtitle')}</p>
       </div>
 
       <div className="space-y-4">
@@ -88,7 +88,7 @@ export function ThemeEditor({ theme, onChange }: ThemeEditorProps) {
             <Label>{t('dashboard.builder.themeEditor.gradient')}</Label>
             <div className="space-y-3">
               <div>
-                <Label htmlFor="gradientFrom" className="text-xs">De</Label>
+                <Label htmlFor="gradientFrom" className="text-xs">{t('dashboard.builder.themeEditor.gradientFrom')}</Label>
                 <div className="flex items-center space-x-2">
                   <Input
                     id="gradientFrom"
@@ -106,7 +106,7 @@ export function ThemeEditor({ theme, onChange }: ThemeEditorProps) {
                 </div>
               </div>
               <div>
-                <Label htmlFor="gradientTo" className="text-xs">À</Label>
+                <Label htmlFor="gradientTo" className="text-xs">{t('dashboard.builder.themeEditor.gradientTo')}</Label>
                 <div className="flex items-center space-x-2">
                   <Input
                     id="gradientTo"

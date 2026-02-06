@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
+import { useLanguage } from "@/components/language-provider"
 import { 
   X, 
   Save, 
@@ -34,6 +35,7 @@ interface LivePageEditorProps {
 
 export function LivePageEditor({ business, initialConfig, onClose }: LivePageEditorProps) {
   const { toast } = useToast()
+  const { t, language } = useLanguage()
   const [config, setConfig] = useState<BusinessPageConfigData>(
     initialConfig || getDefaultConfig("sidebar-right")
   )
@@ -76,8 +78,8 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
         setJustPublished(true)
         
         toast({
-          title: "✅ Configuration publiée",
-          description: "Vos modifications sont maintenant visibles publiquement. Rechargement...",
+          title: `✅ ${t('dashboard.builder.liveEditor.publishedSuccess')}`,
+          description: t('dashboard.builder.liveEditor.publishedMessage'),
         })
         
         // Recharger la page pour afficher la version publiée depuis le serveur
@@ -86,8 +88,8 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
         }, 1500)
       } else {
         toast({
-          title: "💾 Brouillon sauvegardé",
-          description: "Vos modifications ont été sauvegardées",
+          title: `💾 ${t('dashboard.builder.liveEditor.draftSaved')}`,
+          description: t('dashboard.builder.liveEditor.draftSavedMessage'),
         })
       }
       
@@ -110,16 +112,16 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Edit3 className="h-5 w-5" />
-            <span className="font-semibold">Mode Personnalisation</span>
+            <span className="font-semibold">{t('dashboard.builder.liveEditor.title')}</span>
             {justPublished && (
               <span className="text-xs bg-green-400 text-green-900 px-3 py-1 rounded-full animate-pulse flex items-center">
                 <Check className="h-3 w-3 mr-1" />
-                Publié avec succès !
+                {t('dashboard.builder.liveEditor.publishedSuccess')}
               </span>
             )}
             {isDirty && !justPublished && (
               <span className="text-xs bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full">
-                Modifications non sauvegardées
+                {t('dashboard.builder.liveEditor.unsavedChanges')}
               </span>
             )}
           </div>
@@ -146,7 +148,7 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
               ) : (
                 <Save className="mr-2 h-4 w-4" />
               )}
-              Sauvegarder
+              {t('dashboard.builder.save')}
             </Button>
             
             <Button
@@ -160,7 +162,7 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
               ) : (
                 <Check className="mr-2 h-4 w-4" />
               )}
-              Publier
+              {t('dashboard.builder.publish')}
             </Button>
             
             <Button
@@ -181,7 +183,7 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
           <Card className="shadow-2xl border-emerald-200">
             <CardContent className="p-4 space-y-3">
               <div className="flex items-start justify-between">
-                <h3 className="font-semibold text-gray-900">💡 Guide rapide</h3>
+                <h3 className="font-semibold text-gray-900">💡 {t('dashboard.builder.liveEditor.helpTitle')}</h3>
                 <button onClick={() => setShowHelp(false)} className="text-gray-400 hover:text-gray-600">
                   <X className="h-4 w-4" />
                 </button>
@@ -189,23 +191,23 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-start">
                   <span className="text-emerald-600 mr-2">•</span>
-                  <span>Choisissez un <strong>Template</strong> pour le layout de votre page</span>
+                  <span dangerouslySetInnerHTML={{ __html: t('dashboard.builder.liveEditor.helpTemplate') }} />
                 </li>
                 <li className="flex items-start">
                   <span className="text-emerald-600 mr-2">•</span>
-                  <span>Personnalisez les <strong>Couleurs</strong> et le style dans l'onglet Thème</span>
+                  <span dangerouslySetInnerHTML={{ __html: t('dashboard.builder.liveEditor.helpTheme') }} />
                 </li>
                 <li className="flex items-start">
                   <span className="text-emerald-600 mr-2">•</span>
-                  <span>Activez/désactivez des <strong>Sections</strong> selon vos besoins</span>
+                  <span dangerouslySetInnerHTML={{ __html: t('dashboard.builder.liveEditor.helpSections') }} />
                 </li>
                 <li className="flex items-start">
                   <span className="text-emerald-600 mr-2">•</span>
-                  <span>Ajoutez vos <strong>Images</strong> pour le hero et la galerie</span>
+                  <span dangerouslySetInnerHTML={{ __html: t('dashboard.builder.liveEditor.helpImages') }} />
                 </li>
                 <li className="flex items-start">
                   <span className="text-emerald-600 mr-2">•</span>
-                  <span><strong>Sauvegardez</strong> pour garder un brouillon ou <strong>Publiez</strong> pour rendre visible</span>
+                  <span dangerouslySetInnerHTML={{ __html: t('dashboard.builder.liveEditor.helpSave') }} />
                 </li>
               </ul>
             </CardContent>
@@ -213,8 +215,8 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
         </div>
       )}
 
-      <div className="flex h-full pt-14">
-        {/* Sidebar gauche */}
+      <div className={`flex h-full pt-14 ${language === 'ar' ? 'flex-row-reverse' : ''}`}>
+        {/* Sidebar */}
         <div 
           className={`bg-white shadow-2xl overflow-y-auto transition-all duration-300 ${
             isCollapsed ? 'w-0' : 'w-96'
@@ -223,9 +225,9 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
           {!isCollapsed && (
             <div className="p-6 space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Personnalisation</h2>
+                <h2 className="text-2xl font-bold text-gray-900">{t('dashboard.builder.liveEditor.customizeTitle')}</h2>
                 <p className="text-sm text-gray-600 mt-1">
-                  Personnalisez votre page en temps réel
+                  {t('dashboard.builder.liveEditor.customizeDesc')}
                 </p>
               </div>
 
@@ -233,19 +235,19 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
                 <TabsList className="grid w-full grid-cols-4 gap-1">
                   <TabsTrigger value="template" className="text-xs">
                     <Layout className="h-4 w-4 mr-1" />
-                    Template
+                    {t('dashboard.builder.selectTemplate')}
                   </TabsTrigger>
                   <TabsTrigger value="theme" className="text-xs">
                     <Palette className="h-4 w-4 mr-1" />
-                    Thème
+                    {t('dashboard.builder.themeShort')}
                   </TabsTrigger>
                   <TabsTrigger value="sections" className="text-xs">
                     <Settings className="h-4 w-4 mr-1" />
-                    Sections
+                    {t('dashboard.builder.sections')}
                   </TabsTrigger>
                   <TabsTrigger value="images" className="text-xs">
                     <ImageIcon className="h-4 w-4 mr-1" />
-                    Images
+                    {t('dashboard.builder.images')}
                   </TabsTrigger>
                 </TabsList>
 
@@ -334,10 +336,21 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
         {/* Bouton pour collapse/expand la sidebar */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-emerald-600 text-white p-2 rounded-r-lg shadow-lg hover:bg-emerald-700 transition-colors z-10"
-          style={{ marginLeft: isCollapsed ? '0' : '384px' }}
+          className={`absolute top-1/2 -translate-y-1/2 bg-emerald-600 text-white p-2 shadow-lg hover:bg-emerald-700 transition-colors z-10 ${
+            language === 'ar' 
+              ? (isCollapsed ? 'right-0 rounded-l-lg' : 'rounded-l-lg')
+              : (isCollapsed ? 'left-0 rounded-r-lg' : 'rounded-r-lg')
+          }`}
+          style={{ 
+            [language === 'ar' ? 'right' : 'left']: isCollapsed ? '0' : '384px'
+          }}
         >
-          {isCollapsed ? '→' : '←'}
+          <span className="text-xl">
+            {language === 'ar' 
+              ? (isCollapsed ? '←' : '→')
+              : (isCollapsed ? '→' : '←')
+            }
+          </span>
         </button>
 
         {/* Aperçu en temps réel */}

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -13,19 +12,17 @@ import {
   MapPin, 
   Clock, 
   Loader2,
-  ArrowLeft,
   Save,
   Trash2
 } from "lucide-react"
 
-interface CreateBusinessManualProps {
-  onBack?: () => void // Optionnel maintenant
+interface CreateServiceStep1Props {
+  onComplete: (data: any, token: string) => void
 }
 
-const CACHE_KEY = 'dzairbox_business_draft'
+const CACHE_KEY = 'dzairbox_public_business_draft'
 
-export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
-  const router = useRouter()
+export function CreateServiceStep1({ onComplete }: CreateServiceStep1Props) {
   const { toast } = useToast()
   const { t } = useLanguage()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -34,7 +31,7 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
   const addressInputRef = useRef<HTMLInputElement>(null)
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null)
 
-  // Fonction pour obtenir le label traduit d'un jour
+  // Utiliser les labels traduits pour les jours
   const getDayLabel = (dayKey: string) => {
     const translations: Record<string, string> = {
       "sunday": t("dashboard.createForm.hours.day.sunday"),
@@ -46,15 +43,6 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
       "saturday": t("dashboard.createForm.hours.day.saturday")
     }
     return translations[dayKey] || dayKey
-  }
-
-  // Fonction pour gérer le retour
-  const handleBack = () => {
-    if (onBack) {
-      onBack()
-    } else {
-      router.push('/dashboard')
-    }
   }
 
   const [formData, setFormData] = useState({
@@ -72,7 +60,6 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
     hours: {} as Record<string, { open: string; close: string; closed: boolean }>
   })
 
-  // Charger les données en cache au montage du composant
   useEffect(() => {
     const loadCachedData = () => {
       try {
@@ -95,17 +82,14 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
     loadCachedData()
   }, [toast, t])
 
-  // Sauvegarder automatiquement les données toutes les 2 secondes
   useEffect(() => {
     const saveTimer = setTimeout(() => {
-      // Ne sauvegarder que si au moins un champ est rempli
       const hasData = formData.name || formData.category || formData.description || formData.address
       if (hasData) {
         setIsSaving(true)
         localStorage.setItem(CACHE_KEY, JSON.stringify(formData))
         setHasCachedData(true)
         
-        // Masquer l'indicateur après 1 seconde
         setTimeout(() => setIsSaving(false), 1000)
       }
     }, 2000)
@@ -113,7 +97,6 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
     return () => clearTimeout(saveTimer)
   }, [formData])
 
-  // Fonction pour effacer le cache
   const clearCache = () => {
     localStorage.removeItem(CACHE_KEY)
     setFormData({
@@ -137,22 +120,19 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
     })
   }
 
-  // Initialiser Google Places Autocomplete
   useEffect(() => {
     const initAutocomplete = () => {
       if (!addressInputRef.current || !window.google) return
 
-      // Créer l'autocomplete avec focus sur l'Algérie
       autocompleteRef.current = new google.maps.places.Autocomplete(
         addressInputRef.current,
         {
           types: ['address'],
-          componentRestrictions: { country: 'dz' }, // Restreindre à l'Algérie
+          componentRestrictions: { country: 'dz' },
           fields: ['formatted_address', 'address_components', 'geometry']
         }
       )
 
-      // Écouter la sélection d'une adresse
       autocompleteRef.current.addListener('place_changed', () => {
         const place = autocompleteRef.current?.getPlace()
         if (place?.formatted_address) {
@@ -164,7 +144,6 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
       })
     }
 
-    // Charger le script Google Maps si ce n'est pas déjà fait
     if (!window.google) {
       const script = document.createElement('script')
       script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&language=fr`
@@ -177,7 +156,6 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
     }
 
     return () => {
-      // Nettoyer les listeners
       if (autocompleteRef.current) {
         google.maps.event.clearInstanceListeners(autocompleteRef.current)
       }
@@ -185,15 +163,10 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
   }, [])
 
   const handleInputChange = (field: string, value: string) => {
-    // Gestion spéciale pour le champ téléphone
     if (field === "phone") {
-      // Nettoyer la valeur : ne garder que les chiffres
       const numbers = value.replace(/\D/g, "")
-      
-      // Limiter à 9 chiffres (format algérien)
       const limitedNumbers = numbers.slice(0, 9)
       
-      // Formater le numéro : XXX XXX XXX
       let formatted = ""
       if (limitedNumbers.length > 0) {
         const parts = []
@@ -203,7 +176,6 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
         formatted = parts.join(" ")
       }
       
-      // Toujours ajouter +213 au début pour le stockage
       value = "+213 " + formatted
     }
     
@@ -263,7 +235,6 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
         return
       }
 
-      // Formater les horaires pour l'envoi au format JSON
       const formattedHours: Record<string, { open: string; close: string; closed: boolean }> = {}
       Object.entries(formData.hours).forEach(([day, hours]) => {
         formattedHours[day] = {
@@ -275,7 +246,8 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
 
       const dataToSend = {
         ...formData,
-        hours: formattedHours
+        hours: formattedHours,
+        temporary: true
       }
 
       const response = await fetch("/api/businesses", {
@@ -289,14 +261,14 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
       const result = await response.json()
 
       if (response.ok) {
-        // Effacer le cache après une création réussie
         localStorage.removeItem(CACHE_KEY)
         
         toast({
-          title: t("dashboard.createForm.success.title"),
-          description: result.message || t("dashboard.createForm.success.message"),
+          title: t("createService.step1.success"),
+          description: t("createService.step1.successDesc"),
         })
-        router.push("/dashboard/businesses")
+        
+        onComplete(dataToSend, result.token)
       } else {
         toast({
           title: t("dashboard.createForm.errors.title"),
@@ -305,7 +277,7 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
         })
       }
     } catch (error) {
-      console.error("Error creating business:", error)
+      console.error("Error creating pending business:", error)
       toast({
         title: t("dashboard.createForm.errors.title"),
         description: t("dashboard.createForm.errors.unexpected"),
@@ -317,65 +289,58 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <Button onClick={handleBack} variant="ghost" size="sm" className="hover:bg-gray-100 rounded-xl">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          <span>{t("dashboard.createForm.back")}</span>
-        </Button>
-
-        {hasCachedData && (
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm">
-              <div className={`w-2 h-2 rounded-full ${isSaving ? 'bg-blue-500 animate-pulse' : 'bg-green-500'}`}></div>
-              <span>{isSaving ? t("dashboard.createForm.draft.saving") : t("dashboard.createForm.draft.saved")}</span>
-            </div>
-            <Button 
-              onClick={clearCache} 
-              variant="outline" 
-              size="sm" 
-              className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 rounded-xl"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              {t("dashboard.createForm.draft.clear")}
-            </Button>
+    <div className="space-y-4 sm:space-y-8">
+      {hasCachedData && (
+        <div className="flex flex-col sm:flex-row items-center justify-end gap-2 sm:gap-3 max-w-4xl mx-auto px-4 sm:px-0">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-xs sm:text-sm w-full sm:w-auto justify-center">
+            <div className={`w-2 h-2 rounded-full ${isSaving ? 'bg-blue-500 animate-pulse' : 'bg-green-500'}`}></div>
+            <span>{isSaving ? t("dashboard.createForm.draft.saving") : t("dashboard.createForm.draft.saved")}</span>
           </div>
-        )}
-      </div>
+          <Button 
+            onClick={clearCache} 
+            variant="outline" 
+            size="sm" 
+            className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 rounded-xl w-full sm:w-auto text-xs sm:text-sm"
+          >
+            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+            {t("dashboard.createForm.draft.clear")}
+          </Button>
+        </div>
+      )}
 
-      <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl mx-auto">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-8 max-w-4xl mx-auto px-4 sm:px-0">
         <Card className="bg-white/70 backdrop-blur-sm border border-gray-200/50 shadow-lg shadow-gray-900/5">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-to-br from-emerald-100 to-green-100 rounded-xl">
-                <Building2 className="h-5 w-5 text-emerald-600" />
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="flex items-center space-x-2 sm:space-x-3 text-base sm:text-lg">
+              <div className="p-1.5 sm:p-2 bg-gradient-to-br from-emerald-100 to-green-100 rounded-xl">
+                <Building2 className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
               </div>
               <span>{t("dashboard.createForm.general.title")}</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-xs sm:text-sm font-medium text-gray-700">
                   {t("dashboard.createForm.general.name")} *
                 </label>
                 <Input
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   placeholder={t("dashboard.createForm.general.namePlaceholder")}
-                  className="rounded-xl"
+                  className="rounded-xl text-sm sm:text-base"
                   required
                 />
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-xs sm:text-sm font-medium text-gray-700">
                   {t("dashboard.createForm.general.category")} *
                 </label>
                 <select
                   value={formData.category}
                   onChange={(e) => handleInputChange("category", e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm sm:text-base"
                   required
                 >
                   <option value="">{t("dashboard.createForm.general.categoryPlaceholder")}</option>
@@ -389,7 +354,7 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-xs sm:text-sm font-medium text-gray-700">
                 {t("dashboard.createForm.general.description")} *
               </label>
               <textarea
@@ -397,37 +362,37 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
                 onChange={(e) => handleInputChange("description", e.target.value)}
                 placeholder={t("dashboard.createForm.general.descriptionPlaceholder")}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none resize-none"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl outline-none resize-none text-sm sm:text-base"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-xs sm:text-sm font-medium text-gray-700">
                 {t("dashboard.createForm.general.services")}
               </label>
               <Input
                 value={formData.services}
                 onChange={(e) => handleInputChange("services", e.target.value)}
                 placeholder={t("dashboard.createForm.general.servicesPlaceholder")}
-                className="rounded-xl"
+                className="rounded-xl text-sm sm:text-base"
               />
             </div>
           </CardContent>
         </Card>
 
         <Card className="bg-white/70 backdrop-blur-sm border border-gray-200/50 shadow-lg shadow-gray-900/5">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl">
-                <MapPin className="h-5 w-5 text-blue-600" />
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="flex items-center space-x-2 sm:space-x-3 text-base sm:text-lg">
+              <div className="p-1.5 sm:p-2 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl">
+                <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
               </div>
               <span>{t("dashboard.createForm.location.title")}</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-xs sm:text-sm font-medium text-gray-700">
                 {t("dashboard.createForm.location.address")} *
               </label>
               <Input
@@ -435,23 +400,23 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
                 value={formData.address}
                 onChange={(e) => handleInputChange("address", e.target.value)}
                 placeholder={t("dashboard.createForm.location.addressPlaceholder")}
-                className="rounded-xl"
+                className="rounded-xl text-sm sm:text-base"
                 required
                 autoComplete="off"
               />
               <p className="text-xs text-gray-500">{t("dashboard.createForm.location.addressHelper")}</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-xs sm:text-sm font-medium text-gray-700">
                   {t("dashboard.createForm.contact.phone")} *
                 </label>
                 <div className="relative">
                   <div className="absolute left-0 top-0 bottom-0 flex items-center">
-                    <div className="flex items-center gap-2 pl-4 pr-3 border-r border-gray-200">
-                      <span className="text-2xl">🇩🇿</span>
-                      <span className="text-sm font-semibold text-gray-700">+213</span>
+                    <div className="flex items-center gap-1 sm:gap-2 pl-2 sm:pl-4 pr-2 sm:pr-3 border-r border-gray-200">
+                      <span className="text-lg sm:text-2xl">🇩🇿</span>
+                      <span className="text-xs sm:text-sm font-semibold text-gray-700">+213</span>
                     </div>
                   </div>
                   <Input
@@ -459,7 +424,7 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
                     value={formData.phone.replace('+213 ', '')}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
                     placeholder={t("dashboard.createForm.contact.phonePlaceholder")}
-                    className="rounded-xl pl-[120px]"
+                    className="rounded-xl pl-[90px] sm:pl-[120px] text-sm"
                     required
                   />
                 </div>
@@ -470,7 +435,7 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-xs sm:text-sm font-medium text-gray-700">
                   {t("dashboard.createForm.contact.email")} {t("dashboard.createForm.contact.emailOptional")}
                 </label>
                 <Input
@@ -478,71 +443,71 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder={t("dashboard.createForm.contact.emailPlaceholder")}
-                  className="rounded-xl"
+                  className="rounded-xl text-sm sm:text-base"
                 />
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-gray-900">{t("dashboard.createForm.social.title")}</h3>
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="text-xs sm:text-sm font-semibold text-gray-900">{t("dashboard.createForm.social.title")}</h3>
               <p className="text-xs text-gray-500">{t("dashboard.createForm.social.description")}</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-xs sm:text-sm font-medium text-gray-700">
                     {t("dashboard.createForm.social.facebook")}
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">@</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span>
                     <Input
                       value={formData.facebook}
                       onChange={(e) => handleInputChange("facebook", e.target.value)}
                       placeholder={t("dashboard.createForm.social.facebookPlaceholder")}
-                      className="rounded-xl pl-8"
+                      className="rounded-xl pl-8 text-sm sm:text-base"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-xs sm:text-sm font-medium text-gray-700">
                     {t("dashboard.createForm.social.instagram")}
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">@</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span>
                     <Input
                       value={formData.instagram}
                       onChange={(e) => handleInputChange("instagram", e.target.value)}
                       placeholder={t("dashboard.createForm.social.instagramPlaceholder")}
-                      className="rounded-xl pl-8"
+                      className="rounded-xl pl-8 text-sm sm:text-base"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-xs sm:text-sm font-medium text-gray-700">
                     {t("dashboard.createForm.social.tiktok")}
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">@</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span>
                     <Input
                       value={formData.tiktok}
                       onChange={(e) => handleInputChange("tiktok", e.target.value)}
                       placeholder={t("dashboard.createForm.social.tiktokPlaceholder")}
-                      className="rounded-xl pl-8"
+                      className="rounded-xl pl-8 text-sm sm:text-base"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-xs sm:text-sm font-medium text-gray-700">
                     {t("dashboard.createForm.social.youtube")}
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">@</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">@</span>
                     <Input
                       value={formData.youtube}
                       onChange={(e) => handleInputChange("youtube", e.target.value)}
                       placeholder={t("dashboard.createForm.social.youtubePlaceholder")}
-                      className="rounded-xl pl-8"
+                      className="rounded-xl pl-8 text-sm sm:text-base"
                     />
                   </div>
                 </div>
@@ -552,38 +517,38 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
         </Card>
 
         <Card className="bg-white/70 backdrop-blur-sm border border-gray-200/50 shadow-lg shadow-gray-900/5">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl">
-                  <Clock className="h-5 w-5 text-purple-600" />
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="p-1.5 sm:p-2 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl">
+                  <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
                 </div>
-                <span>{t("dashboard.createForm.hours.title")}</span>
+                <span className="text-base sm:text-lg">{t("dashboard.createForm.hours.title")}</span>
               </div>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={applyToAllWeek}
-                className="rounded-xl text-xs"
+                className="rounded-xl text-xs w-full sm:w-auto"
               >
                 {t("dashboard.createForm.hours.description")}
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-3 sm:space-y-4">
               {daysOfWeek.map((day) => {
                 const dayHours = formData.hours[day.key] || { open: '', close: '', closed: false }
                 return (
-                  <div key={day.key} className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl">
-                    <div className="w-24">
-                      <label className="text-sm font-medium text-gray-700">
+                  <div key={day.key} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3 bg-gray-50 rounded-xl">
+                    <div className="sm:w-24">
+                      <label className="text-xs sm:text-sm font-medium text-gray-700">
                         {getDayLabel(day.key)}
                       </label>
                     </div>
                     
-                    <div className="flex items-center gap-2 flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 flex-1">
                       <label className="flex items-center space-x-2 cursor-pointer">
                         <input
                           type="checkbox"
@@ -591,43 +556,41 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
                           onChange={(e) => handleHoursChange(day.key, 'closed', e.target.checked)}
                           className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
                         />
-                        <span className="text-sm text-gray-600">{t("dashboard.createForm.hours.closed")}</span>
+                        <span className="text-xs sm:text-sm text-gray-600">{t("dashboard.createForm.hours.closed")}</span>
                       </label>
                       
                       {!dayHours.closed && (
-                        <>
-                          <div className="flex items-center gap-2">
-                            <select
-                              value={dayHours.open}
-                              onChange={(e) => handleHoursChange(day.key, 'open', e.target.value)}
-                              className="px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500"
-                            >
-                              <option value="">{t("dashboard.createForm.hours.opening")}</option>
-                              {Array.from({ length: 24 }, (_, i) => {
-                                const hour = i.toString().padStart(2, '0')
-                                return (
-                                  <option key={`${hour}:00`} value={`${hour}:00`}>{`${hour}:00`}</option>
-                                )
-                              })}
-                            </select>
-                            
-                            <span className="text-gray-400">-</span>
-                            
-                            <select
-                              value={dayHours.close}
-                              onChange={(e) => handleHoursChange(day.key, 'close', e.target.value)}
-                              className="px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-500"
-                            >
-                              <option value="">{t("dashboard.createForm.hours.closing")}</option>
-                              {Array.from({ length: 24 }, (_, i) => {
-                                const hour = i.toString().padStart(2, '0')
-                                return (
-                                  <option key={`${hour}:00`} value={`${hour}:00`}>{`${hour}:00`}</option>
-                                )
-                              })}
-                            </select>
-                          </div>
-                        </>
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                          <select
+                            value={dayHours.open}
+                            onChange={(e) => handleHoursChange(day.key, 'open', e.target.value)}
+                            className="flex-1 sm:flex-none px-2 sm:px-3 py-2 border border-gray-200 rounded-lg text-xs sm:text-sm outline-none focus:ring-2 focus:ring-emerald-500"
+                          >
+                            <option value="">{t("dashboard.createForm.hours.opening")}</option>
+                            {Array.from({ length: 24 }, (_, i) => {
+                              const hour = i.toString().padStart(2, '0')
+                              return (
+                                <option key={`${hour}:00`} value={`${hour}:00`}>{`${hour}:00`}</option>
+                              )
+                            })}
+                          </select>
+                          
+                          <span className="text-gray-400">-</span>
+                          
+                          <select
+                            value={dayHours.close}
+                            onChange={(e) => handleHoursChange(day.key, 'close', e.target.value)}
+                            className="flex-1 sm:flex-none px-2 sm:px-3 py-2 border border-gray-200 rounded-lg text-xs sm:text-sm outline-none focus:ring-2 focus:ring-emerald-500"
+                          >
+                            <option value="">{t("dashboard.createForm.hours.closing")}</option>
+                            {Array.from({ length: 24 }, (_, i) => {
+                              const hour = i.toString().padStart(2, '0')
+                              return (
+                                <option key={`${hour}:00`} value={`${hour}:00`}>{`${hour}:00`}</option>
+                              )
+                            })}
+                          </select>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -637,19 +600,11 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
           </CardContent>
         </Card>
 
-        <div className="flex flex-col sm:flex-row sm:justify-end gap-4">
-          <Button 
-            type="button"
-            variant="outline"
-            onClick={handleBack}
-            className="w-full sm:w-auto rounded-xl"
-          >
-            {t("dashboard.createForm.submit.cancel")}
-          </Button>
+        <div className="flex justify-end px-4 sm:px-0">
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-lg shadow-emerald-600/25 rounded-xl"
+            className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-lg shadow-emerald-600/25 rounded-xl py-3 sm:py-2 text-sm sm:text-base"
           >
             {isSubmitting ? (
               <>
@@ -659,7 +614,7 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                {t("dashboard.createForm.submit.submit")}
+                {t("createService.step1.continue")}
               </>
             )}
           </Button>
@@ -667,4 +622,4 @@ export function CreateBusinessManual({ onBack }: CreateBusinessManualProps) {
       </form>
     </div>
   )
-} 
+}

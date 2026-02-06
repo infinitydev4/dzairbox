@@ -2,24 +2,29 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import crypto from "crypto"
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-
-    if (!session || !session.user) {
+    const businessData = await req.json()
+    
+    const isTemporary = businessData.temporary === true
+    
+    console.log("Données reçues pour création d'entreprise:", businessData)
+    
+    if (!isTemporary && (!session || !session.user)) {
       return NextResponse.json(
         { error: "Non autorisé" },
         { status: 401 }
       )
     }
-
-    const businessData = await req.json()
     
-    console.log("Données reçues pour création d'entreprise:", businessData)
-    console.log("Session utilisateur:", { id: session.user.id, email: session.user.email })
+    if (session?.user) {
+      console.log("Session utilisateur:", { id: session.user.id, email: session.user.email })
+    }
 
     // Validation des données obligatoires
     const requiredFields = ["name", "category", "description", "address", "phone", "hours"]
@@ -58,6 +63,14 @@ export async function POST(req: NextRequest) {
     console.log("Création de l'entreprise avec le sous-domaine:", subdomain)
     console.log("Horaires converties:", hoursString)
     
+    let tempToken = null
+    let tempExpiresAt = null
+    
+    if (isTemporary) {
+      tempToken = crypto.randomBytes(32).toString('hex')
+      tempExpiresAt = new Date(Date.now() + 60 * 60 * 1000) // 1 heure
+    }
+    
     const business = await prisma.business.create({
       data: {
         name: businessData.name,
@@ -75,10 +88,12 @@ export async function POST(req: NextRequest) {
           ? businessData.services.join(", ") 
           : businessData.services || null,
         subdomain: subdomain,
-        isActive: false, // Nécessite validation admin
-        userId: session.user.id,
+        isActive: false,
+        userId: isTemporary ? undefined : session!.user.id,
+        tempToken: tempToken || undefined,
+        tempExpiresAt: tempExpiresAt || undefined,
       },
-      include: {
+      include: isTemporary ? undefined : {
         user: {
           select: {
             name: true,
@@ -95,7 +110,10 @@ export async function POST(req: NextRequest) {
       name: business.name,
       subdomain: business.subdomain,
       isActive: business.isActive,
-      message: "Entreprise créée avec succès ! Elle sera activée après validation par nos équipes."
+      token: tempToken,
+      message: isTemporary 
+        ? "Service enregistré avec succès"
+        : "Entreprise créée avec succès ! Elle sera activée après validation par nos équipes."
     })
 
   } catch (error) {

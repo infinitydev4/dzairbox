@@ -81,14 +81,18 @@ model Business {
   heroImage   String?  // URL de l'image principale
   subdomain   String   @unique
   isActive    Boolean  @default(false)
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?  // Nullable pour les services en attente d'inscription
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   // Templates system
   templateId    String?
   template      Template? @relation(fields: [templateId], references: [id])
   pageConfig    BusinessPageConfig?
   useCustomPage Boolean  @default(false)
+  
+  // Temporary data for registration flow
+  tempToken     String?  @unique // Token temporaire pour lier le service à l'inscription
+  tempExpiresAt DateTime? // Expiration du token temporaire
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

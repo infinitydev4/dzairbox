@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Header } from "@/components/header"
 import { useLanguage } from "@/components/language-provider"
+import { useSession } from "next-auth/react"
 import { 
   Target,
   Users,
@@ -31,6 +32,8 @@ import Image from "next/image"
 
 export default function AboutPage() {
   const { t } = useLanguage()
+  const { data: session } = useSession()
+  const createServiceUrl = session ? '/dashboard/create-business' : '/create-service'
 
   const values = [
     {
@@ -365,7 +368,7 @@ export default function AboutPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button asChild size="lg" className="bg-white text-emerald-600 hover:bg-gray-100 text-lg px-8 py-3">
-                  <Link href="/register">
+                  <Link href={createServiceUrl}>
                     {t('aboutPage.contact.business')}
                   </Link>
                 </Button>

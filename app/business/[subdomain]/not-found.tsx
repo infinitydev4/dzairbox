@@ -51,7 +51,7 @@ export default function NotFound() {
               <div className="pt-6 border-t border-gray-200">
                 <p className="text-sm text-gray-500">
                   Vous êtes propriétaire d'une entreprise ?{" "}
-                  <Link href="/register" className="text-emerald-600 hover:text-emerald-700 font-medium">
+                  <Link href="/create-service" className="text-emerald-600 hover:text-emerald-700 font-medium">
                     Inscrivez-vous gratuitement
                   </Link>
                 </p>

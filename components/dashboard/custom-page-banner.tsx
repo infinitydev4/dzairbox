@@ -49,8 +49,8 @@ export function CustomPageBanner({ businessId, useCustomPage, onActivated }: Cus
     } catch (error) {
       console.error('Error activating custom page:', error)
       toast({
-        title: "Erreur",
-        description: "Impossible d'activer la personnalisation",
+        title: t('dashboard.builder.banner.error'),
+        description: t('dashboard.builder.banner.errorMessage'),
         variant: "destructive"
       })
     } finally {
@@ -80,11 +80,11 @@ export function CustomPageBanner({ businessId, useCustomPage, onActivated }: Cus
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2 text-sm text-gray-600">
               <Layout className="h-4 w-4 text-purple-600" />
-              <span>3 templates modernes</span>
+              <span>{t('dashboard.builder.banner.templates')}</span>
             </div>
             <div className="flex items-center space-x-2 text-sm text-gray-600">
               <Palette className="h-4 w-4 text-pink-600" />
-              <span>Personnalisation complète</span>
+              <span>{t('dashboard.builder.banner.customization')}</span>
             </div>
           </div>
           

@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { LanguageProvider } from "@/components/language-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from "@/components/auth-provider"
+import { MobileBottomNav } from "@/components/mobile-bottom-nav"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -83,11 +84,12 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="DzBusiness" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
       </head>
-      <body className={`${inter.variable} ${notoSansArabic.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${notoSansArabic.variable} font-sans antialiased pb-16 md:pb-0`}>
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             <LanguageProvider>
               {children}
+              <MobileBottomNav />
               <Toaster />
             </LanguageProvider>
           </ThemeProvider>

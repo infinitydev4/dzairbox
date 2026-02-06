@@ -6,6 +6,7 @@ import { TemplateRenderer } from "@/components/templates/template-renderer"
 import { BusinessPage } from "@/components/business/business-page"
 import { LivePageEditor } from "@/components/builder/live-page-editor"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/components/language-provider"
 import { Edit3, Loader2 } from "lucide-react"
 
 interface PublicBusinessPageProps {
@@ -15,6 +16,7 @@ interface PublicBusinessPageProps {
 }
 
 export function PublicBusinessPage({ business, useCustomPage, config }: PublicBusinessPageProps) {
+  const { t } = useLanguage()
   const [isOwner, setIsOwner] = useState<boolean | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [isCheckingOwnership, setIsCheckingOwnership] = useState(true)
@@ -55,7 +57,7 @@ export function PublicBusinessPage({ business, useCustomPage, config }: PublicBu
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Edit3 className="h-5 w-5" />
-              <span className="font-medium">Vous êtes le propriétaire de cette page</span>
+              <span className="font-medium">{t('dashboard.builder.ownerBanner.title')}</span>
             </div>
             
             <Button
@@ -64,7 +66,7 @@ export function PublicBusinessPage({ business, useCustomPage, config }: PublicBu
               className="bg-white text-emerald-600 hover:bg-gray-100 shadow-md"
             >
               <Edit3 className="mr-2 h-4 w-4" />
-              Personnaliser cette page
+              {t('dashboard.builder.ownerBanner.customize')}
             </Button>
           </div>
         </div>

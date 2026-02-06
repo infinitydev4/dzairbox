@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Phone, Mail, Clock, MapPin, Navigation, Facebook, Instagram, Youtube } from "lucide-react"
 import { BusinessPageConfigData, BusinessWithConfig } from "@/types/template"
 import { useLanguage } from "@/components/language-provider"
+import { daysOfWeek } from "@/lib/constants"
 import Image from "next/image"
 
 interface ContactSidebarProps {
@@ -13,7 +14,7 @@ interface ContactSidebarProps {
 }
 
 export function ContactSidebar({ business, config }: ContactSidebarProps) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const handleCall = () => {
     if (business.phone) {
@@ -73,15 +74,19 @@ export function ContactSidebar({ business, config }: ContactSidebarProps) {
 
   const parsedHours = parseHours(business.hours)
 
-  const daysOfWeek = [
-    { key: "dimanche", label: t('days.sunday') },
-    { key: "lundi", label: t('days.monday') },
-    { key: "mardi", label: t('days.tuesday') },
-    { key: "mercredi", label: t('days.wednesday') },
-    { key: "jeudi", label: t('days.thursday') },
-    { key: "vendredi", label: t('days.friday') },
-    { key: "samedi", label: t('days.saturday') }
-  ]
+  // Fonction pour obtenir le label traduit d'un jour
+  const getDayLabel = (dayKey: string) => {
+    const translations: Record<string, string> = {
+      "sunday": t('days.sunday'),
+      "monday": t('days.monday'),
+      "tuesday": t('days.tuesday'),
+      "wednesday": t('days.wednesday'),
+      "thursday": t('days.thursday'),
+      "friday": t('days.friday'),
+      "saturday": t('days.saturday')
+    }
+    return translations[dayKey] || dayKey
+  }
 
   if (!config.sidebar) return null
 
@@ -110,7 +115,7 @@ export function ContactSidebar({ business, config }: ContactSidebarProps) {
               }}
             >
               <Phone className="mr-2 h-5 w-5" />
-              {business.phone}
+              <span dir="ltr">{business.phone}</span>
             </Button>
           )}
 
@@ -227,7 +232,7 @@ export function ContactSidebar({ business, config }: ContactSidebarProps) {
                 
                 return (
                   <div key={day.key} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
-                    <span className="font-medium text-gray-700">{day.label}</span>
+                    <span className="font-medium text-gray-700">{getDayLabel(day.key)}</span>
                     <span className="text-gray-600">
                       {dayHours.closed 
                         ? t('dashboard.editBusiness.hours.closed') || 'Fermé'

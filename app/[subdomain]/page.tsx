@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: BusinessPageProps): Promise<M
   
   if (!business) {
     return {
-      title: "Service non trouvé - DzBox"
+      title: "Service non trouvé - Dzairbox"
     }
   }
 
@@ -60,9 +60,9 @@ export async function generateMetadata({ params }: BusinessPageProps): Promise<M
   }
 
   return {
-    title: `${title} - ${business.category} | DzBox`,
+    title: `${title} - ${business.category} | Dzairbox`,
     description: description,
-    keywords: `${business.name}, ${business.category}, ${business.address}, Algérie, DzBox`,
+    keywords: `${business.name}, ${business.category}, ${business.address}, Algérie, Dzairbox`,
     openGraph: {
       title: title,
       description: description,

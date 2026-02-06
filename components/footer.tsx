@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useLanguage } from "@/components/language-provider"
 import { Building2, Mail, MapPin, Phone } from "lucide-react"
 
@@ -14,11 +15,14 @@ export function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8">
           {/* Logo & Description */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center">
-                <Building2 className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-xl font-bold text-gray-900">DzairBox</span>
+            <Link href="/" className="flex items-center">
+              <Image 
+                src="/logo-dzairbox.png" 
+                alt="DzairBox" 
+                width={160} 
+                height={45}
+                className="h-12 w-auto"
+              />
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed">
               {t("footer.description")}
@@ -67,12 +71,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/register" className="text-sm hover:text-emerald-500 transition-colors">
+                <Link href="/create-service" className="text-sm hover:text-emerald-500 transition-colors">
                   {t("footer.createPage")}
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="text-sm hover:text-emerald-500 transition-colors">
+                <Link href="/auth/signin" className="text-sm hover:text-emerald-500 transition-colors">
                   {t("footer.login")}
                 </Link>
               </li>

@@ -5,6 +5,7 @@ import { getBusinessFullUrl } from "@/lib/business-url"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useLanguage } from "@/components/language-provider"
+import { daysOfWeek } from "@/lib/constants"
 import { 
   MapPin, 
   Phone, 
@@ -46,7 +47,7 @@ interface BusinessPageProps {
 }
 
 export function BusinessPage({ business }: BusinessPageProps) {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [showAllServices, setShowAllServices] = useState(false)
   const [copied, setCopied] = useState(false)
 
@@ -80,15 +81,19 @@ export function BusinessPage({ business }: BusinessPageProps) {
 
   const parsedHours = parseHours(business.hours)
 
-  const daysOfWeek = [
-    { key: "dimanche", label: t('days.sunday') },
-    { key: "lundi", label: t('days.monday') },
-    { key: "mardi", label: t('days.tuesday') },
-    { key: "mercredi", label: t('days.wednesday') },
-    { key: "jeudi", label: t('days.thursday') },
-    { key: "vendredi", label: t('days.friday') },
-    { key: "samedi", label: t('days.saturday') }
-  ]
+  // Fonction pour obtenir le label traduit d'un jour
+  const getDayLabel = (dayKey: string) => {
+    const translations: Record<string, string> = {
+      "sunday": t('days.sunday'),
+      "monday": t('days.monday'),
+      "tuesday": t('days.tuesday'),
+      "wednesday": t('days.wednesday'),
+      "thursday": t('days.thursday'),
+      "friday": t('days.friday'),
+      "saturday": t('days.saturday')
+    }
+    return translations[dayKey] || dayKey
+  }
 
   const handleShare = async () => {
     const url = getBusinessFullUrl(business.subdomain)
@@ -305,7 +310,7 @@ export function BusinessPage({ business }: BusinessPageProps) {
                     className="w-full bg-emerald-600 hover:bg-emerald-700 text-lg py-6 rounded-xl shadow-lg"
                   >
                     <Phone className="mr-2 h-5 w-5" />
-                    {business.phone}
+                    <span dir="ltr">{business.phone}</span>
                   </Button>
                 )}
 
@@ -404,7 +409,7 @@ export function BusinessPage({ business }: BusinessPageProps) {
                       
                       return (
                         <div key={day.key} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
-                          <span className="font-medium text-gray-700">{day.label}</span>
+                          <span className="font-medium text-gray-700">{getDayLabel(day.key)}</span>
                           <span className="text-gray-600">
                             {dayHours.closed 
                               ? (t('dashboard.editBusiness.hours.closed') || 'Fermé')
@@ -448,7 +453,7 @@ export function BusinessPage({ business }: BusinessPageProps) {
           </p>
           <div className="flex items-center justify-center space-x-4">
             <a 
-              href="https://dzbusiness.dz" 
+              href="/create-service" 
               className="text-emerald-600 hover:text-emerald-700 font-medium"
             >
               {t('business.page.createMyPage')}
