@@ -9,9 +9,15 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 export async function sendVerificationEmail(email: string, token: string, name?: string) {
   const verificationUrl = `${process.env.NEXTAUTH_URL}/auth/verify-email?token=${token}`
   
+  // En développement, utiliser l'email de test Resend
+  // En production, utiliser le domaine vérifié
+  const fromEmail = process.env.NODE_ENV === 'production' 
+    ? 'DzairBox <noreply@dzbusiness.dz>'
+    : 'DzairBox <onboarding@resend.dev>'
+  
   try {
     const { data, error } = await resend.emails.send({
-      from: 'DzairBox <noreply@dzbusiness.dz>',
+      from: fromEmail,
       to: email,
       subject: 'Vérifiez votre adresse email - DzairBox',
       html: getVerificationEmailTemplate(verificationUrl, name || 'Utilisateur'),
