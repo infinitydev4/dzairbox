@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
 import { useLanguage } from "@/components/language-provider"
 import { Building2, Mail, MapPin, Phone } from "lucide-react"
 
@@ -16,11 +15,9 @@ export function Footer() {
           {/* Logo & Description */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center">
-              <Image 
+              <img 
                 src="/logo-dzairbox.png" 
                 alt="DzairBox" 
-                width={160} 
-                height={45}
                 className="h-12 w-auto"
               />
             </Link>

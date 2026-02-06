@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { useSession, signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Globe, User } from "lucide-react"
@@ -18,13 +17,10 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <Image 
+          <img 
             src="/logo-dzairbox.png" 
             alt="DzairBox" 
-            width={240} 
-            height={40}
-            className="h-36 w-auto"
-            priority
+            className="h-10 w-auto"
           />
         </Link>
 
