@@ -20,7 +20,7 @@ export function Header() {
           <img 
             src="/logo-dzairbox.png" 
             alt="DzairBox" 
-            className="h-10 w-auto"
+            className="h-36 w-auto"
           />
         </Link>
 

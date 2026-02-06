@@ -18,7 +18,7 @@ export function Footer() {
               <img 
                 src="/logo-dzairbox.png" 
                 alt="DzairBox" 
-                className="h-12 w-auto"
+                className="h-36 w-auto"
               />
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed">
