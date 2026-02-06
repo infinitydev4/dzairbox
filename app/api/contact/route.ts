@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { sendContactEmail } from "@/lib/email"
 
 export const dynamic = 'force-dynamic'
 
@@ -6,10 +7,10 @@ export async function POST(req: NextRequest) {
   try {
     const { name, email, phone, subject, message } = await req.json()
 
-    // Validation des données obligatoires
+    // Validation des champs requis
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
-        { error: "Tous les champs obligatoires doivent être remplis" },
+        { message: "Tous les champs obligatoires doivent être remplis" },
         { status: 400 }
       )
     }
@@ -18,37 +19,55 @@ export async function POST(req: NextRequest) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: "Adresse email invalide" },
+        { message: "Adresse email invalide" },
         { status: 400 }
       )
     }
 
-    // Pour l'instant, nous loggons les messages de contact
-    // Dans une vraie application, vous enverriez un email ou stockeriez en base
-    console.log("Nouveau message de contact:", {
+    // Validation de la longueur du message
+    if (message.length < 10) {
+      return NextResponse.json(
+        { message: "Le message doit contenir au moins 10 caractères" },
+        { status: 400 }
+      )
+    }
+
+    if (message.length > 2000) {
+      return NextResponse.json(
+        { message: "Le message ne doit pas dépasser 2000 caractères" },
+        { status: 400 }
+      )
+    }
+
+    // Envoyer l'email
+    const emailResult = await sendContactEmail(
       name,
       email,
-      phone,
+      phone || '',
       subject,
-      message,
-      timestamp: new Date().toISOString()
-    })
+      message
+    )
 
-    // Ici vous pourriez :
-    // 1. Envoyer un email à l'équipe support
-    // 2. Stocker le message en base de données
-    // 3. Intégrer avec un service comme SendGrid, Mailgun, etc.
+    if (!emailResult.success) {
+      console.error("Failed to send contact email:", emailResult.error)
+      return NextResponse.json(
+        { message: "Erreur lors de l'envoi du message. Veuillez réessayer." },
+        { status: 500 }
+      )
+    }
 
-    return NextResponse.json({
-      success: true,
-      message: "Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais."
-    })
-
+    return NextResponse.json(
+      { 
+        message: "Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.",
+        success: true
+      },
+      { status: 200 }
+    )
   } catch (error) {
     console.error("Error processing contact form:", error)
     return NextResponse.json(
-      { error: "Erreur lors de l'envoi du message. Veuillez réessayer." },
+      { message: "Erreur interne du serveur" },
       { status: 500 }
     )
   }
-} 
+}
