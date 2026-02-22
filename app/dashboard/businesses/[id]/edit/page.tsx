@@ -934,7 +934,7 @@ export default function EditBusinessPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => router.push(`/business/${formData.subdomain}`)}
+                  onClick={() => router.push(`/${formData.subdomain}`)}
                   className="flex-1 sm:flex-none rounded-xl border-gray-300 hover:bg-gray-50"
                 >
                   <Eye className="h-4 w-4 mr-2" />

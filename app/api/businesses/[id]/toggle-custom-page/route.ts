@@ -78,7 +78,6 @@ export async function POST(
 
       // Revalider le cache
       revalidatePath(`/${business.subdomain}`)
-      revalidatePath(`/business/${business.subdomain}`)
 
       return NextResponse.json({ 
         success: true, 
@@ -94,7 +93,6 @@ export async function POST(
 
       // Revalider le cache
       revalidatePath(`/${business.subdomain}`)
-      revalidatePath(`/business/${business.subdomain}`)
 
       return NextResponse.json({ 
         success: true, 

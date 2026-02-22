@@ -182,7 +182,6 @@ export async function POST(
     // Revalider le cache de la page publique si published
     if (publish) {
       revalidatePath(`/${business.subdomain}`)
-      revalidatePath(`/business/${business.subdomain}`)
       console.log('✅ Cache revalidé pour:', business.subdomain)
     }
 
