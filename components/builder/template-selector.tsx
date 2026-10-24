@@ -1,10 +1,9 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { TemplateKey } from "@/types/template"
 import { useLanguage } from "@/components/language-provider"
-import { Check, Layout } from "lucide-react"
-
+import { Check } from "lucide-react"
 interface TemplateSelectorProps {
   selected: TemplateKey
   onChange: (key: TemplateKey) => void

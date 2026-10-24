@@ -1,70 +1,77 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useSyncExternalStore, type FormEvent } from "react"
+import { useSearchParams } from "next/navigation"
+import Link from "next/link"
+import Image from "next/image"
 import { signIn } from "next-auth/react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ArrowLeft, ArrowRight, Eye, EyeOff, Loader2, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { useLanguage } from "@/components/language-provider"
-import Link from "next/link"
 
-interface SigninFormProps {
-  callbackUrl?: string
-  hasPendingBusiness?: boolean
+function BrandMark() {
+  return (
+    <svg className="dz-brand-mark" width="34" height="34" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+      <path d="M19 2.5C10.2 2.5 3.5 9.2 3.5 18c0 11.3 15.5 17.5 15.5 17.5S34.5 29.3 34.5 18C34.5 9.2 27.8 2.5 19 2.5Z" fill="currentColor" />
+      <path d="m19 10 8.5 4.7v9.2L19 28.7l-8.5-4.8v-9.2L19 10Z" stroke="#F7F6F0" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="m10.7 14.8 8.3 4.7 8.3-4.7M19 19.5v9" stroke="#F7F6F0" strokeWidth="1.5" strokeLinejoin="round" />
+    </svg>
+  )
 }
 
-export function SigninForm({ callbackUrl, hasPendingBusiness }: SigninFormProps) {
-  const { t } = useLanguage()
+export function SignInExperience() {
+  const { t, language, setLanguage } = useLanguage()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || undefined
+  const action = searchParams.get("action")
+  const hasPendingBusiness = useSyncExternalStore(
+    () => () => {},
+    () => Boolean(localStorage.getItem("pendingBusinessData")) || action === "complete_business",
+    () => action === "complete_business"
+  )
   const [isLoading, setIsLoading] = useState(false)
   const [isResending, setIsResending] = useState(false)
   const [showResendButton, setShowResendButton] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [tipOpen, setTipOpen] = useState(false)
+  const [formError, setFormError] = useState("")
+  const [resendNotice, setResendNotice] = useState("")
   const [unverifiedEmail, setUnverifiedEmail] = useState("")
-  const [formData, setFormData] = useState({
-    email: "",
-    password: ""
-  })
+  const [formData, setFormData] = useState({ email: "", password: "" })
   const { toast } = useToast()
+  const BackIcon = language === "ar" ? ArrowRight : ArrowLeft
+  const ForwardIcon = language === "ar" ? ArrowLeft : ArrowRight
+  const signupHref = "/onboarding"
 
   const handleResendVerification = async () => {
     setIsResending(true)
+    setResendNotice("")
     try {
       const response = await fetch("/api/auth/resend-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: unverifiedEmail }),
       })
-
       const data = await response.json()
-
       if (response.ok) {
-        toast({
-          title: "Email envoyé",
-          description: "Un nouvel email de vérification a été envoyé. Vérifiez votre boîte de réception.",
-        })
+        setResendNotice(t("auth.signin.resendSent"))
         setShowResendButton(false)
       } else {
-        toast({
-          title: "Erreur",
-          description: data.message || "Impossible d'envoyer l'email",
-          variant: "destructive",
-        })
+        setFormError(data.message || t("auth.signin.resendError"))
       }
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue",
-        variant: "destructive",
-      })
+    } catch {
+      setFormError(t("auth.signin.errorUnexpected"))
     } finally {
       setIsResending(false)
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setShowResendButton(false)
+    setFormError("")
+    setResendNotice("")
 
     try {
       const result = await signIn("credentials", {
@@ -76,126 +83,182 @@ export function SigninForm({ callbackUrl, hasPendingBusiness }: SigninFormProps)
 
       if (result?.ok) {
         toast({
-          title: t('auth.signin.success'),
-          description: hasPendingBusiness 
-            ? t('auth.signin.successPending')
-            : t('auth.signin.successRedirect'),
+          title: t("auth.signin.success"),
+          description: hasPendingBusiness
+            ? t("auth.signin.successPending")
+            : t("auth.signin.successRedirect"),
         })
-        window.location.href = callbackUrl || "/dashboard"
+        window.location.assign(callbackUrl || "/dashboard")
+      } else if (result?.error && result.error.includes("vérifier votre email")) {
+        setUnverifiedEmail(formData.email)
+        setShowResendButton(true)
+        setFormError(result.error)
       } else {
-        // Vérifier si l'erreur est liée à l'email non vérifié
-        if (result?.error && result.error.includes("vérifier votre email")) {
-          setUnverifiedEmail(formData.email)
-          setShowResendButton(true)
-          toast({
-            title: "Email non vérifié",
-            description: result.error,
-            variant: "destructive",
-          })
-        } else {
-          toast({
-            title: t('auth.signin.error'),
-            description: result?.error || t('auth.signin.errorMessage'),
-            variant: "destructive",
-          })
-        }
+        setFormError(result?.error || t("auth.signin.errorMessage"))
       }
-    } catch (error) {
-      toast({
-        title: t('auth.signin.error'),
-        description: t('auth.signin.errorUnexpected'),
-        variant: "destructive",
-      })
+    } catch {
+      setFormError(t("auth.signin.errorUnexpected"))
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl text-center">{t('auth.signin.title')}</CardTitle>
-        <CardDescription className="text-center">
-          {hasPendingBusiness 
-            ? t('auth.signin.pendingBusiness')
-            : t('auth.signin.description')
-          }
-        </CardDescription>
-        {hasPendingBusiness && (
-          <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 mt-4">
-            <div className="flex items-center space-x-2">
-              <span className="text-emerald-600">🏢</span>
-              <span className="text-sm text-emerald-700 font-medium">
-                {t('auth.signin.pendingBadge')}
-              </span>
-            </div>
-            <p className="text-xs text-emerald-600 mt-1">
-              {t('auth.signin.pendingMessage')}
-            </p>
+    <div className={`dz-home ob-root ob-login ${language === "ar" ? "ob-ar" : ""}`} dir={language === "ar" ? "rtl" : "ltr"}>
+      <header className="ob-header">
+        <Link href="/" className="dz-brand" aria-label="DzairBox">
+          <BrandMark />
+          <span>Dzair<span>Box</span></span>
+        </Link>
+        <span className="ob-header-label">{t("auth.signin.kicker")}</span>
+        <div className="ob-header-actions">
+          <div className="dz-language" aria-label={t("home.nav.language")}>
+            <button type="button" lang="fr" aria-pressed={language === "fr"} onClick={() => setLanguage("fr")}>FR</button>
+            <span aria-hidden="true" />
+            <button type="button" lang="ar" aria-pressed={language === "ar"} onClick={() => setLanguage("ar")}>ع</button>
           </div>
-        )}
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">
-              {t('auth.signin.email')}
-            </label>
-            <Input
-              id="email"
-              type="email"
-              placeholder={t('auth.signin.emailPlaceholder')}
-              value={formData.email}
-              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-              disabled={isLoading}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">
-              {t('auth.signin.password')}
-            </label>
-            <Input
-              id="password"
-              type="password"
-              placeholder={t('auth.signin.passwordPlaceholder')}
-              value={formData.password}
-              onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-              disabled={isLoading}
-              required
-            />
-          </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? t('auth.signin.submitting') : t('auth.signin.submit')}
-          </Button>
-        </form>
-
-        {showResendButton && (
-          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <p className="text-sm text-amber-800 mb-3">
-              Votre email n'a pas encore été vérifié. Consultez votre boîte de réception ou cliquez ci-dessous pour recevoir un nouvel email.
-            </p>
-            <Button
-              onClick={handleResendVerification}
-              disabled={isResending}
-              variant="outline"
-              className="w-full"
-            >
-              {isResending ? "Envoi en cours..." : "Renvoyer l'email de vérification"}
-            </Button>
-          </div>
-        )}
-
-        <div className="mt-4 text-center text-sm">
-          {t('auth.signin.noAccount')}{" "}
-          <Link 
-            href={`/auth/signup${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`}
-            className="text-emerald-600 hover:underline"
-          >
-            {t('auth.signin.signup')}
+          <Link className="ob-exit" href="/">
+            <span>{t("onboarding.backHome")}</span>
+            <BackIcon size={16} aria-hidden="true" />
           </Link>
         </div>
-      </CardContent>
-    </Card>
+      </header>
+
+      <div className="ob-layout">
+        <aside className="ob-guide">
+          <div className="ob-guide-top">
+            <span className="ob-guide-identity">
+              <i className="ob-status-dot" />
+              <strong>{t("onboarding.guideName")}</strong>
+            </span>
+            <span>{t("onboarding.guideRole")}</span>
+          </div>
+          <div className="ob-guide-intro">
+            <h2>{t("auth.signin.guideIntro")}</h2>
+            <p>{t("auth.signin.guideIntroSub")}</p>
+          </div>
+          <div className="ob-character-scene">
+            <div className="ob-character-halo" />
+            <div className="ob-character-orbit" />
+            <Image
+              className="ob-character"
+              src="/images/onboarding/sami-guide.webp"
+              alt={t("onboarding.guideAlt")}
+              width={720}
+              height={1080}
+              sizes="(max-width:850px) 100px, 400px"
+              preload
+            />
+            <span className="ob-character-badge">
+              <ShieldCheck size={15} aria-hidden="true" />
+              {t("auth.signin.badge")}
+            </span>
+          </div>
+          <div className={`ob-guide-bubble${tipOpen ? " is-expanded" : ""}`}>
+            <span className="ob-bubble-label">
+              <Sparkles size={15} aria-hidden="true" />
+              {t("onboarding.guideTip")}
+            </span>
+            <p>{t("auth.signin.tip")}</p>
+            <button type="button" className="ob-tip-toggle" aria-expanded={tipOpen} onClick={() => setTipOpen((open) => !open)}>
+              {t(tipOpen ? "onboarding.guideHide" : "onboarding.guideShow")}
+            </button>
+          </div>
+          <p className="ob-guide-footer">{t("onboarding.guideFooter")}</p>
+        </aside>
+
+        <main className="ob-main">
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="ob-heading">
+              <span className="ob-heading-icon">
+                <LockKeyhole size={23} aria-hidden="true" />
+              </span>
+              <h1>{hasPendingBusiness ? t("auth.signin.pendingBusiness") : t("auth.signin.title")}</h1>
+              <p>{hasPendingBusiness ? t("auth.signin.pendingMessage") : t("auth.signin.description")}</p>
+            </div>
+
+            {hasPendingBusiness && (
+              <div className="ob-connected ob-pending">
+                <ShieldCheck aria-hidden="true" />
+                <div>
+                  <strong>{t("auth.signin.pendingBadge")}</strong>
+                  <p>{t("auth.signin.pendingMessage")}</p>
+                </div>
+              </div>
+            )}
+
+            <p className="ob-login-prompt">
+              {t("auth.signin.noAccount")}{" "}
+              <Link href={signupHref}>{t("auth.signin.signup")}</Link>
+            </p>
+            <div className="ob-fields">
+              <label className="ob-field" htmlFor="email">
+                {t("auth.signin.email")}
+                <input
+                  id="email"
+                  type="email"
+                  dir="ltr"
+                  autoComplete="email"
+                  placeholder={t("onboarding.account.emailPlaceholder")}
+                  value={formData.email}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                  disabled={isLoading}
+                  required
+                />
+              </label>
+              <label className="ob-field" htmlFor="password">
+                {t("auth.signin.password")}
+                <span className="ob-password">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    placeholder={t("auth.signin.passwordPlaceholder")}
+                    value={formData.password}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, password: e.target.value }))}
+                    disabled={isLoading}
+                    required
+                  />
+                  <button
+                    type="button"
+                    aria-label={t(showPassword ? "onboarding.account.hide" : "onboarding.account.show")}
+                    onClick={() => setShowPassword((value) => !value)}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </span>
+              </label>
+            </div>
+
+            {formError && <div className="ob-server-error" role="alert">{formError}</div>}
+            {resendNotice && <p className="ob-restored" role="status">{resendNotice}</p>}
+            {showResendButton && (
+              <div className="ob-moderation">
+                <Sparkles size={20} aria-hidden="true" />
+                <div>
+                  <p>{t("auth.signin.resendText")}</p>
+                  <button type="button" className="ob-text-button" onClick={handleResendVerification} disabled={isResending}>
+                    {isResending ? t("auth.signin.resending") : t("auth.signin.resend")}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="ob-form-actions">
+              <span className="ob-no-card">
+                <ShieldCheck size={15} aria-hidden="true" />
+                {t("auth.signin.secure")}
+              </span>
+              <button type="submit" className="ob-primary" disabled={isLoading}>
+                {isLoading ? <Loader2 size={17} className="ob-spin" aria-hidden="true" /> : null}
+                {isLoading ? t("auth.signin.submitting") : t("auth.signin.submit")}
+                <ForwardIcon size={17} aria-hidden="true" />
+              </button>
+            </div>
+            <p className="ob-form-footnote">{t("onboarding.guideFooter")}</p>
+          </form>
+        </main>
+      </div>
+    </div>
   )
-} 
+}

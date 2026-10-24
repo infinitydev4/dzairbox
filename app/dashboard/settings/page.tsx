@@ -1,18 +1,18 @@
 "use client"
 
-import { useSession, signOut } from "next-auth/react"
+import { signOut } from "next-auth/react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { 
-  Settings, 
-  Globe, 
-  Bell, 
-  Shield, 
-  Trash2, 
-  LogOut, 
-  Moon, 
-  Sun, 
+import {
+  Settings,
+  Globe,
+  Bell,
+  Shield,
+  Trash2,
+  LogOut,
+  Moon,
+  Sun,
   Monitor,
   CheckCircle,
   AlertTriangle,
@@ -25,16 +25,14 @@ import {
   Smartphone,
   Volume2,
   VolumeX,
-  Crown,
   Star,
   Sliders,
-  Lock
+  Lock,
 } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 
 export default function SettingsPage() {
   const { t, language, setLanguage } = useLanguage()
-  const { data: session } = useSession()
   const [activeTab, setActiveTab] = useState<'language' | 'theme' | 'notifications' | 'security' | 'danger'>('language')
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('light')
   const [notifications, setNotifications] = useState({
@@ -234,8 +232,8 @@ export default function SettingsPage() {
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-gray-900 mb-3">Support multilingue</h3>
                       <p className="text-gray-600 mb-4 leading-relaxed">
-                        DzairBox prend en charge le français et l'arabe avec une interface complètement adaptée, 
-                        incluant la direction RTL pour l'arabe et des traductions localisées.
+                        DzairBox prend en charge le français et l&apos;arabe avec une interface complètement adaptée,
+                        incluant la direction RTL pour l&apos;arabe et des traductions localisées.
                       </p>
                       <div className="flex items-center space-x-3">
                         <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
@@ -273,7 +271,7 @@ export default function SettingsPage() {
                 ].map(({ key, icon: Icon, label, color, gradient }) => (
                   <div
                     key={key}
-                    onClick={() => setTheme(key as any)}
+                    onClick={() => setTheme(key as "light" | "dark" | "system")}
                     className={`cursor-pointer p-8 rounded-3xl border-2 transition-all duration-300 hover:shadow-lg ${
                       theme === key
                         ? `border-emerald-500 bg-gradient-to-br ${gradient} shadow-xl shadow-emerald-500/25 scale-105`
@@ -552,4 +550,4 @@ export default function SettingsPage() {
       </div>
     </div>
   )
-} 
+}

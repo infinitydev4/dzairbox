@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Send, Bot, User, Loader2 } from "lucide-react"
+import { Send, Bot, Loader2 } from "lucide-react"
 import { ChatMessage } from "./chat-message"
 import { ChatProgress } from "./chat-progress"
 import { BusinessSummary } from "./business-summary"
@@ -32,9 +33,26 @@ export interface BusinessData {
 }
 
 export function ChatInterface() {
+  const router = useRouter()
   const { data: session } = useSession()
   const { t } = useLanguage()
-  const [messages, setMessages] = useState<Message[]>([])
+  const welcomeContent = t('dashboard.chat.welcome')
+  const [welcomeKey, setWelcomeKey] = useState(welcomeContent)
+  const [messages, setMessages] = useState<Message[]>(() => [{
+    id: "welcome",
+    role: "assistant",
+    content: welcomeContent,
+    timestamp: new Date()
+  }])
+  if (welcomeKey !== welcomeContent) {
+    setWelcomeKey(welcomeContent)
+    setMessages([{
+      id: "welcome",
+      role: "assistant",
+      content: welcomeContent,
+      timestamp: new Date()
+    }])
+  }
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [businessData, setBusinessData] = useState<BusinessData>({})
@@ -42,24 +60,13 @@ export function ChatInterface() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [sessionId] = useState(() => Math.random().toString(36).substring(7))
 
-  useEffect(() => {
-    // Message d'accueil
-    const welcomeMessage: Message = {
-      id: "welcome",
-      role: "assistant",
-      content: t('dashboard.chat.welcome'),
-      timestamp: new Date()
-    }
-    setMessages([welcomeMessage])
-  }, [t])
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   useEffect(() => {
     scrollToBottom()
   }, [messages])
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -137,7 +144,7 @@ export function ChatInterface() {
       
       // Rediriger vers la page d'inscription/connexion
       const returnUrl = encodeURIComponent('/register/chat?complete=true')
-      window.location.href = `/auth/signin?callbackUrl=${returnUrl}&action=complete_business`
+      router.push(`/auth/signin?callbackUrl=${returnUrl}&action=complete_business`)
       return
     }
 
@@ -184,7 +191,7 @@ export function ChatInterface() {
 
       // Rediriger vers le dashboard avec un message de succès
       alert(`Entreprise créée avec succès ! Sous-domaine: ${responseData.subdomain}`)
-      window.location.href = `/dashboard?success=business-created&id=${responseData.id}`
+      router.push(`/dashboard?success=business-created&id=${responseData.id}`)
       
     } catch (error) {
       console.error("Erreur lors de la création de l'entreprise:", error)

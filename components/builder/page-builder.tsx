@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -29,16 +29,15 @@ export function PageBuilder({ businessId, currentConfig, businessImages = [], he
   const [config, setConfig] = useState<BusinessPageConfigData>(
     currentConfig || getDefaultConfig("sidebar-right")
   )
+  const [configSource, setConfigSource] = useState(currentConfig)
+  if (currentConfig && configSource !== currentConfig) {
+    setConfigSource(currentConfig)
+    setConfig(currentConfig)
+  }
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [activeTab, setActiveTab] = useState("template")
   const [justSaved, setJustSaved] = useState(false)
-
-  useEffect(() => {
-    if (currentConfig) {
-      setConfig(currentConfig)
-    }
-  }, [currentConfig])
 
   const handleSave = async (publish: boolean) => {
     setIsSaving(true)

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { BusinessPageConfigData, BusinessWithConfig } from "@/types/template"
 import { getDefaultConfig } from "@/types/template"
 import { TemplateRenderer } from "@/components/templates/template-renderer"
@@ -13,20 +13,18 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { useLanguage } from "@/components/language-provider"
-import { 
-  X, 
-  Save, 
-  Eye, 
-  Loader2, 
+import {
+  X,
+  Save,
+  Loader2,
   Edit3,
   Palette,
   Layout,
   Image as ImageIcon,
   Settings,
   Check,
-  HelpCircle
+  HelpCircle,
 } from "lucide-react"
-
 interface LivePageEditorProps {
   business: BusinessWithConfig
   initialConfig: BusinessPageConfigData | null
@@ -39,18 +37,17 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
   const [config, setConfig] = useState<BusinessPageConfigData>(
     initialConfig || getDefaultConfig("sidebar-right")
   )
+  const [configSource, setConfigSource] = useState(initialConfig)
+  if (initialConfig && configSource !== initialConfig) {
+    setConfigSource(initialConfig)
+    setConfig(initialConfig)
+  }
   const [isDirty, setIsDirty] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [activeTab, setActiveTab] = useState("template")
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [justPublished, setJustPublished] = useState(false)
-
-  useEffect(() => {
-    if (initialConfig) {
-      setConfig(initialConfig)
-    }
-  }, [initialConfig])
 
   const handleConfigChange = (newConfig: BusinessPageConfigData) => {
     setConfig(newConfig)
@@ -357,7 +354,7 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
         <div className="flex-1 overflow-y-auto bg-gray-100">
           <div className="min-h-full">
             <TemplateRenderer 
-              business={business as any} 
+              business={business}
               config={config} 
             />
           </div>
@@ -366,4 +363,3 @@ export function LivePageEditor({ business, initialConfig, onClose }: LivePageEdi
     </div>
   )
 }
-

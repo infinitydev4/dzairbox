@@ -125,7 +125,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions)
 
@@ -147,6 +147,7 @@ export async function GET(req: NextRequest) {
     })
 
     // Parser les images pour chaque entreprise
+    const counts = await prisma.businessEvent.groupBy({ by: ["businessId", "kind"], where: { businessId: { in: businesses.map(b => b.id) }, day: { gte: new Date(Date.now() - 30 * 86400000) } }, _sum: { count: true } })
     const businessesWithParsedImages = businesses.map(business => {
       let parsedImages = []
       try {
@@ -158,6 +159,7 @@ export async function GET(req: NextRequest) {
       
       return {
         ...business,
+        stats: Object.fromEntries(counts.filter(c => c.businessId === business.id).map(c => [c.kind, c._sum.count || 0])),
         images: parsedImages
       }
     })

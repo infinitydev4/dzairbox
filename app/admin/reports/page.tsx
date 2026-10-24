@@ -46,25 +46,27 @@ export default function AdminReportsPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (session?.user?.role === "ADMIN") {
-      fetchReportData()
+    if (session?.user?.role !== "ADMIN") return
+    let cancelled = false
+
+    async function loadReport() {
+      try {
+        const response = await fetch("/api/admin/reports")
+        if (!response.ok || cancelled) return
+        const data = await response.json()
+        if (!cancelled) setReportData(data)
+      } catch (error) {
+        console.error("Error fetching report data:", error)
+      } finally {
+        if (!cancelled) setIsLoading(false)
+      }
+    }
+
+    void loadReport()
+    return () => {
+      cancelled = true
     }
   }, [session])
-
-  const fetchReportData = async () => {
-    try {
-      setIsLoading(true)
-      const response = await fetch("/api/admin/reports")
-      if (response.ok) {
-        const data = await response.json()
-        setReportData(data)
-      }
-    } catch (error) {
-      console.error("Error fetching report data:", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const downloadReport = async (type: string) => {
     try {
@@ -112,7 +114,7 @@ export default function AdminReportsPage() {
                 Rapports et Statistiques
               </h1>
               <p className="text-gray-600 mt-2">
-                Analyse détaillée de l'activité sur DzBusiness
+                Analyse détaillée de l&apos;activité sur DzBusiness
               </p>
             </div>
             <Button asChild variant="outline">
@@ -298,7 +300,7 @@ export default function AdminReportsPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Activity className="mr-2 h-5 w-5" />
-                    Vue d'ensemble des performances
+                    Vue d&apos;ensemble des performances
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -335,7 +337,7 @@ export default function AdminReportsPage() {
                       <div className="text-2xl font-bold text-green-600">
                         {reportData.businesses.total > 0 ? Math.round((reportData.businesses.active / reportData.businesses.total) * 100) : 0}%
                       </div>
-                      <p className="text-sm text-gray-600">Taux d'Approbation</p>
+                      <p className="text-sm text-gray-600">Taux d&apos;Approbation</p>
                       <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                         <div 
                           className="bg-green-600 h-2 rounded-full" 

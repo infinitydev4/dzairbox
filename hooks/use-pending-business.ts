@@ -2,10 +2,8 @@ import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
-import { getBusinessUrl } from "@/lib/business-url"
-
 interface PendingBusinessData {
-  businessData: any
+  businessData: Record<string, unknown>
   timestamp: number
 }
 

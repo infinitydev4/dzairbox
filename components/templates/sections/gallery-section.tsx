@@ -1,11 +1,10 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BusinessPageConfigData, BusinessWithConfig } from "@/types/template"
-import { useLanguage } from "@/components/language-provider"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
 
 interface GallerySectionProps {
   business: BusinessWithConfig
@@ -13,7 +12,6 @@ interface GallerySectionProps {
 }
 
 export function GallerySection({ business, config }: GallerySectionProps) {
-  const { t } = useLanguage()
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -61,13 +59,15 @@ export function GallerySection({ business, config }: GallerySectionProps) {
                 className="relative aspect-square cursor-pointer group overflow-hidden rounded-lg"
                 onClick={() => handleImageClick(image, index)}
               >
-                <img
+                <Image
                   src={image}
                   alt={`${business.name} - Photo ${index + 1}`}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  onError={(e) => {
+                  fill
+                  unoptimized
+                  className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  onError={(event) => {
                     console.error("Erreur chargement image galerie:", image)
-                    e.currentTarget.style.display = 'none'
+                    event.currentTarget.style.display = 'none'
                   }}
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
@@ -104,11 +104,15 @@ export function GallerySection({ business, config }: GallerySectionProps) {
             className="max-w-4xl max-h-[90vh] relative"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
+            <Image
               src={selectedImage}
               alt={`${business.name} - Photo ${selectedIndex + 1}`}
+              width={1600}
+              height={1200}
+              unoptimized
               className="max-w-full max-h-[90vh] object-contain rounded-lg"
-              onError={(e) => {
+              style={{ width: "auto", height: "auto", maxWidth: "100%", maxHeight: "90vh" }}
+              onError={() => {
                 console.error("Erreur chargement image lightbox:", selectedImage)
               }}
             />

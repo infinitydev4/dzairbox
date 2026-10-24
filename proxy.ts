@@ -2,7 +2,7 @@ import { withAuth } from "next-auth/middleware"
 import { NextResponse } from "next/server"
 
 export default withAuth(
-  function middleware(req) {
+  function proxy(req) {
     const { pathname } = req.nextUrl
     const token = req.nextauth.token
 
@@ -26,16 +26,30 @@ export default withAuth(
     callbacks: {
       authorized: ({ token, req }) => {
         const { pathname } = req.nextUrl
-        
+
+        // Les fichiers statiques sont servis à la racine de public/ et par les routes metadata de Next.
+        if (/\.(?:svg|png|jpe?g|webp|gif|ico|webmanifest|json)$/i.test(pathname)) {
+          return true
+        }
+
+        // Les pages /[subdomain] des activités actives sont publiques.
+        // Les espaces privés restent soumis au contrôle d’authentification.
+        if (/^\/[^/]+\/?$/.test(pathname) &&
+            !pathname.startsWith("/admin") &&
+            !pathname.startsWith("/dashboard")) {
+          return true
+        }
+
         // Routes publiques
-        if (pathname === "/" || 
-            pathname.startsWith("/auth/") || 
+        if (pathname === "/" ||
+            pathname.startsWith("/auth/") ||
             pathname.startsWith("/api/auth/") ||
             pathname.startsWith("/api/businesses-public") ||
             pathname.startsWith("/api/business/") ||
             pathname.startsWith("/api/contact") ||
             pathname.startsWith("/api/images/proxy") ||
             pathname.startsWith("/register") ||
+            pathname.startsWith("/onboarding") ||
             pathname.startsWith("/create-service") ||
             pathname.startsWith("/businesses") ||
             pathname.startsWith("/business") ||
@@ -65,4 +79,4 @@ export const config = {
      */
     "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
-} 
+}

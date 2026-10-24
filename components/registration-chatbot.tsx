@@ -98,7 +98,7 @@ export function RegistrationChatbot() {
       <CardHeader className="border-b">
         <CardTitle className="flex items-center gap-2">
           <Bot className="h-5 w-5 text-emerald-600" />
-          Assistant d'inscription
+          Assistant d&apos;inscription
         </CardTitle>
       </CardHeader>
 

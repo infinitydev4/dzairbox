@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,6 +15,7 @@ interface SignupFormProps {
 }
 
 export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps) {
+  const router = useRouter()
   const { t } = useLanguage()
   const [isLoading, setIsLoading] = useState(false)
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
@@ -76,7 +77,7 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
 
         // Rediriger vers la page de connexion après 5 secondes
         setTimeout(() => {
-          window.location.href = "/auth/signin"
+          router.push("/auth/signin")
         }, 5000)
       } else {
         const error = await res.json()
@@ -86,7 +87,7 @@ export function SignupForm({ callbackUrl, hasPendingBusiness }: SignupFormProps)
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       toast({
         title: t('auth.signup.error'),
         description: t('auth.signup.errorUnexpected'),

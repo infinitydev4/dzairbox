@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ArrowRight, MapPin, Users, Star, Search, TrendingUp } from "lucide-react"
+import { ArrowRight, MapPin, Star, Search, TrendingUp } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import Link from "next/link"
 import { useState } from "react"
@@ -72,7 +72,7 @@ export function HeroSection() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-20">
-            <Link href="/create-service">
+            <Link href="/onboarding">
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-8 py-6 text-lg font-semibold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 group border-0"

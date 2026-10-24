@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { 
+import {
   LayoutDashboard,
   Users,
   Building2,
@@ -13,13 +13,11 @@ import {
   Clock,
   CheckCircle,
   AlertTriangle,
-  FileText,
   HelpCircle,
   ChevronLeft,
   ChevronRight,
-  CreditCard
+  CreditCard,
 } from "lucide-react"
-
 const navigationItems = [
   {
     name: "Dashboard",
@@ -90,18 +88,18 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ isOpen = true, onClose }: AdminSidebarProps) {
   const pathname = usePathname()
+  const currentItem = navigationItems.find(item =>
+    item.submenu?.some(sub => sub.href === pathname)
+  )
   const [collapsed, setCollapsed] = useState(false)
-  const [expandedMenus, setExpandedMenus] = useState<string[]>([])
-
-  // Auto-expand menu if current path matches submenu
-  useEffect(() => {
-    const currentItem = navigationItems.find(item => 
-      item.submenu?.some(sub => sub.href === pathname)
-    )
+  const [expandedMenus, setExpandedMenus] = useState<string[]>(() => currentItem ? [currentItem.name] : [])
+  const [expandedPath, setExpandedPath] = useState(pathname)
+  if (expandedPath !== pathname) {
+    setExpandedPath(pathname)
     if (currentItem && !expandedMenus.includes(currentItem.name)) {
       setExpandedMenus([...expandedMenus, currentItem.name])
     }
-  }, [pathname])
+  }
 
   const toggleSubmenu = (itemName: string) => {
     setExpandedMenus(prev => 

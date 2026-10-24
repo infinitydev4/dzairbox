@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -38,11 +37,26 @@ export interface BusinessData {
 }
 
 export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
-  const { data: session } = useSession()
   const router = useRouter()
   const { toast } = useToast()
   const { t } = useLanguage()
-  const [messages, setMessages] = useState<Message[]>([])
+  const welcomeContent = t("dashboard.createBusinessAI.welcomeMessage")
+  const [welcomeKey, setWelcomeKey] = useState(welcomeContent)
+  const [messages, setMessages] = useState<Message[]>(() => [{
+    id: "welcome",
+    role: "assistant",
+    content: welcomeContent,
+    timestamp: new Date()
+  }])
+  if (welcomeKey !== welcomeContent) {
+    setWelcomeKey(welcomeContent)
+    setMessages([{
+      id: "welcome",
+      role: "assistant",
+      content: welcomeContent,
+      timestamp: new Date()
+    }])
+  }
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [businessData, setBusinessData] = useState<BusinessData>({})
@@ -50,23 +64,13 @@ export function CreateBusinessAI({ onBack }: CreateBusinessAIProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const [sessionId] = useState(() => Math.random().toString(36).substring(7))
 
-  useEffect(() => {
-    const welcomeMessage: Message = {
-      id: "welcome",
-      role: "assistant",
-      content: t("dashboard.createBusinessAI.welcomeMessage"),
-      timestamp: new Date()
-    }
-    setMessages([welcomeMessage])
-  }, [t])
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   useEffect(() => {
     scrollToBottom()
   }, [messages])
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

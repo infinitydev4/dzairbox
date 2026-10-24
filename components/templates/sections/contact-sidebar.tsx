@@ -1,4 +1,5 @@
 "use client"
+import { trackEvent } from "@/lib/studio/events"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -14,21 +15,24 @@ interface ContactSidebarProps {
 }
 
 export function ContactSidebar({ business, config }: ContactSidebarProps) {
-  const { t, language } = useLanguage()
+  const { t } = useLanguage()
 
   const handleCall = () => {
+    trackEvent("call", business.id)
     if (business.phone) {
       window.location.href = `tel:${business.phone}`
     }
   }
 
   const handleEmail = () => {
+    trackEvent("email", business.id)
     if (business.email) {
       window.location.href = `mailto:${business.email}`
     }
   }
 
   const handleDirections = () => {
+    trackEvent("directions", business.id)
     const query = encodeURIComponent(business.address)
     window.open(`https://maps.google.com/?q=${query}`, '_blank')
   }
@@ -58,7 +62,7 @@ export function ContactSidebar({ business, config }: ContactSidebarProps) {
   }
 
   // Parse hours
-  const parseHours = (hours: string | null | any) => {
+  const parseHours = (hours: string | Record<string, unknown> | null) => {
     if (!hours) return null
     if (typeof hours === 'object' && hours !== null) return hours
     if (typeof hours === 'string') {

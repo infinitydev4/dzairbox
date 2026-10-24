@@ -7,8 +7,9 @@ import { AboutSection } from "../sections/about-section"
 import { GallerySection } from "../sections/gallery-section"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, MapPin, Navigation, Clock } from "lucide-react"
+import { Phone, Mail, MapPin, Navigation } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import Link from "next/link"
 
 interface HeroFullTemplateProps {
   business: BusinessWithConfig
@@ -16,7 +17,7 @@ interface HeroFullTemplateProps {
 }
 
 export function HeroFullTemplate({ business, config }: HeroFullTemplateProps) {
-  const { t, language } = useLanguage()
+  const { t } = useLanguage()
 
   const handleCall = () => {
     if (business.phone) window.location.href = `tel:${business.phone}`
@@ -141,11 +142,11 @@ export function HeroFullTemplate({ business, config }: HeroFullTemplateProps) {
           Cette page est hébergée sur Dzairbox
         </p>
         <div className="flex items-center justify-center space-x-4">
-          <a 
-            href="/create-service" 
+          <Link
+            href="/onboarding"
             className="font-medium transition-colors hover:underline"
-            style={{ 
-              color: config.theme.primaryColor 
+            style={{
+              color: config.theme.primaryColor
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = config.theme.secondaryColor
@@ -155,7 +156,7 @@ export function HeroFullTemplate({ business, config }: HeroFullTemplateProps) {
             }}
           >
             Créer ma page entreprise
-          </a>
+          </Link>
         </div>
       </div>
     </div>

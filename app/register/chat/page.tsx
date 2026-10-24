@@ -11,7 +11,7 @@ export default function RegisterChatPage() {
             Inscription de votre entreprise
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Notre assistant IA va vous accompagner étape par étape pour créer votre profil d'entreprise.
+            Notre assistant IA va vous accompagner étape par étape pour créer votre profil d&apos;entreprise.
             Répondez simplement aux questions de manière naturelle.
           </p>
         </div>

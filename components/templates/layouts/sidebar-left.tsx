@@ -6,6 +6,7 @@ import { ServicesSection } from "../sections/services-section"
 import { AboutSection } from "../sections/about-section"
 import { GallerySection } from "../sections/gallery-section"
 import { ContactSidebar } from "../sections/contact-sidebar"
+import Link from "next/link"
 
 interface SidebarLeftTemplateProps {
   business: BusinessWithConfig
@@ -47,11 +48,11 @@ export function SidebarLeftTemplate({ business, config }: SidebarLeftTemplatePro
           Cette page est hébergée sur Dzairbox
         </p>
         <div className="flex items-center justify-center space-x-4">
-          <a 
-            href="/create-service" 
+          <Link
+            href="/onboarding"
             className="font-medium transition-colors hover:underline"
-            style={{ 
-              color: config.theme.primaryColor 
+            style={{
+              color: config.theme.primaryColor
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = config.theme.secondaryColor
@@ -61,7 +62,7 @@ export function SidebarLeftTemplate({ business, config }: SidebarLeftTemplatePro
             }}
           >
             Créer ma page entreprise
-          </a>
+          </Link>
         </div>
       </div>
     </div>

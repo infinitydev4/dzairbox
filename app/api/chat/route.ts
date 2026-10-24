@@ -1,7 +1,25 @@
 import { openai } from "@ai-sdk/openai"
-import { streamText } from "ai"
+import { generateText, type ModelMessage } from "ai"
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
+
+type IncomingMessage = {
+  role?: unknown
+  content?: unknown
+}
+
+function toModelMessages(input: unknown): ModelMessage[] {
+  if (!Array.isArray(input)) return []
+
+  return input.flatMap((item): ModelMessage[] => {
+    if (!item || typeof item !== "object") return []
+    const { role, content } = item as IncomingMessage
+    if ((role !== "user" && role !== "assistant" && role !== "system") || typeof content !== "string") {
+      return []
+    }
+    return [{ role, content }]
+  })
+}
 
 export async function POST(req: Request) {
   const { messages } = await req.json()
@@ -30,15 +48,15 @@ export async function POST(req: Request) {
   - Utilise un français adapté au contexte algérien`
 
   try {
-    const result = streamText({
+    const { text } = await generateText({
       model: openai("gpt-4o"),
       system: systemPrompt,
-      messages,
+      messages: toModelMessages(messages),
       temperature: 0.7,
-      maxTokens: 500,
+      maxOutputTokens: 500,
     })
 
-    return result.toDataStreamResponse()
+    return Response.json({ message: text })
   } catch (error) {
     console.error("Error in chat API:", error)
     return new Response("Error processing request", { status: 500 })

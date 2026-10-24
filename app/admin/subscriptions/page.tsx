@@ -1,19 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { 
+import {
   CreditCard,
-  Crown,
   Building2,
   TrendingUp,
   Users,
-  Calendar,
   CheckCircle,
-  XCircle,
-  AlertTriangle,
   Search,
   Filter,
   Download,
@@ -22,18 +18,13 @@ import {
   Eye,
   MoreHorizontal,
   DollarSign,
-  Zap,
   Star,
   Clock,
-  Sparkles,
   BarChart3,
   PieChart,
   Activity,
-  ArrowUpRight,
-  ArrowDownRight,
-  Package
+  Package,
 } from "lucide-react"
-
 interface Subscription {
   id: string
   businessId: string
@@ -156,18 +147,16 @@ export default function AdminSubscriptionsPage() {
   ]
 
   const [subscriptions] = useState<Subscription[]>(mockSubscriptions)
-  const [filteredSubscriptions, setFilteredSubscriptions] = useState<Subscription[]>(mockSubscriptions)
   const [activeTab, setActiveTab] = useState<'overview' | 'subscriptions' | 'plans' | 'analytics'>('overview')
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const [planFilter, setPlanFilter] = useState<string>("all")
 
-  // Filtrage des abonnements
-  useEffect(() => {
+  const filteredSubscriptions = useMemo(() => {
     let filtered = subscriptions
 
     if (searchTerm) {
-      filtered = filtered.filter(sub => 
+      filtered = filtered.filter(sub =>
         sub.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         sub.ownerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         sub.ownerEmail.toLowerCase().includes(searchTerm.toLowerCase())
@@ -182,7 +171,7 @@ export default function AdminSubscriptionsPage() {
       filtered = filtered.filter(sub => sub.plan === planFilter)
     }
 
-    setFilteredSubscriptions(filtered)
+    return filtered
   }, [searchTerm, statusFilter, planFilter, subscriptions])
 
   // Statistiques calculées
@@ -311,7 +300,7 @@ export default function AdminSubscriptionsPage() {
               <CardContent>
                 <div className="text-2xl font-bold text-emerald-600">{stats.activeSubscriptions}</div>
                 <p className="text-xs text-muted-foreground">
-                  {Math.round((stats.activeSubscriptions / stats.totalSubscriptions) * 100)}% taux d'activité
+                  {Math.round((stats.activeSubscriptions / stats.totalSubscriptions) * 100)}% taux d&apos;activité
                 </p>
               </CardContent>
             </Card>
@@ -659,7 +648,7 @@ export default function AdminSubscriptionsPage() {
                   Analytics à venir
                 </h3>
                 <p className="text-gray-600 max-w-md mx-auto">
-                  Des outils d'analyse détaillés pour suivre les performances des abonnements seront bientôt disponibles.
+                  Des outils d&apos;analyse détaillés pour suivre les performances des abonnements seront bientôt disponibles.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
                   <div className="p-4 bg-blue-50 rounded-lg">

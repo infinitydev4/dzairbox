@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useRef } from "react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
-import { Upload, X, Image as ImageIcon, Loader2, CloudUpload } from "lucide-react"
-
+import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react"
 interface ImageUploadProps {
   value?: string
   onChange: (url: string) => void
@@ -19,12 +19,10 @@ interface ImageUploadProps {
 export function ImageUpload({
   value,
   onChange,
-  onRemove,
   disabled,
   className = "",
   placeholder = "Cliquez pour uploader une image",
   aspectRatio = "video",
-  compact = false
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -120,10 +118,12 @@ export function ImageUpload({
       {value ? (
         <div className="relative group">
           <div className={`relative ${getAspectClass()} w-full overflow-hidden rounded-2xl border-2 border-gray-200 bg-white shadow-lg`}>
-            <img
+            <Image
               src={value}
               alt="Image uploadée"
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              fill
+              unoptimized
+              className="object-cover transition-transform group-hover:scale-105"
             />
           </div>
           {!disabled && (

@@ -1,9 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useLanguage } from "@/components/language-provider"
-import { Building2, Mail, MapPin, Phone } from "lucide-react"
-
+import { Mail, MapPin, Phone } from "lucide-react"
 export function Footer() {
   const { t } = useLanguage()
   const currentYear = new Date().getFullYear()
@@ -15,10 +15,13 @@ export function Footer() {
           {/* Logo & Description */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center">
-              <img 
-                src="/logo-dzairbox.png" 
-                alt="DzairBox" 
+              <Image
+                src="/logo-dzairbox.png"
+                alt="DzairBox"
+                width={1204}
+                height={1021}
                 className="h-36 w-auto"
+                style={{ width: "auto", height: "9rem" }}
               />
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed">
@@ -68,7 +71,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/create-service" className="text-sm hover:text-emerald-500 transition-colors">
+                <Link href="/onboarding" className="text-sm hover:text-emerald-500 transition-colors">
                   {t("footer.createPage")}
                 </Link>
               </li>

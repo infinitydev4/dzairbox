@@ -116,8 +116,8 @@ export interface BusinessWithConfig {
   }
   pageConfig?: {
     id: string
-    config: any // Will be parsed as BusinessPageConfigData
-    draft: any | null
+    config: unknown
+    draft: unknown | null
     configVersion: number
     publishedAt: Date | null
   } | null
@@ -125,7 +125,7 @@ export interface BusinessWithConfig {
     id: string
     key: string
     name: string
-    schema: any
+    schema: unknown
   } | null
 }
 

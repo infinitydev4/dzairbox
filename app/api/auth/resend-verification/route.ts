@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { sendVerificationEmail } from "@/lib/email"
+import { sendOnboardingVerification } from "@/lib/onboarding-email"
 import crypto from "crypto"
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
   try {
-    const { email } = await req.json()
+    const body = await req.json()
+    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : ""
+    const language = body.language === "ar" ? "ar" : "fr"
 
     if (!email) {
       return NextResponse.json(
@@ -36,9 +38,9 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Supprimer les anciens tokens de vérification pour cet email
+    // Conserver les liens encore valides si un nouvel envoi échoue.
     await prisma.verificationToken.deleteMany({
-      where: { identifier: email },
+      where: { identifier: email, expires: { lt: new Date() } },
     })
 
     // Générer un nouveau token de vérification
@@ -56,10 +58,10 @@ export async function POST(req: NextRequest) {
     })
 
     // Envoyer l'email de vérification
-    const emailResult = await sendVerificationEmail(email, verificationToken, user.name || undefined)
+    const emailResult = await sendOnboardingVerification(email, verificationToken, user.name || "", language)
 
     if (!emailResult.success) {
-      console.error("Failed to send verification email:", emailResult.error)
+      console.error("Failed to send verification email")
       return NextResponse.json(
         { message: "Erreur lors de l'envoi de l'email" },
         { status: 500 }

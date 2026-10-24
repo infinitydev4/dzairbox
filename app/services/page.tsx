@@ -25,13 +25,14 @@ import {
   Zap,
   TrendingUp,
   Eye,
-  Heart
+  Heart,
+  type LucideIcon,
 } from "lucide-react"
 import Link from "next/link"
 
 interface Service {
   id: string
-  icon: any
+  icon: LucideIcon
   color: string
   popular?: boolean
 }
@@ -40,7 +41,7 @@ export default function ServicesPage() {
   const { t } = useLanguage()
   const { data: session } = useSession()
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const createServiceUrl = session ? '/dashboard/create-business' : '/create-service'
+  const createServiceUrl = session ? '/dashboard/create-business' : '/onboarding'
 
   const services: Service[] = [
     { id: 'directory', icon: Search, color: 'emerald' },

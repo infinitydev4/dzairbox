@@ -1,13 +1,13 @@
 "use client"
 
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
-import { Users, Search, Shield, User, Mail, Calendar, Building2, MoreHorizontal } from "lucide-react"
+import { Users, Search, Shield, Mail, Calendar, Building2, MoreHorizontal } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,28 +30,16 @@ interface UserData {
 }
 
 export default function AdminUsersPage() {
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
   const { toast } = useToast()
   
   const [users, setUsers] = useState<UserData[]>([])
-  const [filteredUsers, setFilteredUsers] = useState<UserData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [roleFilter, setRoleFilter] = useState("all")
 
-  useEffect(() => {
-    if (session?.user?.role === "ADMIN") {
-      fetchUsers()
-    }
-  }, [session])
-
-  useEffect(() => {
-    filterUsers()
-  }, [users, searchTerm, roleFilter])
-
   const fetchUsers = async () => {
     try {
-      setIsLoading(true)
       const response = await fetch("/api/admin/users")
       if (response.ok) {
         const data = await response.json()
@@ -69,7 +57,37 @@ export default function AdminUsersPage() {
     }
   }
 
-  const filterUsers = () => {
+  useEffect(() => {
+    if (session?.user?.role !== "ADMIN") return
+    let cancelled = false
+
+    async function loadUsers() {
+      try {
+        const response = await fetch("/api/admin/users")
+        if (!response.ok || cancelled) return
+        const data = await response.json()
+        if (!cancelled) setUsers(data)
+      } catch (error) {
+        console.error("Error fetching users:", error)
+        if (!cancelled) {
+          toast({
+            title: "Erreur",
+            description: "Erreur lors du chargement des utilisateurs",
+            variant: "destructive"
+          })
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false)
+      }
+    }
+
+    void loadUsers()
+    return () => {
+      cancelled = true
+    }
+  }, [session, toast])
+
+  const filteredUsers = useMemo(() => {
     let filtered = users
 
     if (roleFilter === "admin") {
@@ -79,14 +97,14 @@ export default function AdminUsersPage() {
     }
 
     if (searchTerm) {
-      filtered = filtered.filter(u => 
+      filtered = filtered.filter(u =>
         (u.name && u.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
         u.email.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
-    setFilteredUsers(filtered)
-  }
+    return filtered
+  }, [users, searchTerm, roleFilter])
 
   const handleRoleChange = async (userId: string, newRole: "USER" | "ADMIN") => {
     try {
@@ -103,7 +121,8 @@ export default function AdminUsersPage() {
           title: "Succès",
           description: `Rôle mis à jour vers ${newRole}`,
         })
-        fetchUsers()
+        setIsLoading(true)
+        void fetchUsers()
       }
     } catch (error) {
       console.error("Error updating user role:", error)

@@ -10,7 +10,7 @@ interface PreviewPaneProps {
   businessId: string
 }
 
-export function PreviewPane({ config, businessId }: PreviewPaneProps) {
+export function PreviewPane({ config }: PreviewPaneProps) {
   const { t } = useLanguage()
 
   return (
@@ -54,7 +54,7 @@ export function PreviewPane({ config, businessId }: PreviewPaneProps) {
               {config.sections.about.enabled && (
                 <div className="bg-gray-50 rounded p-3">
                   <div className="text-sm font-medium mb-2">À propos</div>
-                  <div className="text-xs text-gray-600">Description de l'entreprise...</div>
+                  <div className="text-xs text-gray-600">Description de l&apos;entreprise...</div>
                 </div>
               )}
 

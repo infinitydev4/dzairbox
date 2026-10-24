@@ -101,7 +101,7 @@ export async function POST(request: Request) {
 
     console.log("Utilisateur créé et service associé avec succès:", { userId: user.id, businessId: updatedBusiness.id })
 
-    const { password: _, ...userWithoutPassword } = user
+    const { password: _password, ...userWithoutPassword } = user
 
     return NextResponse.json(
       { 

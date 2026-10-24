@@ -5,25 +5,20 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useLanguage } from "@/components/language-provider"
-import { 
+import {
   X,
   Filter,
   Search,
   MapPin,
   Building2,
-  Star,
-  Clock,
-  DollarSign,
   Users,
-  Sliders
+  Sliders,
 } from "lucide-react"
-
 interface BusinessFiltersDrawerProps {
   isOpen: boolean
   onClose: () => void
   onFiltersChange: (filters: BusinessFilters) => void
-  businesses: any[]
+  businesses: Array<{ category: string; address: string }>
 }
 
 export interface BusinessFilters {
@@ -42,8 +37,6 @@ export function BusinessFiltersDrawer({
   onFiltersChange, 
   businesses 
 }: BusinessFiltersDrawerProps) {
-  const { t } = useLanguage()
-  
   const [filters, setFilters] = useState<BusinessFilters>({
     search: '',
     category: '',
@@ -63,7 +56,7 @@ export function BusinessFiltersDrawer({
     return cityPart
   }).filter(Boolean))).sort()
 
-  const handleFilterChange = (key: keyof BusinessFilters, value: any) => {
+  const handleFilterChange = (key: keyof BusinessFilters, value: BusinessFilters[keyof BusinessFilters]) => {
     const newFilters = { ...filters, [key]: value }
     setFilters(newFilters)
     onFiltersChange(newFilters)

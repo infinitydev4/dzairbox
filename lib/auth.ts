@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "./prisma"
-import { Role } from "@prisma/client"
+import type { Role } from "@prisma/client"
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
 
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials.email
+            email: credentials.email.trim().toLowerCase()
           }
         })
 
@@ -38,16 +38,12 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Email ou mot de passe incorrect")
         }
 
-        // Vérifier si l'email est vérifié
-        if (!user.emailVerified) {
-          throw new Error("Veuillez vérifier votre email avant de vous connecter. Consultez votre boîte de réception.")
-        }
-
         return {
           id: user.id,
           email: user.email,
           name: user.name || undefined,
           role: user.role,
+          emailVerified: !!user.emailVerified,
         }
       }
     })
@@ -60,13 +56,17 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id
         token.role = user.role
+        token.emailVerified = !!user.emailVerified
       }
       return token
     },
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string || token.sub as string
-        session.user.role = token.role as Role
+        const current = await prisma.user.findUnique({ where: { id: session.user.id }, select: { emailVerified: true, role: true, email: true, name: true } })
+        session.user.role = current?.role as Role || "USER"
+        session.user.emailVerified = !!current?.emailVerified
+        if (current) { session.user.email = current.email; session.user.name = current.name || undefined }
       }
       return session
     }

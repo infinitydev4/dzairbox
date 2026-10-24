@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session || !session.user || session.user.role !== "ADMIN") {
+    if (!session || !session.user || (session.user.role !== "ADMIN" || !session.user.emailVerified)) {
       return NextResponse.json(
         { error: "Accès non autorisé" },
         { status: 403 }
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
 
         csvContent = 'ID,Nom,Catégorie,Description,Adresse,Téléphone,Email,Site web,Sous-domaine,Statut,Date création,Propriétaire,Email propriétaire\n'
         csvContent += businesses.map(business => 
-          `${business.id},"${business.name}","${business.category}","${business.description || ''}","${business.address}","${business.phone || ''}","${business.email || ''}","${business.website || ''}","${business.subdomain}","${business.isActive ? 'Active' : 'En attente'}","${business.createdAt.toISOString().split('T')[0]}","${business.user.name || 'N/A'}","${business.user.email}"`
+          `${business.id},"${business.name}","${business.category}","${business.description || ''}","${business.address}","${business.phone || ''}","${business.email || ''}","","${business.subdomain}","${business.isActive ? 'Active' : 'En attente'}","${business.createdAt.toISOString().split('T')[0]}","${business.user?.name || 'N/A'}","${business.user?.email || ''}"`
         ).join('\n')
         
         filename = 'dzbusiness-entreprises.csv'

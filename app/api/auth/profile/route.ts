@@ -9,7 +9,7 @@ export async function GET() {
   try {
     const session = await getServerSession(authOptions)
     
-    if (!session?.user?.email) {
+    if (!session?.user?.email || !session.user.emailVerified) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 })
     }
 
@@ -44,7 +44,7 @@ export async function PUT(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     
-    if (!session?.user?.email) {
+    if (!session?.user?.email || !session.user.emailVerified) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 })
     }
 
@@ -61,17 +61,9 @@ export async function PUT(request: NextRequest) {
 
     // Vérifier si l'email est déjà utilisé par un autre utilisateur
     if (email !== session.user.email) {
-      const existingUser = await prisma.user.findUnique({
-        where: { email }
-      })
-
-      if (existingUser) {
-        return NextResponse.json(
-          { error: "Cet email est déjà utilisé" },
-          { status: 400 }
-        )
-      }
+      return NextResponse.json({ error: "Pour changer votre email, contactez notre équipe depuis la page Contact." }, { status: 409 })
     }
+
 
     const updatedUser = await prisma.user.update({
       where: { email: session.user.email },

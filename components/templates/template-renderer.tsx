@@ -1,6 +1,6 @@
 "use client"
 
-import { TemplateKey, BusinessPageConfigData, BusinessWithConfig } from "@/types/template"
+import { BusinessPageConfigData, BusinessWithConfig } from "@/types/template"
 import { SidebarRightTemplate } from "./layouts/sidebar-right"
 import { SidebarLeftTemplate } from "./layouts/sidebar-left"
 import { HeroFullTemplate } from "./layouts/hero-full"

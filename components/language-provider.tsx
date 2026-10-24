@@ -1,6 +1,8 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useCallback, useContext, useSyncExternalStore, useEffect, type ReactNode } from "react"
+import frData from "@/locales/fr.json"
+import arData from "@/locales/ar.json"
 
 type Language = "fr" | "ar"
 
@@ -10,76 +12,53 @@ interface LanguageContextType {
   t: (key: string) => string
 }
 
-let translations: Record<Language, any> = {
-  fr: {},
-  ar: {}
+type TranslationTree = { [key: string]: string | TranslationTree }
+
+const translations: Record<Language, TranslationTree> = {
+  fr: frData,
+  ar: arData
 }
 
-// Fonction pour obtenir la valeur d'une clé imbriquée (ex: "nav.home")
-function getNestedValue(obj: any, path: string): string {
-  return path.split('.').reduce((current, key) => {
-    return current && current[key] !== undefined ? current[key] : path
+function getNestedValue(obj: TranslationTree | string | undefined, path: string): string {
+  const result = path.split(".").reduce<TranslationTree | string | undefined>((current, key) => {
+    if (!current || typeof current === "string") return undefined
+    return current[key]
   }, obj)
+  return typeof result === "string" ? result : path
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
+function getSavedLanguage(): Language {
+  const saved = localStorage.getItem("language")
+  return saved === "ar" ? "ar" : "fr"
+}
+
+function subscribeToLanguage(callback: () => void) {
+  window.addEventListener("storage", callback)
+  window.addEventListener("dzairbox-language-change", callback)
+  return () => {
+    window.removeEventListener("storage", callback)
+    window.removeEventListener("dzairbox-language-change", callback)
+  }
+}
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>("fr")
-  const [isLoaded, setIsLoaded] = useState(false)
+  const language = useSyncExternalStore<Language>(subscribeToLanguage, getSavedLanguage, () => "fr")
 
   useEffect(() => {
-    // Charger les traductions
-    const loadTranslations = async () => {
-      try {
-        const [frData, arData] = await Promise.all([
-          import('../locales/fr.json'),
-          import('../locales/ar.json')
-        ])
-        
-        translations.fr = frData.default || frData
-        translations.ar = arData.default || arData
-        setIsLoaded(true)
-      } catch (error) {
-        console.error('Erreur lors du chargement des traductions:', error)
-        // En cas d'erreur, on garde les traductions vides et on définit isLoaded à true
-        // pour éviter les blocages, les clés non trouvées retourneront la clé elle-même
-        setIsLoaded(true)
-      }
-    }
-
-    loadTranslations()
-
-    // Charger la langue sauvegardée
-    const savedLang = localStorage.getItem("language") as Language
-    if (savedLang && (savedLang === "fr" || savedLang === "ar")) {
-      setLanguage(savedLang)
-    }
-  }, [])
+    document.documentElement.lang = language
+    document.documentElement.dir = language === "ar" ? "rtl" : "ltr"
+  }, [language])
 
   const handleSetLanguage = (lang: Language) => {
-    setLanguage(lang)
     localStorage.setItem("language", lang)
-    document.documentElement.lang = lang
-    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr"
+    window.dispatchEvent(new Event("dzairbox-language-change"))
   }
 
-  const t = (key: string): string => {
-    if (!isLoaded) return key
+  const t = useCallback((key: string): string => {
     return getNestedValue(translations[language], key) || key
-  }
-
-  // Éviter le rendu jusqu'à ce que les traductions soient chargées
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement...</p>
-        </div>
-      </div>
-    )
-  }
+  }, [language])
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>

@@ -1,21 +1,21 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Loader } from '@googlemaps/js-api-loader'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { getBusinessUrl } from '@/lib/business-url'
-import { 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Globe, 
+import {
+  MapPin,
+  Phone,
   ExternalLink,
   Navigation,
-  Loader2
+  Loader2,
 } from 'lucide-react'
 import Link from 'next/link'
+
+const DEFAULT_CENTER = { lat: 36.7538, lng: 3.0588 }
 
 interface Business {
   id: string
@@ -25,9 +25,11 @@ interface Business {
   address: string
   phone: string | null
   email: string | null
-  website: string | null
+  website?: string | null
   subdomain: string
 }
+
+type MarkerWithWindow = google.maps.Marker & { infoWindow?: google.maps.InfoWindow }
 
 interface BusinessMapProps {
   businesses: Business[]
@@ -38,26 +40,12 @@ interface BusinessMapProps {
 export function BusinessMap({ businesses, selectedBusiness, onBusinessSelect }: BusinessMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<google.maps.Map | null>(null)
-  const [markers, setMarkers] = useState<google.maps.Marker[]>([])
+  const [markers, setMarkers] = useState<MarkerWithWindow[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
 
-  // Coordonnées par défaut pour l'Algérie (Alger)
-  const defaultCenter = { lat: 36.7538, lng: 3.0588 }
-
-  useEffect(() => {
-    initializeMap()
-    getUserLocation()
-  }, [])
-
-  useEffect(() => {
-    if (map && businesses.length > 0) {
-      updateMarkers()
-    }
-  }, [map, businesses])
-
-  const getUserLocation = () => {
+  const getUserLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -71,9 +59,9 @@ export function BusinessMap({ businesses, selectedBusiness, onBusinessSelect }: 
         }
       )
     }
-  }
+  }, [])
 
-  const initializeMap = async () => {
+  const initializeMap = useCallback(async () => {
     try {
       const loader = new Loader({
         apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
@@ -85,7 +73,7 @@ export function BusinessMap({ businesses, selectedBusiness, onBusinessSelect }: 
 
       if (mapRef.current) {
         const mapInstance = new google.maps.Map(mapRef.current, {
-          center: defaultCenter,
+          center: DEFAULT_CENTER,
           zoom: 10,
           styles: [
             {
@@ -107,9 +95,9 @@ export function BusinessMap({ businesses, selectedBusiness, onBusinessSelect }: 
       setError('Erreur lors du chargement de la carte')
       setIsLoading(false)
     }
-  }
+  }, [])
 
-  const geocodeAddress = async (address: string): Promise<{ lat: number; lng: number } | null> => {
+  const geocodeAddress = useCallback(async (address: string): Promise<{ lat: number; lng: number } | null> => {
     return new Promise((resolve) => {
       const geocoder = new google.maps.Geocoder()
       geocoder.geocode({ address: address + ', Algérie' }, (results, status) => {
@@ -129,13 +117,17 @@ export function BusinessMap({ businesses, selectedBusiness, onBusinessSelect }: 
         }
       })
     })
-  }
+  }, [])
 
-  const updateMarkers = async () => {
-    // Supprimer les anciens marqueurs
-    markers.forEach(marker => marker.setMap(null))
+  const markersRef = useRef(markers)
+  useEffect(() => {
+    markersRef.current = markers
+  }, [markers])
+
+  const updateMarkers = useCallback(async () => {
+    markersRef.current.forEach(marker => marker.setMap(null))
     
-    const newMarkers: google.maps.Marker[] = []
+    const newMarkers: MarkerWithWindow[] = []
     const bounds = new google.maps.LatLngBounds()
 
     for (const business of businesses) {
@@ -175,21 +167,19 @@ export function BusinessMap({ businesses, selectedBusiness, onBusinessSelect }: 
             `
           })
 
-          marker.addListener('click', () => {
-            // Fermer toutes les autres InfoWindows
-            markers.forEach(m => {
-              const iw = (m as any).infoWindow
-              if (iw) iw.close()
+          const markerWithWindow = marker as MarkerWithWindow
+          markerWithWindow.addListener('click', () => {
+            markersRef.current.forEach(existing => {
+              existing.infoWindow?.close()
             })
-            
-            infoWindow.open(map, marker)
+
+            infoWindow.open(map, markerWithWindow)
             onBusinessSelect?.(business)
           })
 
-          // Stocker l'InfoWindow dans le marqueur
-          ;(marker as any).infoWindow = infoWindow
+          markerWithWindow.infoWindow = infoWindow
 
-          newMarkers.push(marker)
+          newMarkers.push(markerWithWindow)
           bounds.extend(position)
         }
       } catch (error) {
@@ -209,7 +199,26 @@ export function BusinessMap({ businesses, selectedBusiness, onBusinessSelect }: 
         map.setZoom(Math.min(map.getZoom() || 10, 12))
       }
     }
-  }
+  }, [businesses, geocodeAddress, map, onBusinessSelect])
+
+  useEffect(() => {
+    void initializeMap()
+    getUserLocation()
+  }, [getUserLocation, initializeMap])
+
+  useEffect(() => {
+    if (!map || businesses.length === 0) return
+    let cancelled = false
+
+    async function syncMarkers() {
+      if (!cancelled) await updateMarkers()
+    }
+
+    void syncMarkers()
+    return () => {
+      cancelled = true
+    }
+  }, [businesses.length, map, updateMarkers])
 
   const centerOnUserLocation = () => {
     if (userLocation && map) {

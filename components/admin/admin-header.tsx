@@ -59,7 +59,7 @@ export function AdminHeader({ onToggleSidebar, sidebarOpen }: AdminHeaderProps) 
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-lg font-bold text-gray-900">DzBusiness Admin</h1>
-                <p className="text-xs text-gray-500">Panneau d'administration</p>
+                <p className="text-xs text-gray-500">Panneau d&apos;administration</p>
               </div>
             </Link>
           </div>

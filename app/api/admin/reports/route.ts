@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
 export const dynamic = 'force-dynamic'
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session || !session.user || session.user.role !== "ADMIN") {
+    if (!session || !session.user || (session.user.role !== "ADMIN" || !session.user.emailVerified)) {
       return NextResponse.json(
         { error: "Accès non autorisé" },
         { status: 403 }
@@ -20,7 +20,6 @@ export async function GET(req: NextRequest) {
     const now = new Date()
     const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1)
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0)
 
     // Statistiques utilisateurs
     const [

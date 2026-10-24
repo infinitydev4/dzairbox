@@ -2,38 +2,28 @@
 const nextConfig = {
   // Ne PAS utiliser output: 'export' pour permettre le rendu dynamique
   images: {
+    // Next 16 passe le défaut de 60s à 4h : on conserve le comportement Next 14.
+    minimumCacheTTL: 60,
     remotePatterns: [
       {
         protocol: 'https',
         hostname: '*.amazonaws.com',
         port: '',
-        pathname: '**',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'dzairbox.s3.eu-north-1.amazonaws.com',
         port: '',
-        pathname: '**',
+        pathname: '/**',
       }
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ['@aws-sdk/client-s3'],
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  webpack: (config) => {
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      net: false,
-      tls: false,
-    };
-    return config;
+  serverExternalPackages: ['@aws-sdk/client-s3', '@aws-sdk/s3-request-presigner'],
+  async redirects() {
+    return [
+      { source: '/create-service', destination: '/onboarding', permanent: true },
+    ]
   },
 };
 

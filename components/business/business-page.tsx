@@ -1,6 +1,8 @@
 "use client"
 
+import { trackEvent } from "@/lib/studio/events"
 import { useState } from "react"
+import Link from "next/link"
 import { getBusinessFullUrl } from "@/lib/business-url"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -47,7 +49,7 @@ interface BusinessPageProps {
 }
 
 export function BusinessPage({ business }: BusinessPageProps) {
-  const { t, language } = useLanguage()
+  const { t } = useLanguage()
   const [showAllServices, setShowAllServices] = useState(false)
   const [copied, setCopied] = useState(false)
 
@@ -56,7 +58,7 @@ export function BusinessPage({ business }: BusinessPageProps) {
     : []
 
   // Parser les horaires
-  const parseHours = (hours: string | null | any) => {
+  const parseHours = (hours: string | Record<string, unknown> | null) => {
     if (!hours) return null
     
     // Si c'est déjà un objet, le retourner directement
@@ -116,18 +118,21 @@ export function BusinessPage({ business }: BusinessPageProps) {
   }
 
   const handleCall = () => {
+    trackEvent("call", business.id)
     if (business.phone) {
       window.location.href = `tel:${business.phone}`
     }
   }
 
   const handleEmail = () => {
+    trackEvent("email", business.id)
     if (business.email) {
       window.location.href = `mailto:${business.email}`
     }
   }
 
   const handleDirections = () => {
+    trackEvent("directions", business.id)
     const query = encodeURIComponent(business.address)
     window.open(`https://maps.google.com/?q=${query}`, '_blank')
   }
@@ -452,12 +457,12 @@ export function BusinessPage({ business }: BusinessPageProps) {
             {t('business.page.hostedOn')}
           </p>
           <div className="flex items-center justify-center space-x-4">
-            <a 
-              href="/create-service" 
+            <Link
+              href="/onboarding"
               className="text-emerald-600 hover:text-emerald-700 font-medium"
             >
               {t('business.page.createMyPage')}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

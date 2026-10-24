@@ -17,7 +17,7 @@ import {
 } from "lucide-react"
 
 interface CreateServiceStep1Props {
-  onComplete: (data: any, token: string) => void
+  onComplete: (data: Record<string, unknown>, token: string) => void
 }
 
 const CACHE_KEY = 'dzairbox_public_business_draft'

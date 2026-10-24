@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,12 +10,12 @@ import { useLanguage } from "@/components/language-provider"
 import { User, Mail, Lock, Loader2, ArrowLeft, CheckCircle2 } from "lucide-react"
 
 interface CreateServiceStep2Props {
-  businessData: any
+  businessData: Record<string, unknown>
   businessToken: string | null
   onBack: () => void
 }
 
-export function CreateServiceStep2({ businessData, businessToken, onBack }: CreateServiceStep2Props) {
+export function CreateServiceStep2({ businessToken, onBack }: CreateServiceStep2Props) {
   const router = useRouter()
   const { toast } = useToast()
   const { t } = useLanguage()

@@ -1,12 +1,11 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Header } from "@/components/header"
 import { useLanguage } from "@/components/language-provider"
 import { useSession } from "next-auth/react"
-import { 
+import {
   Target,
   Users,
   MapPin,
@@ -18,22 +17,13 @@ import {
   TrendingUp,
   Rocket,
   Building2,
-  Star,
-  Award,
   Calendar,
-  ArrowRight,
-  Mail,
-  Phone,
-  Linkedin,
-  Twitter
 } from "lucide-react"
 import Link from "next/link"
-import Image from "next/image"
-
 export default function AboutPage() {
   const { t } = useLanguage()
   const { data: session } = useSession()
-  const createServiceUrl = session ? '/dashboard/create-business' : '/create-service'
+  const createServiceUrl = session ? '/dashboard/create-business' : '/onboarding'
 
   const values = [
     {
@@ -225,7 +215,7 @@ export default function AboutPage() {
 
             {/* Timeline */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              {timeline.map((item, index) => {
+              {timeline.map((item) => {
                 const Icon = item.icon
                 return (
                   <Card key={item.key} className="bg-white border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">

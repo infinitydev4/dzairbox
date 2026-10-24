@@ -1,14 +1,14 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { BusinessPageConfigData } from "@/types/template"
 import { useLanguage } from "@/components/language-provider"
 import { ImageUpload } from "@/components/ui/image-upload"
-import { X, Plus, Image as ImageIcon } from "lucide-react"
-
+import { X, Image as ImageIcon } from "lucide-react"
 interface ImageEditorProps {
   config: BusinessPageConfigData
   businessImages: string[] // Images de l'entreprise
@@ -158,14 +158,16 @@ export function ImageEditor({ config, businessImages, heroImage, onChange }: Ima
           {galleryImages.length > 0 && (
             <div className="grid grid-cols-3 gap-2">
               {galleryImages.map((image, index) => (
-                <div key={index} className="relative group">
-                  <img
+                <div key={index} className="relative group h-24">
+                  <Image
                     src={image}
                     alt={`Gallery ${index + 1}`}
-                    className="w-full h-24 object-cover rounded-lg"
-                    onError={(e) => {
+                    fill
+                    unoptimized
+                    className="object-cover rounded-lg"
+                    onError={(event) => {
                       console.error("Erreur chargement image:", image)
-                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23f3f4f6' width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af'%3E❌%3C/text%3E%3C/svg%3E"
+                      event.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23f3f4f6' width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af'%3E❌%3C/text%3E%3C/svg%3E"
                     }}
                   />
                   <Button

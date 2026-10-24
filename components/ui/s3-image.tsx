@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, type SyntheticEvent } from 'react'
+import Image from 'next/image'
 import { ImageIcon } from 'lucide-react'
 
 interface S3ImageProps {
@@ -8,56 +9,32 @@ interface S3ImageProps {
   alt: string
   className?: string
   onLoad?: () => void
-  onError?: (e: any) => void
+  onError?: (event: SyntheticEvent<HTMLImageElement>) => void
+}
+
+function resolveImageUrl(src: string) {
+  if (!src || typeof src !== "string") return ""
+  if (!src.includes("s3.") && !src.includes("amazonaws.com")) return src
+  return `/api/images/proxy?url=${encodeURIComponent(src)}`
 }
 
 export function S3Image({ src, alt, className, onLoad, onError }: S3ImageProps) {
-  const [currentUrl, setCurrentUrl] = useState<string>('')
-  const [isLoading, setIsLoading] = useState(true)
-  const [hasError, setHasError] = useState(false)
-
-  useEffect(() => {
-    // Reset states when src changes
-    setIsLoading(true)
-    setHasError(false)
-    
-    if (!src || typeof src !== 'string') {
-      console.warn('⚠️ URL source invalide:', src)
-      setHasError(true)
-      setIsLoading(false)
-      return
-    }
-
-    console.log('🔍 S3Image: Chargement de l\'image:', src)
-
-    // Si l'URL n'est pas une URL S3, l'utiliser directement
-    if (!src.includes('s3.') && !src.includes('amazonaws.com')) {
-      console.log('📷 URL non-S3, utilisation directe:', src)
-      setCurrentUrl(src)
-      setIsLoading(false)
-      return
-    }
-
-    // Pour les URLs S3, utiliser la route proxy
-    console.log('📷 URL S3 détectée, utilisation du proxy')
-    const proxyUrl = `/api/images/proxy?url=${encodeURIComponent(src)}`
-    setCurrentUrl(proxyUrl)
-    setIsLoading(false)
-  }, [src])
+  const currentUrl = resolveImageUrl(src)
+  const [failedSrc, setFailedSrc] = useState<string | null>(null)
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null)
+  const hasError = !currentUrl || failedSrc === src
+  const isLoading = !hasError && loadedSrc !== src
 
   const handleLoad = () => {
-    console.log('✅ Image chargée avec succès via proxy:', src)
-    setIsLoading(false)
-    setHasError(false)
+    setLoadedSrc(src)
+    setFailedSrc(null)
     onLoad?.()
   }
 
-  const handleError = (e: any) => {
-    console.error('❌ Erreur chargement image via proxy:', src)
-    console.error('❌ URL proxy utilisée:', currentUrl)
-    setIsLoading(false)
-    setHasError(true)
-    onError?.(e)
+  const handleError = (event: SyntheticEvent<HTMLImageElement>) => {
+    console.error("Erreur chargement image via proxy:", src, currentUrl)
+    setFailedSrc(src)
+    onError?.(event)
   }
 
   if (hasError || !src) {
@@ -79,9 +56,11 @@ export function S3Image({ src, alt, className, onLoad, onError }: S3ImageProps) 
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
         </div>
       )}
-      <img
+      <Image
         src={currentUrl}
         alt={alt}
+        fill
+        unoptimized
         className={className}
         onLoad={handleLoad}
         onError={handleError}

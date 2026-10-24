@@ -7,11 +7,11 @@ import { useSession } from "next-auth/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { 
-  MapPin, 
-  Mail, 
-  Phone, 
-  Clock, 
+import {
+  MapPin,
+  Mail,
+  Phone,
+  Clock,
   Send,
   MessageSquare,
   Sparkles,
@@ -20,8 +20,7 @@ import {
   User,
   Building2,
   HeadphonesIcon,
-  HandHeart,
-  HelpCircle
+  HelpCircle,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -38,7 +37,7 @@ export default function ContactPage() {
     subject: 'general',
     message: ''
   })
-  const createServiceUrl = session ? '/dashboard/create-business' : '/create-service'
+  const createServiceUrl = session ? '/dashboard/create-business' : '/onboarding'
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -58,7 +57,7 @@ export default function ContactPage() {
         body: JSON.stringify(formData)
       })
 
-      const data = await response.json()
+      await response.json()
 
       if (response.ok) {
         setSubmitStatus('success')

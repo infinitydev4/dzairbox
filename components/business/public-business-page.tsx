@@ -1,14 +1,14 @@
 "use client"
 
+import { trackEvent } from "@/lib/studio/events"
 import { useState, useEffect } from "react"
 import { BusinessPageConfigData, BusinessWithConfig } from "@/types/template"
 import { TemplateRenderer } from "@/components/templates/template-renderer"
 import { BusinessPage } from "@/components/business/business-page"
-import { LivePageEditor } from "@/components/builder/live-page-editor"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/components/language-provider"
-import { Edit3, Loader2 } from "lucide-react"
-
+import { Edit3 } from "lucide-react"
 interface PublicBusinessPageProps {
   business: BusinessWithConfig
   useCustomPage: boolean
@@ -18,36 +18,32 @@ interface PublicBusinessPageProps {
 export function PublicBusinessPage({ business, useCustomPage, config }: PublicBusinessPageProps) {
   const { t } = useLanguage()
   const [isOwner, setIsOwner] = useState<boolean | null>(null)
-  const [isEditing, setIsEditing] = useState(false)
   const [isCheckingOwnership, setIsCheckingOwnership] = useState(true)
 
+  useEffect(() => { trackEvent("view", business.id) }, [business.id])
+
   useEffect(() => {
-    checkOwnership()
+    let cancelled = false
+
+    async function checkOwnership() {
+      try {
+        const response = await fetch(`/api/businesses/${business.id}/is-owner`)
+        const data = await response.json()
+        if (!cancelled) setIsOwner(data.isOwner)
+      } catch (error) {
+        console.error("Erreur lors de la vérification de propriété:", error)
+        if (!cancelled) setIsOwner(false)
+      } finally {
+        if (!cancelled) setIsCheckingOwnership(false)
+      }
+    }
+
+    void checkOwnership()
+    return () => {
+      cancelled = true
+    }
   }, [business.id])
 
-  const checkOwnership = async () => {
-    try {
-      const response = await fetch(`/api/businesses/${business.id}/is-owner`)
-      const data = await response.json()
-      setIsOwner(data.isOwner)
-    } catch (error) {
-      console.error("Erreur lors de la vérification de propriété:", error)
-      setIsOwner(false)
-    } finally {
-      setIsCheckingOwnership(false)
-    }
-  }
-
-  // Afficher l'éditeur en mode live
-  if (isEditing) {
-    return (
-      <LivePageEditor
-        business={business}
-        initialConfig={config || null}
-        onClose={() => setIsEditing(false)}
-      />
-    )
-  }
 
   return (
     <div className="relative">
@@ -60,13 +56,11 @@ export function PublicBusinessPage({ business, useCustomPage, config }: PublicBu
               <span className="font-medium">{t('dashboard.builder.ownerBanner.title')}</span>
             </div>
             
-            <Button
-              onClick={() => setIsEditing(true)}
+            <Button asChild
               size="sm"
               className="bg-white text-emerald-600 hover:bg-gray-100 shadow-md"
             >
-              <Edit3 className="mr-2 h-4 w-4" />
-              {t('dashboard.builder.ownerBanner.customize')}
+              <Link href={`/dashboard/businesses/${business.id}/studio`}><Edit3 className="mr-2 h-4 w-4" />{t('studio.openStudio')}</Link>
             </Button>
           </div>
         </div>
@@ -74,7 +68,7 @@ export function PublicBusinessPage({ business, useCustomPage, config }: PublicBu
 
       {/* Affichage de la page */}
       {useCustomPage && config ? (
-        <TemplateRenderer business={business as any} config={config} />
+        <TemplateRenderer business={business} config={config} />
       ) : (
         <BusinessPage business={business} />
       )}

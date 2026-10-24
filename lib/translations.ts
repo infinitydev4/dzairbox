@@ -2,18 +2,19 @@ import frTranslations from '../locales/fr.json'
 import arTranslations from '../locales/ar.json'
 
 type Language = "fr" | "ar"
-type Translations = Record<string, any>
+type TranslationTree = { [key: string]: string | TranslationTree }
 
-const translations: Record<Language, Translations> = {
+const translations: Record<Language, TranslationTree> = {
   fr: frTranslations,
   ar: arTranslations
 }
 
-// Fonction pour obtenir la valeur d'une clé imbriquée (ex: "nav.home")
-function getNestedValue(obj: any, path: string): string {
-  return path.split('.').reduce((current, key) => {
-    return current && current[key] !== undefined ? current[key] : path
+function getNestedValue(obj: TranslationTree | string | undefined, path: string): string {
+  const result = path.split('.').reduce<TranslationTree | string | undefined>((current, key) => {
+    if (!current || typeof current === "string") return undefined
+    return current[key]
   }, obj)
+  return typeof result === "string" ? result : path
 }
 
 export function getServerTranslation(language: Language = 'fr') {
@@ -22,6 +23,6 @@ export function getServerTranslation(language: Language = 'fr') {
   }
 }
 
-export function getTranslations(language: Language = 'fr'): Translations {
+export function getTranslations(language: Language = 'fr'): TranslationTree {
   return translations[language] || translations.fr
 } 

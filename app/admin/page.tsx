@@ -44,25 +44,27 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (session?.user?.role === "ADMIN") {
-      fetchStats()
+    if (session?.user?.role !== "ADMIN") return
+    let cancelled = false
+
+    async function loadStats() {
+      try {
+        const response = await fetch("/api/admin/stats")
+        if (!response.ok || cancelled) return
+        const data = await response.json()
+        if (!cancelled) setStats(data)
+      } catch (error) {
+        console.error("Error fetching admin stats:", error)
+      } finally {
+        if (!cancelled) setIsLoading(false)
+      }
+    }
+
+    void loadStats()
+    return () => {
+      cancelled = true
     }
   }, [session])
-
-  const fetchStats = async () => {
-    try {
-      setIsLoading(true)
-      const response = await fetch("/api/admin/stats")
-      if (response.ok) {
-        const data = await response.json()
-        setStats(data)
-      }
-    } catch (error) {
-      console.error("Error fetching admin stats:", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   if (status === "loading") {
     return (
@@ -290,7 +292,7 @@ export default function AdminDashboard() {
             <CardContent>
               <div className="text-center text-gray-500 py-8">
                 <Activity className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                <p>Fonctionnalité d'activité récente à venir</p>
+                <p>Fonctionnalité d&apos;activité récente à venir</p>
               </div>
             </CardContent>
           </Card>

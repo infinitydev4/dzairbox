@@ -1,17 +1,17 @@
+import { openai } from "@ai-sdk/openai"
+import { generateText } from "ai"
 import { NextRequest, NextResponse } from "next/server"
-import { ChatOpenAI } from "@langchain/openai"
-import { ConversationChain } from "langchain/chains"
-import { BufferMemory } from "langchain/memory"
-import { PromptTemplate } from "@langchain/core/prompts"
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
-// Store des sessions en mémoire (en production, utiliser Redis ou une DB)
-const sessionStore = new Map<string, BufferMemory>()
+type BusinessRecord = Record<string, unknown>
+type SessionTurn = { role: "user" | "assistant"; content: string }
 
-// Template de prompt pour l'assistant d'inscription
-const BUSINESS_REGISTRATION_PROMPT = PromptTemplate.fromTemplate(`
-Tu es un assistant IA spécialisé dans l'inscription d'entreprises locales en Algérie sur la plateforme DzBusiness.
+// Historique par session (en production, utiliser Redis ou une DB).
+// Même format que BufferMemory : préfixes Human / AI, tour courant hors historique.
+const sessionStore = new Map<string, SessionTurn[]>()
+
+const BUSINESS_REGISTRATION_PROMPT = `Tu es un assistant IA spécialisé dans l'inscription d'entreprises locales en Algérie sur la plateforme DzBusiness.
 
 CONTEXTE ACTUEL:
 Données collectées: {businessData}
@@ -51,13 +51,30 @@ Historique de conversation:
 {history}
 
 Utilisateur: {input}
-Assistant:`)
+Assistant:`
+
+function formatHistory(turns: SessionTurn[]): string {
+  return turns
+    .map((turn) => `${turn.role === "user" ? "Human" : "AI"}: ${turn.content}`)
+    .join("\n")
+}
+
+function renderRegistrationPrompt(businessData: BusinessRecord, history: string, input: string) {
+  return BUSINESS_REGISTRATION_PROMPT
+    .replaceAll("{businessData}", JSON.stringify(businessData, null, 2))
+    .replaceAll("{history}", history)
+    .replaceAll("{input}", input)
+}
 
 export async function POST(req: NextRequest) {
   try {
     const { messages, sessionId, businessData } = await req.json()
+    const sessionKey = typeof sessionId === "string" ? sessionId : ""
+    const messageList = Array.isArray(messages) ? messages : []
+    const lastMessage = messageList[messageList.length - 1] as { content?: unknown } | undefined
+    const lastUserMessage = typeof lastMessage?.content === "string" ? lastMessage.content : ""
 
-    console.log("Données reçues:", { sessionId, businessData, lastMessage: messages[messages.length - 1]?.content })
+    console.log("Données reçues:", { sessionId, businessData, lastMessage: lastUserMessage })
 
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
@@ -66,60 +83,38 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Initialiser ou récupérer la mémoire de la session
-    let memory = sessionStore.get(sessionId)
-    if (!memory) {
-      memory = new BufferMemory({
-        memoryKey: "history",
-        inputKey: "input",
-      })
-      sessionStore.set(sessionId, memory)
-    }
+    const history = sessionStore.get(sessionKey) ?? []
+    const currentData: BusinessRecord =
+      businessData && typeof businessData === "object" && !Array.isArray(businessData)
+        ? businessData
+        : {}
 
-    // Initialiser le modèle OpenAI
-    const model = new ChatOpenAI({
-      openAIApiKey: process.env.OPENAI_API_KEY,
-      modelName: "gpt-4o",
-      temperature: 0.7,
-      maxTokens: 500,
-    })
-
-    // Créer la chaîne de conversation
-    const chain = new ConversationChain({
-      llm: model,
-      memory: memory,
-      prompt: BUSINESS_REGISTRATION_PROMPT,
-    })
-
-    // Dernière entrée utilisateur
-    const lastUserMessage = messages[messages.length - 1]?.content || ""
-
-    // Analyser la réponse pour extraire les données d'entreprise
-    const updatedBusinessData = await extractBusinessData(
-      lastUserMessage,
-      businessData || {},
-      model
-    )
+    const updatedBusinessData = await extractBusinessData(lastUserMessage, currentData)
 
     console.log("Données mises à jour:", updatedBusinessData)
 
-    // Exécuter la conversation
-    const response = await chain.invoke({
-      input: lastUserMessage,
-      businessData: JSON.stringify(updatedBusinessData, null, 2),
+    const { text } = await generateText({
+      model: openai("gpt-4o"),
+      prompt: renderRegistrationPrompt(updatedBusinessData, formatHistory(history), lastUserMessage),
+      temperature: 0.7,
+      maxOutputTokens: 500,
     })
 
-    // Vérifier si l'inscription est complète
+    sessionStore.set(sessionKey, [
+      ...history,
+      { role: "user", content: lastUserMessage },
+      { role: "assistant", content: text },
+    ])
+
     const isCompleted = checkIfRegistrationComplete(updatedBusinessData)
-    
+
     console.log("Inscription complète?", isCompleted)
 
     return NextResponse.json({
-      message: response.response,
+      message: text,
       businessData: updatedBusinessData,
       isCompleted,
     })
-
   } catch (error) {
     console.error("Error in business chat API:", error)
     return NextResponse.json(
@@ -129,12 +124,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Fonction pour extraire les données d'entreprise du message utilisateur
-async function extractBusinessData(
-  userMessage: string,
-  currentData: any,
-  model: ChatOpenAI
-) {
+async function extractBusinessData(userMessage: string, currentData: BusinessRecord): Promise<BusinessRecord> {
   const extractionPrompt = `
 Tu es un expert en extraction de données d'entreprises algériennes. Analyse le message utilisateur et extrait TOUTES les informations pertinentes.
 
@@ -178,38 +168,31 @@ RÉPONSE JSON ATTENDUE:
 `
 
   try {
-    const result = await model.invoke(extractionPrompt)
-    const extractedText = result.content as string
-    
-    console.log("Réponse IA pour extraction:", extractedText)
-    
-    // Nettoyer la réponse pour extraire le JSON - plusieurs tentatives
-    let jsonString = extractedText.trim()
-    
-    // Tentative 1: JSON direct
-    let jsonMatch = jsonString.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) {
-      // Tentative 2: JSON avec backticks
-      jsonMatch = jsonString.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/)
-      if (jsonMatch) jsonString = jsonMatch[1]
-    } else {
-      jsonString = jsonMatch[0]
+    const { text } = await generateText({
+      model: openai("gpt-4o"),
+      prompt: extractionPrompt,
+      temperature: 0.7,
+      maxOutputTokens: 500,
+    })
+
+    console.log("Réponse IA pour extraction:", text)
+
+    const extracted = parseExtractedJson(text)
+    if (!extracted) {
+      console.log("Aucune donnée extraite, retour des données actuelles")
+      return currentData
     }
-    
-    if (jsonString) {
-      const extracted = JSON.parse(jsonString)
-      const merged = { ...currentData }
-      
-      // Merge intelligent - ne pas écraser avec des valeurs vides
-      Object.keys(extracted).forEach(key => {
-        if (extracted[key] && String(extracted[key]).trim() !== "") {
-          merged[key] = extracted[key]
-        }
-      })
-      
-      console.log("Données extraites et mergées:", merged)
-      return merged
+
+    const merged: BusinessRecord = { ...currentData }
+    for (const key of Object.keys(extracted)) {
+      const value = extracted[key]
+      if (value && String(value).trim() !== "") {
+        merged[key] = value
+      }
     }
+
+    console.log("Données extraites et mergées:", merged)
+    return merged
   } catch (error) {
     console.error("Erreur lors de l'extraction des données:", error)
     if (error instanceof Error) {
@@ -221,28 +204,40 @@ RÉPONSE JSON ATTENDUE:
   return currentData
 }
 
-// Vérifier si l'inscription est complète
-function checkIfRegistrationComplete(businessData: any): boolean {
+function parseExtractedJson(extractedText: string): BusinessRecord | null {
+  let jsonString = extractedText.trim()
+  const directMatch = jsonString.match(/\{[\s\S]*\}/)
+  if (!directMatch) {
+    const fencedMatch = jsonString.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/)
+    if (!fencedMatch) return null
+    jsonString = fencedMatch[1]
+  } else {
+    jsonString = directMatch[0]
+  }
+
+  const parsed: unknown = JSON.parse(jsonString)
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null
+  return parsed as BusinessRecord
+}
+
+function checkIfRegistrationComplete(businessData: BusinessRecord): boolean {
   const requiredFields = ["name", "category", "description", "address", "phone", "hours"]
-  return requiredFields.every(field => {
+  return requiredFields.every((field) => {
     const value = businessData[field]
     if (!value) return false
-    
-    // Gestion spéciale pour les objets (comme hours)
-    if (typeof value === 'object') {
+
+    if (typeof value === "object") {
       return Object.keys(value).length > 0
     }
-    
-    // Pour les strings
+
     return String(value).trim() !== ""
   })
 }
 
 // Nettoyer les sessions anciennes (appelé périodiquement)
 setInterval(() => {
-  // En production, implémenter une logique de nettoyage basée sur le timestamp
   if (sessionStore.size > 100) {
     const firstKey = sessionStore.keys().next().value
     if (firstKey) sessionStore.delete(firstKey)
   }
-}, 60000) // Nettoyer toutes les minutes 
+}, 60000)

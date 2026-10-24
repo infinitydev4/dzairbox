@@ -5,25 +5,22 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Calendar, 
-  Save, 
-  Loader2, 
-  CheckCircle, 
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Save,
+  Loader2,
+  CheckCircle,
   AlertCircle,
   Settings,
   Shield,
-  Edit3,
   UserCheck,
-  Clock,
   Sparkles,
   Crown,
-  Star,
-  Award
+  Award,
 } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 
@@ -42,6 +39,7 @@ export default function ProfilePage() {
   const { data: session, update } = useSession()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [accountAgeDays, setAccountAgeDays] = useState(0)
   const [isSaving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [activeTab, setActiveTab] = useState<'personal' | 'account' | 'security'>('personal')
@@ -54,33 +52,28 @@ export default function ProfilePage() {
     city: ""
   })
 
-  const [unsavedChanges, setUnsavedChanges] = useState(false)
+  const unsavedChanges = Boolean(
+    profile && (
+      formData.name !== (profile.name || "") ||
+      formData.email !== (profile.email || "") ||
+      formData.phone !== (profile.phone || "") ||
+      formData.address !== (profile.address || "") ||
+      formData.city !== (profile.city || "")
+    )
+  )
 
   useEffect(() => {
-    if (session?.user) {
-      fetchProfile()
-    }
-  }, [session])
+    if (!session?.user) return
+    let cancelled = false
 
-  useEffect(() => {
-    if (profile) {
-      const hasChanges = 
-        formData.name !== (profile.name || "") ||
-        formData.email !== (profile.email || "") ||
-        formData.phone !== (profile.phone || "") ||
-        formData.address !== (profile.address || "") ||
-        formData.city !== (profile.city || "")
-      setUnsavedChanges(hasChanges)
-    }
-  }, [formData, profile])
-
-  const fetchProfile = async () => {
-    try {
-      setIsLoading(true)
-      const response = await fetch("/api/auth/profile")
-      if (response.ok) {
+    async function loadProfile() {
+      try {
+        const response = await fetch("/api/auth/profile")
+        if (!response.ok || cancelled) return
         const data = await response.json()
+        if (cancelled) return
         setProfile(data)
+        setAccountAgeDays(Math.floor((Date.now() - new Date(data.createdAt || 0).getTime()) / (1000 * 60 * 60 * 24)))
         setFormData({
           name: data.name || "",
           email: data.email || "",
@@ -88,14 +81,19 @@ export default function ProfilePage() {
           address: data.address || "",
           city: data.city || ""
         })
+      } catch (error) {
+        console.error("Error fetching profile:", error)
+        if (!cancelled) setMessage({ type: 'error', text: t('common.error') })
+      } finally {
+        if (!cancelled) setIsLoading(false)
       }
-    } catch (error) {
-      console.error("Error fetching profile:", error)
-      setMessage({ type: 'error', text: t('common.error') })
-    } finally {
-      setIsLoading(false)
     }
-  }
+
+    void loadProfile()
+    return () => {
+      cancelled = true
+    }
+  }, [session, t])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -479,9 +477,9 @@ export default function ProfilePage() {
                   </div>
                   <div className="text-center p-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl">
                     <div className="text-3xl font-bold text-amber-600 mb-2">
-                      {Math.floor((Date.now() - new Date(profile?.createdAt || 0).getTime()) / (1000 * 60 * 60 * 24))}
+                      {accountAgeDays}
                     </div>
-                    <div className="text-sm text-gray-600">Jours d'ancienneté</div>
+                    <div className="text-sm text-gray-600">Jours d&apos;ancienneté</div>
                   </div>
                 </div>
               </div>
@@ -509,7 +507,7 @@ export default function ProfilePage() {
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-gray-900 mb-3">Sécurité renforcée</h3>
                       <p className="text-gray-600 mb-6 leading-relaxed">
-                        Votre compte est protégé par nos systèmes de sécurité avancés. Nous recommandons d'utiliser un mot de passe fort et de garder vos informations à jour.
+                        Votre compte est protégé par nos systèmes de sécurité avancés. Nous recommandons d&apos;utiliser un mot de passe fort et de garder vos informations à jour.
                       </p>
                       <div className="flex items-center space-x-3">
                         <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>

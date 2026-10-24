@@ -17,7 +17,7 @@ export function MobileBottomNav() {
   const { data: session } = useSession()
   const { t } = useLanguage()
   
-  const createServiceUrl = session ? '/dashboard/create-business' : '/create-service'
+  const createServiceUrl = '/onboarding'
 
   const navItems = [
     {
@@ -36,7 +36,7 @@ export function MobileBottomNav() {
       href: createServiceUrl,
       icon: PlusCircle,
       label: t("mobileNav.create"),
-      active: pathname === "/create-service" || pathname === "/dashboard/create-business",
+      active: pathname.endsWith("/studio") || pathname === "/onboarding" || pathname === "/dashboard/create-business",
       highlight: true
     },
     {
@@ -48,7 +48,7 @@ export function MobileBottomNav() {
   ]
 
   // Ne pas afficher la bottom nav sur certaines pages
-  if (pathname.startsWith("/admin") || pathname.startsWith("/register")) {
+  if (pathname === "/" || pathname.endsWith("/studio") || pathname === "/onboarding" || pathname === "/auth/verify-email" || pathname === "/auth/signin" || pathname === "/businesses" || pathname.startsWith("/dashboard") || pathname.startsWith("/admin") || pathname.startsWith("/register")) {
     return null
   }
 
