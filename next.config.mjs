@@ -2,6 +2,8 @@
 const nextConfig = {
   // Ne PAS utiliser output: 'export' pour permettre le rendu dynamique
   images: {
+    // Netlify ne fournit pas /_next/image avec Next 16 : on sert les fichiers tels quels.
+    unoptimized: true,
     // Next 16 passe le défaut de 60s à 4h : on conserve le comportement Next 14.
     minimumCacheTTL: 60,
     remotePatterns: [

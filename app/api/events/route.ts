@@ -19,10 +19,29 @@ const allowed = new Set([
   "signup_contact",
   "signup_abandon",
 ]);
+function sameSiteOrigin(req: NextRequest, origin: string) {
+  const allowed = new Set<string>();
+  try {
+    allowed.add(new URL(req.url).origin);
+  } catch {}
+  const host = (req.headers.get("x-forwarded-host") || req.headers.get("host") || "")
+    .split(",")[0]
+    .trim();
+  const proto = (
+    req.headers.get("x-forwarded-proto") ||
+    new URL(req.url).protocol.replace(":", "")
+  )
+    .split(",")[0]
+    .trim();
+  if (host) allowed.add(`${proto}://${host}`);
+  return allowed.has(origin);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const origin = req.headers.get("origin");
-    if (origin && origin !== new URL(req.url).origin)
+    // Sur Netlify, req.url est l'adresse interne de la fonction, pas dzairbox.com.
+    if (origin && !sameSiteOrigin(req, origin))
       return new NextResponse(null, { status: 403 });
     const text = await req.text();
     if (text.length > 1000) return new NextResponse(null, { status: 400 });
