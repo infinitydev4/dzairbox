@@ -157,7 +157,9 @@ async function settled(page) {
     await p.getByLabel("Choisissez un mot de passe").fill(password);
     await p.getByRole("button", { name: "Continuer", exact: true }).click();
     await p.getByLabel("Nom de votre activité").fill(business.name);
-    await p.getByLabel("Votre métier ou catégorie").selectOption("menuisier");
+    await p.getByRole("button", { name: "Votre métier ou catégorie" }).click();
+    await p.getByRole("combobox", { name: "Rechercher" }).fill("menu");
+    await p.getByRole("option", { name: "Menuisier", exact: true }).click();
     assert.equal(
       await p
         .getByRole("textbox", { name: "Présentez votre activité" })
@@ -165,8 +167,17 @@ async function settled(page) {
       0,
     );
     await p.getByRole("button", { name: "Continuer", exact: true }).click();
-    await p.getByLabel("Wilaya", { exact: false }).selectOption("16");
-    await p.getByLabel("Commune", { exact: false }).selectOption(String(c.id));
+    await p.getByRole("button", { name: "Wilaya" }).click();
+    await p.getByRole("combobox", { name: "Rechercher" }).fill("16");
+    const locations = p.waitForResponse(
+      (response) =>
+        response.url().includes("/api/locations?wilaya=16") && response.ok(),
+    );
+    await p.getByRole("option", { name: "16 · Alger", exact: true }).click();
+    await locations;
+    await p.getByRole("button", { name: "Commune" }).click();
+    await p.getByRole("combobox", { name: "Rechercher" }).fill(c.name);
+    await p.getByRole("option", { name: c.name, exact: true }).click();
     await p
       .getByLabel("Adresse publique", { exact: false })
       .fill(location.address);
@@ -245,7 +256,8 @@ async function settled(page) {
     await p
       .getByLabel("Nom du service", { exact: true })
       .fill("Meubles sur mesure");
-    await p.getByLabel("Tarification", { exact: true }).selectOption("fixed");
+    await p.getByRole("button", { name: "Tarification" }).click();
+    await p.getByRole("option", { name: "Prix fixe", exact: true }).click();
     await p.getByLabel("Prix en DZD", { exact: true }).fill("15000");
     await settled(p);
     assert((await p.locator(".bc-price").textContent()).includes("15"));

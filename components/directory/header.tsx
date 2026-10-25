@@ -2,13 +2,14 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useLanguage } from "@/components/language-provider";
+import { BrandLogo } from "@/components/brand-logo";
 export function LocalHeader() {
   const { t, language, setLanguage } = useLanguage();
   const { data: session } = useSession();
   return (
     <header className="local-header">
-      <Link className="st-brand" href="/">
-        Dzair<span>Box</span>
+      <Link className="st-brand" href="/" aria-label="DzairBox">
+        <BrandLogo priority alt="" />
       </Link>
       <nav>
         <Link href="/businesses">{t("studio.directory")}</Link>

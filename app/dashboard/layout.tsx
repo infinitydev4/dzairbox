@@ -5,6 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Loader2, LogOut, Plus, Store, UserRound } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
+import { BrandLogo } from "@/components/brand-logo";
 import "../studio.css";
 import "../directory.css";
 export default function DashboardLayout({
@@ -38,8 +39,8 @@ export default function DashboardLayout({
   return (
     <div className="dashboard-v1" dir={language === "ar" ? "rtl" : "ltr"}>
       <header className="local-header">
-        <Link className="st-brand" href="/">
-          Dzair<span>Box</span>
+        <Link className="st-brand" href="/" aria-label="DzairBox">
+          <BrandLogo priority alt="" />
         </Link>
         <nav>
           <Link href="/dashboard/businesses">

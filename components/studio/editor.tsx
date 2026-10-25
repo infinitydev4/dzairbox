@@ -23,7 +23,9 @@ import {
   X,
 } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
+import { BrandLogo } from "@/components/brand-logo";
 import { businessCategories, daysOfWeek } from "@/lib/constants";
+import { OptionPicker } from "@/components/option-picker";
 import {
   studioDocumentSchema,
   palettes,
@@ -361,7 +363,7 @@ export function StudioEditor({ businessId }: { businessId: string }) {
     <div className="st-root" dir={language === "ar" ? "rtl" : "ltr"}>
       <header className="st-header">
         <Link href="/dashboard/businesses" className="st-brand">
-          Dzair<span>Box</span>
+          <BrandLogo priority alt="DzairBox" />
           <span className="st-brand-tag">{s("studio")}</span>
         </Link>
         <div className="st-header-middle">
@@ -649,16 +651,18 @@ export function StudioEditor({ businessId }: { businessId: string }) {
               <div className="st-content-language">
                 <label>
                   {s("contentLanguage")}
-                  <select
-                    aria-label={s("contentLanguage")}
+                  <OptionPicker
+                    label={s("contentLanguage")}
+                    placeholder={s("contentLanguage")}
                     value={contentLanguage}
-                    onChange={(e) =>
-                      setContentLanguage(e.target.value as "fr" | "ar")
+                    onValueChange={(language) =>
+                      setContentLanguage(language as "fr" | "ar")
                     }
-                  >
-                    <option value="fr">Français</option>
-                    <option value="ar">العربية</option>
-                  </select>
+                    options={[
+                      { value: "fr", label: "Français" },
+                      { value: "ar", label: "العربية" },
+                    ]}
+                  />
                 </label>
                 <p>{s("translationOptional")}</p>
               </div>
@@ -724,37 +728,37 @@ export function StudioEditor({ businessId }: { businessId: string }) {
                 </fieldset>
                 <label>
                   {s("font")}
-                  <select
-                    aria-label={s("font")}
+                  <OptionPicker
+                    label={s("font")}
+                    placeholder={s("font")}
                     value={doc.design.font}
-                    onChange={(e) =>
+                    onValueChange={(font) =>
                       change((d) => {
-                        d.design.font = e.target
-                          .value as StudioDocument["design"]["font"];
+                        d.design.font = font as StudioDocument["design"]["font"];
                       })
                     }
-                  >
-                    {["modern", "humanist", "editorial"].map((font) => (
-                      <option key={font} value={font}>
-                        {s(font)}
-                      </option>
-                    ))}
-                  </select>
+                    options={["modern", "humanist", "editorial"].map((font) => ({
+                      value: font,
+                      label: s(font),
+                    }))}
+                  />
                 </label>
                 <label>
                   {s("primaryLanguage")}
-                  <select
-                    aria-label={s("primaryLanguage")}
+                  <OptionPicker
+                    label={s("primaryLanguage")}
+                    placeholder={s("primaryLanguage")}
                     value={doc.primaryLanguage}
-                    onChange={(e) =>
+                    onValueChange={(language) =>
                       change((d) => {
-                        d.primaryLanguage = e.target.value as "fr" | "ar";
+                        d.primaryLanguage = language as "fr" | "ar";
                       })
                     }
-                  >
-                    <option value="fr">Français</option>
-                    <option value="ar">العربية</option>
-                  </select>
+                    options={[
+                      { value: "fr", label: "Français" },
+                      { value: "ar", label: "العربية" },
+                    ]}
+                  />
                 </label>
               </>
             )}
@@ -774,29 +778,32 @@ export function StudioEditor({ businessId }: { businessId: string }) {
                 </label>
                 <label>
                   {s("category")}
-                  <select
-                    aria-label={s("category")}
+                  <OptionPicker
+                    label={s("category")}
+                    placeholder={s("category")}
                     value={doc.profile.category}
-                    onChange={(e) =>
+                    onValueChange={(category) =>
                       change((d) => {
-                        d.profile.category = e.target
-                          .value as StudioDocument["profile"]["category"];
+                        d.profile.category = category;
                       })
                     }
-                  >
-                    {!businessCategories.some(
-                      (c) => c === doc.profile.category,
-                    ) && (
-                      <option value={doc.profile.category}>
-                        {doc.profile.category}
-                      </option>
-                    )}
-                    {businessCategories.map((c) => (
-                      <option key={c} value={c}>
-                        {t(`categories.${c}`)}
-                      </option>
-                    ))}
-                  </select>
+                    options={[
+                      ...(!businessCategories.some(
+                        (category) => category === doc.profile.category,
+                      ) && doc.profile.category
+                        ? [
+                            {
+                              value: doc.profile.category,
+                              label: doc.profile.category,
+                            },
+                          ]
+                        : []),
+                      ...businessCategories.map((category) => ({
+                        value: category,
+                        label: t(`categories.${category}`),
+                      })),
+                    ]}
+                  />
                 </label>
                 <LocalizedInput
                   label={s("title")}
@@ -891,22 +898,23 @@ export function StudioEditor({ businessId }: { businessId: string }) {
                     <div className="st-form-grid">
                       <label>
                         {s("priceMode")}
-                        <select
-                          aria-label={s("priceMode")}
+                        <OptionPicker
+                          label={s("priceMode")}
+                          placeholder={s("priceMode")}
                           value={service.priceMode}
-                          onChange={(e) =>
+                          onValueChange={(mode) =>
                             change((d) => {
-                              d.content.services[index].priceMode = e.target
-                                .value as "quote" | "fixed" | "from";
+                              d.content.services[index].priceMode = mode as
+                                | "quote"
+                                | "fixed"
+                                | "from";
                             })
                           }
-                        >
-                          {["quote", "fixed", "from"].map((mode) => (
-                            <option key={mode} value={mode}>
-                              {s(mode)}
-                            </option>
-                          ))}
-                        </select>
+                          options={["quote", "fixed", "from"].map((mode) => ({
+                            value: mode,
+                            label: s(mode),
+                          }))}
+                        />
                       </label>
                       {service.priceMode !== "quote" && (
                         <label>

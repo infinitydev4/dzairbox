@@ -1910,6 +1910,10 @@
     "fitMap": "Recentrer sur les résultats",
     "mapGroup": "professionnels dans cette zone",
     "noMapLocations": "Aucun emplacement fiable pour ces résultats. Retrouvez tous les professionnels dans la liste.",
-    "mapPins": "repères"
+    "mapPins": "repères",
+    "pickerSearch": "Rechercher",
+    "pickerEmpty": "Aucun résultat",
+    "pickerClose": "Fermer",
+    "pickerClear": "Effacer la recherche"
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useLanguage } from "@/components/language-provider"
+import { OptionPicker } from "@/components/option-picker"
 import { Header } from "@/components/header"
 import { useSession } from "next-auth/react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -198,18 +199,26 @@ export default function ContactPage() {
                         <span>{t('contactPage.form.subject.label')}</span>
                         <span className="text-red-500">*</span>
                       </label>
-                      <select
+                      <OptionPicker
+                        label={t("contactPage.form.subject.label")}
+                        placeholder={t("contactPage.form.subject.options.general")}
                         value={formData.subject}
-                        onChange={(e) => handleInputChange('subject', e.target.value)}
-                        className="w-full h-12 px-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-emerald-500/20 focus:outline-none"
-                        required
-                      >
-                        <option value="general">{t('contactPage.form.subject.options.general')}</option>
-                        <option value="business">{t('contactPage.form.subject.options.business')}</option>
-                        <option value="support">{t('contactPage.form.subject.options.support')}</option>
-                        <option value="partnership">{t('contactPage.form.subject.options.partnership')}</option>
-                        <option value="other">{t('contactPage.form.subject.options.other')}</option>
-                      </select>
+                        onValueChange={(subject) =>
+                          handleInputChange("subject", subject)
+                        }
+                        options={[
+                          "general",
+                          "business",
+                          "support",
+                          "partnership",
+                          "other",
+                        ].map((subject) => ({
+                          value: subject,
+                          label: t(
+                            `contactPage.form.subject.options.${subject}`,
+                          ),
+                        }))}
+                      />
                     </div>
                   </div>
 

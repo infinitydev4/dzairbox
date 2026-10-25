@@ -180,3 +180,25 @@ input[type="tel"]:focus {
 .animate-pulse-dot {
   animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+.dz-logo {
+  display: block;
+  width: auto;
+  height: 56px;
+  max-width: none;
+  flex: none;
+}
+
+.dz-logo-compact {
+  height: 32px;
+}
+
+@media (max-width: 640px) {
+  .dz-logo {
+    height: 42px;
+  }
+
+  .dz-logo-compact {
+    height: 26px;
+  }
+}

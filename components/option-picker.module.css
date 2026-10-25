@@ -1,0 +1,235 @@
+.picker {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 14px;
+  border: 1px solid #cfdbcd;
+  border-radius: 7px;
+  background: #fffefa;
+  color: #103832;
+  box-shadow: 0 2px 2px #10383202;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: start;
+  cursor: pointer;
+}
+.trigger > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.trigger svg {
+  flex: none;
+  color: #17745f;
+  transition: transform 0.2s ease;
+}
+.trigger[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.trigger[data-empty="true"] {
+  color: #7a8578;
+}
+.trigger[data-tone="filter"] {
+  min-height: 44px;
+  padding: 10px 13px;
+  border-color: #d1deca;
+  border-radius: 5px;
+  background: #edf1e5;
+  box-shadow: none;
+  color: #54714f;
+  font-size: 11px;
+}
+.trigger[data-tone="filter"][data-empty="false"] {
+  color: #103832;
+}
+.trigger[aria-invalid="true"] {
+  border-color: #b44936;
+  background: #fffaf6;
+}
+.trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.layer {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+}
+.layerSheet {
+  display: flex;
+  align-items: flex-end;
+  background: #10383266;
+  backdrop-filter: blur(4px);
+}
+.sheet {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #fffefa;
+  color: #103832;
+  border: 1px solid #cfdbcd;
+  box-shadow: 0 18px 50px #10383224;
+}
+.sheet[dir="rtl"] {
+  font-family: var(--font-arabic), sans-serif;
+}
+.sheetDrawer {
+  width: 100%;
+  max-height: min(86dvh, 720px);
+  border-bottom: 0;
+  border-radius: 18px 18px 0 0;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  animation: option-picker-rise 0.22s ease;
+}
+.sheetPopover {
+  position: absolute;
+  max-height: min(420px, calc(100dvh - 24px));
+  border-radius: 12px;
+  overflow: hidden;
+}
+.handle {
+  width: 42px;
+  height: 4px;
+  margin: 10px auto 0;
+  border-radius: 999px;
+  background: #c5d4bc;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px 0 18px;
+}
+.title {
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+}
+.close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: #edf1e5;
+  color: #103832;
+  cursor: pointer;
+}
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 16px 6px;
+  padding: 0 8px 0 12px;
+  min-height: 48px;
+  border: 1px solid #cfdbcd;
+  border-radius: 8px;
+  background: #fff;
+}
+.search:focus-within {
+  border-color: #17745f;
+  box-shadow: 0 0 0 3px #17745f10;
+}
+.search svg {
+  flex: none;
+  color: #17745f;
+}
+.search input {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #103832;
+  font: inherit;
+  font-size: 16px;
+}
+.clear {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #5d7358;
+  cursor: pointer;
+}
+.list {
+  overflow: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: 4px 8px 8px;
+  list-style: none;
+}
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #103832;
+  font: inherit;
+  font-size: 14px;
+  text-align: start;
+  cursor: pointer;
+}
+.option[data-active="true"] {
+  background: #f3f6ee;
+}
+.option[aria-selected="true"] {
+  background: #e4edda;
+  font-weight: 650;
+}
+.option svg {
+  flex: none;
+  color: #17745f;
+}
+.empty {
+  margin: 0;
+  padding: 28px 18px 32px;
+  color: #6a7b6a;
+  font-size: 13px;
+  text-align: center;
+}
+@media (max-width: 750px) {
+  .trigger {
+    min-height: 48px;
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trigger svg,
+  .sheetDrawer {
+    transition: none;
+    animation: none;
+  }
+}
+@keyframes option-picker-rise {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

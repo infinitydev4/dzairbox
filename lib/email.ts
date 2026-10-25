@@ -52,8 +52,12 @@ function getVerificationEmailTemplate(verificationUrl: string, name: string): st
           
           <!-- Header avec logo et gradient -->
           <tr>
-            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; border-radius: 16px 16px 0 0;">
-              <img src="https://dzairbox.com/logo-dzairbox.png" alt="DzairBox" style="height: 50px; width: auto; margin-bottom: 20px;">
+            <td style="background: #f7f6f0; padding: 28px 30px 18px; text-align: center; border-radius: 16px 16px 0 0;">
+              <img src="https://dzairbox.com/dzairbox-logo.png" alt="DzairBox" width="220" height="73" style="height: 52px; width: auto; display: inline-block;">
+            </td>
+          </tr>
+          <tr>
+            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 28px 30px; text-align: center;">
               <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
                 Bienvenue sur DzairBox !
               </h1>
@@ -231,8 +235,12 @@ function getContactEmailTemplate(
           
           <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; border-radius: 16px 16px 0 0;">
-              <img src="https://dzairbox.com/logo-dzairbox.png" alt="DzairBox" style="height: 50px; width: auto; margin-bottom: 20px;">
+            <td style="background: #f7f6f0; padding: 28px 30px 18px; text-align: center; border-radius: 16px 16px 0 0;">
+              <img src="https://dzairbox.com/dzairbox-logo.png" alt="DzairBox" width="220" height="73" style="height: 52px; width: auto; display: inline-block;">
+            </td>
+          </tr>
+          <tr>
+            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 28px 30px; text-align: center;">
               <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700;">
                 📧 Nouveau message de contact
               </h1>

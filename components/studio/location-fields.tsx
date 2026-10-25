@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import wilayas from "@/data/locations/wilayas.json";
+import { OptionPicker } from "@/components/option-picker";
 import { useLanguage } from "@/components/language-provider";
+import { allWilayas } from "@/lib/locations";
 import type { BusinessLocation } from "@/lib/studio/document";
 type Commune = {
   code: string;
@@ -70,12 +71,14 @@ export function LocationFields({
       <div className="st-form-grid">
         <label>
           {s("wilaya")} *
-          <select
+          <OptionPicker
+            label={s("wilaya")}
+            placeholder={s("choose")}
             value={value.wilayaCode}
-            onChange={(e) =>
+            onValueChange={(wilayaCode) =>
               onChange({
                 ...value,
-                wilayaCode: e.target.value,
+                wilayaCode,
                 communeCode: "",
                 areas: [],
                 point: null,
@@ -83,40 +86,35 @@ export function LocationFields({
                 geocodeExpiresAt: undefined,
               })
             }
-          >
-            <option value="">{s("choose")}</option>
-            {wilayas.map((w) => (
-              <option key={w.code} value={String(w.code).padStart(2, "0")}>
-                {String(w.code).padStart(2, "0")} ·{" "}
-                {language === "ar" ? w.name_ar : w.name}
-              </option>
-            ))}
-          </select>
+            options={allWilayas.map((wilaya) => ({
+              value: wilaya.code,
+              label: `${wilaya.code} · ${wilaya[language]}`,
+            }))}
+          />
         </label>
         <label>
           {s("commune")} *
-          <select
+          <OptionPicker
+            label={s("commune")}
+            placeholder={s("choose")}
             value={value.communeCode}
             disabled={!value.wilayaCode || error}
-            onChange={(e) => {
-              const c = communes.find((c) => c.code === e.target.value);
+            onValueChange={(communeCode) => {
+              const commune = communes.find((item) => item.code === communeCode);
               onChange({
                 ...value,
-                communeCode: e.target.value,
+                communeCode,
                 point:
-                  value.mode === "area" && c
-                    ? { lat: c.lat, lng: c.lng, source: "commune" }
+                  value.mode === "area" && commune
+                    ? { lat: commune.lat, lng: commune.lng, source: "commune" }
                     : null,
               });
             }}
-          >
-            <option value="">{s("choose")}</option>
-            {communes.map((c) => (
-              <option value={c.code} key={c.code}>
-                {c[language]}
-              </option>
-            ))}
-          </select>
+            options={communes.map((commune) => ({
+              value: commune.code,
+              label: commune[language],
+            }))}
+          />
         </label>
       </div>
       {error && (
@@ -153,23 +151,17 @@ export function LocationFields({
       {multiple && value.mode === "area" && (
         <label>
           {s("areas")}
-          <select
+          <OptionPicker
             multiple
-            aria-label={s("areas")}
+            label={s("areas")}
+            placeholder={s("choose")}
             value={value.areas}
-            onChange={(e) =>
-              onChange({
-                ...value,
-                areas: Array.from(e.target.selectedOptions, (o) => o.value),
-              })
-            }
-          >
-            {communes.map((c) => (
-              <option value={c.code} key={c.code}>
-                {c[language]}
-              </option>
-            ))}
-          </select>
+            onValueChange={(areas) => onChange({ ...value, areas })}
+            options={communes.map((commune) => ({
+              value: commune.code,
+              label: commune[language],
+            }))}
+          />
           <small>{s("areasHelp")}</small>
         </label>
       )}

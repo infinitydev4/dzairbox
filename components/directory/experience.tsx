@@ -21,8 +21,10 @@ import {
   X,
 } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
+import { BrandLogo } from "@/components/brand-logo";
 import { businessCategories } from "@/lib/constants";
-import wilayas from "@/data/locations/wilayas.json";
+import { OptionPicker } from "@/components/option-picker";
+import { allWilayas } from "@/lib/locations";
 import { LocalHeader } from "./header";
 import type { searchDirectory } from "@/lib/studio/directory";
 import { trackEvent } from "@/lib/studio/events";
@@ -154,56 +156,53 @@ export function DirectoryExperience({
     <div className="directory-filters">
       <label>
         <span className="sr-only">{s("category")}</span>
-        <select
-          aria-label={s("category")}
+        <OptionPicker
+          tone="filter"
+          label={s("category")}
+          placeholder={s("allCategories")}
+          clearLabel={s("allCategories")}
           value={query.category || ""}
-          onChange={(e) => navigate({ category: e.target.value })}
-        >
-          <option value="">{s("allCategories")}</option>
-          {businessCategories.map((c) => (
-            <option key={c} value={c}>
-              {t(`categories.${c}`)}
-            </option>
-          ))}
-        </select>
+          onValueChange={(category) => navigate({ category })}
+          options={businessCategories.map((category) => ({
+            value: category,
+            label: t(`categories.${category}`),
+          }))}
+        />
       </label>
       <label>
         <span className="sr-only">{s("wilaya")}</span>
-        <select
-          aria-label={s("wilaya")}
+        <OptionPicker
+          tone="filter"
+          label={s("wilaya")}
+          placeholder={s("allWilayas")}
+          clearLabel={s("allWilayas")}
           value={query.wilaya || ""}
-          onChange={(e) =>
-            navigate({
-              wilaya: e.target.value,
-              commune: "",
-              lat: "",
-              lng: "",
-            })
+          onValueChange={(wilaya) =>
+            navigate({ wilaya, commune: "", lat: "", lng: "" })
           }
-        >
-          <option value="">{s("allWilayas")}</option>
-          {wilayas.map((w) => (
-            <option key={w.code} value={String(w.code).padStart(2, "0")}>
-              {language === "ar" ? w.name_ar : w.name}
-            </option>
-          ))}
-        </select>
+          options={allWilayas.map((wilaya) => ({
+            value: wilaya.code,
+            label: `${wilaya.code} · ${wilaya[language]}`,
+          }))}
+        />
       </label>
       <label>
         <span className="sr-only">{s("commune")}</span>
-        <select
-          aria-label={s("commune")}
+        <OptionPicker
+          tone="filter"
+          label={s("commune")}
+          placeholder={s("allCommunes")}
+          clearLabel={s("allCommunes")}
           value={query.commune || ""}
           disabled={!query.wilaya || communeWilaya !== query.wilaya}
-          onChange={(e) => navigate({ commune: e.target.value })}
-        >
-          <option value="">{s("allCommunes")}</option>
-          {(communeWilaya === query.wilaya ? communes : []).map((c) => (
-            <option key={c.code} value={c.code}>
-              {c[language]}
-            </option>
-          ))}
-        </select>
+          onValueChange={(commune) => navigate({ commune })}
+          options={(communeWilaya === query.wilaya ? communes : []).map(
+            (commune) => ({
+              value: commune.code,
+              label: commune[language],
+            }),
+          )}
+        />
       </label>
       <button className="directory-nearby" type="button" onClick={aroundMe}>
         <LocateFixed size={15} />
@@ -542,8 +541,8 @@ export function DirectoryExperience({
         </div>
       </main>
       <footer className="local-footer">
-        <Link className="st-brand" href="/">
-          Dzair<span>Box</span>
+        <Link className="st-brand" href="/" aria-label="DzairBox">
+          <BrandLogo variant="onDark" alt="" />
         </Link>
         <span>{t("home.footer.description")}</span>
         <Link href="/onboarding">{s("create")} ↗</Link>

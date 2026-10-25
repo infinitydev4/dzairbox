@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
 import { useLanguage } from "@/components/language-provider"
+import { BrandLogo } from "@/components/brand-logo"
 import { Mail, MapPin, Phone } from "lucide-react"
 export function Footer() {
   const { t } = useLanguage()
@@ -14,15 +14,8 @@ export function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8">
           {/* Logo & Description */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center">
-              <Image
-                src="/logo-dzairbox.png"
-                alt="DzairBox"
-                width={1204}
-                height={1021}
-                className="h-36 w-auto"
-                style={{ width: "auto", height: "9rem" }}
-              />
+            <Link href="/" className="flex items-center" aria-label="DzairBox">
+              <BrandLogo alt="" />
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed">
               {t("footer.description")}

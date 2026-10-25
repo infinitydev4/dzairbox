@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { OptionPicker } from "@/components/option-picker"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
@@ -384,30 +385,36 @@ export default function AdminSubscriptionsPage() {
                 </div>
                 
                 <div className="flex gap-3">
-                  <select 
-                    value={statusFilter} 
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option value="all">Tous les statuts</option>
-                    <option value="ACTIVE">Actif</option>
-                    <option value="EXPIRED">Expiré</option>
-                    <option value="CANCELLED">Annulé</option>
-                    <option value="PENDING">En attente</option>
-                  </select>
-                  
-                  <select 
-                    value={planFilter} 
-                    onChange={(e) => setPlanFilter(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option value="all">Tous les plans</option>
-                    <option value="FREE">Gratuit</option>
-                    <option value="BASIC">Basique</option>
-                    <option value="PREMIUM">Premium</option>
-                    <option value="ENTERPRISE">Entreprise</option>
-                  </select>
-                  
+                  <div className="w-52">
+                  <OptionPicker
+                    label="Statut"
+                    placeholder="Tous les statuts"
+                    value={statusFilter}
+                    onValueChange={setStatusFilter}
+                    options={[
+                      ["all", "Tous les statuts"],
+                      ["ACTIVE", "Actif"],
+                      ["EXPIRED", "Expiré"],
+                      ["CANCELLED", "Annulé"],
+                      ["PENDING", "En attente"],
+                    ].map(([value, label]) => ({ value, label }))}
+                  />
+                  </div>
+                  <div className="w-52">
+                  <OptionPicker
+                    label="Plan"
+                    placeholder="Tous les plans"
+                    value={planFilter}
+                    onValueChange={setPlanFilter}
+                    options={[
+                      ["all", "Tous les plans"],
+                      ["FREE", "Gratuit"],
+                      ["BASIC", "Basique"],
+                      ["PREMIUM", "Premium"],
+                      ["ENTERPRISE", "Entreprise"],
+                    ].map(([value, label]) => ({ value, label }))}
+                  />
+                  </div>
                   <Button variant="outline">
                     <Filter className="h-4 w-4 mr-2" />
                     Filtres

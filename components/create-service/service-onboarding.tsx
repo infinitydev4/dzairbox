@@ -21,10 +21,12 @@ import {
   UserRound,
 } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
+import { BrandLogo } from "@/components/brand-logo";
 import { trackEvent } from "@/lib/studio/events";
 import { LocationFields } from "@/components/studio/location-fields";
 import { locationLabel } from "@/lib/locations";
 import { businessCategories } from "@/lib/constants";
+import { OptionPicker } from "@/components/option-picker";
 import {
   accountSchema,
   activitySchema,
@@ -234,8 +236,8 @@ export function ServiceOnboarding() {
       dir={language === "ar" ? "rtl" : "ltr"}
     >
       <header className="ob-header">
-        <Link href="/" className="dz-brand">
-          Dzair<span>Box</span>
+        <Link href="/" className="dz-brand" aria-label="DzairBox">
+          <BrandLogo priority alt="" />
         </Link>
         <span className="ob-header-label">{tr("journey")}</span>
         <div className="ob-header-actions">
@@ -486,22 +488,19 @@ export function ServiceOnboarding() {
                       </label>
                       <label className="ob-field">
                         {tr("activity.category")} *
-                        <select
+                        <OptionPicker
+                          label={tr("activity.category")}
+                          placeholder={tr("activity.categoryPlaceholder")}
                           value={draft.business.category}
-                          aria-invalid={!!errors.category}
-                          onChange={(e) =>
-                            update("business", "category", e.target.value)
+                          invalid={!!errors.category}
+                          onValueChange={(category) =>
+                            update("business", "category", category)
                           }
-                        >
-                          <option value="">
-                            {tr("activity.categoryPlaceholder")}
-                          </option>
-                          {businessCategories.map((c) => (
-                            <option key={c} value={c}>
-                              {t(`categories.${c}`)}
-                            </option>
-                          ))}
-                        </select>
+                          options={businessCategories.map((category) => ({
+                            value: category,
+                            label: t(`categories.${category}`),
+                          }))}
+                        />
                         {fieldError("category")}
                       </label>
                       <p className="ob-private-note">

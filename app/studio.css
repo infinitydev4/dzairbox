@@ -44,14 +44,12 @@
 .st-brand {
   display: flex;
   align-items: center;
+  flex: none;
   font-family: var(--font-home-display), sans-serif;
   font-size: 24px;
   font-weight: 750;
   letter-spacing: -1px;
   white-space: nowrap;
-}
-.st-brand > span:first-child {
-  color: #17745f;
 }
 .st-brand-tag {
   font:

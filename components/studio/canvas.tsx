@@ -22,6 +22,7 @@ import {
 } from "@/lib/studio/document";
 import { studioText } from "@/lib/studio/copy";
 import { useLanguage } from "@/components/language-provider";
+import { BrandLogo } from "@/components/brand-logo";
 import { trackEvent } from "@/lib/studio/events";
 
 export function StudioCanvas({
@@ -378,7 +379,7 @@ export function StudioCanvas({
             if (preview) e.preventDefault();
           }}
         >
-          DzairBox
+          <BrandLogo className="dz-logo dz-logo-compact" alt="DzairBox" />
           <ArrowUpRight size={16} />
         </Link>
       </footer>

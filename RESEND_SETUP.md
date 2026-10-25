@@ -77,4 +77,4 @@ Pour la production sur Netlify :
 1. Ajoutez `RESEND_API_KEY` dans les variables d'environnement Netlify
 2. Configurez le domaine `dzairbox.com` vérifié dans Resend
 3. Mettez à jour `NEXTAUTH_URL` avec l'URL de production (`https://dzairbox.com`)
-4. Le logo doit être accessible à `https://dzairbox.com/logo-dzairbox.png`
+4. Le logo doit être accessible à `https://dzairbox.com/dzairbox-logo.png`

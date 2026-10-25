@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { HomeMotion } from "./home-motion"
+import { BrandLogo } from "@/components/brand-logo"
 
 const categories = [
   { key: "restaurant", term: "restaurant", Icon: UtensilsCrossed, tone: "sun" },
@@ -31,16 +32,11 @@ const categories = [
   { key: "training", term: "formation", Icon: GraduationCap, tone: "sun" },
 ] as const
 
-function Brand() {
+function Brand({ variant = "default", priority = false }: { variant?: "default" | "onDark"; priority?: boolean }) {
   const { t } = useLanguage()
   return (
     <Link className="dz-brand" href="/" aria-label={t("home.nav.homeAria")}>
-      <svg className="dz-brand-mark" width="38" height="38" viewBox="0 0 38 38" fill="none" aria-hidden="true">
-        <path d="M19 2.5C10.2 2.5 3.5 9.2 3.5 18c0 11.3 15.5 17.5 15.5 17.5S34.5 29.3 34.5 18C34.5 9.2 27.8 2.5 19 2.5Z" fill="currentColor" />
-        <path d="m19 10 8.5 4.7v9.2L19 28.7l-8.5-4.8v-9.2L19 10Z" stroke="#F7F6F0" strokeWidth="1.5" strokeLinejoin="round" />
-        <path d="m10.7 14.8 8.3 4.7 8.3-4.7M19 19.5v9" stroke="#F7F6F0" strokeWidth="1.5" strokeLinejoin="round" />
-      </svg>
-      <span>Dzair<span>Box</span></span>
+      <BrandLogo variant={variant} priority={priority} alt="" />
     </Link>
   )
 }
@@ -58,7 +54,7 @@ function HomeHeader() {
   return (
     <header className="dz-header">
       <div className="dz-container dz-header-inner">
-        <Brand />
+        <Brand priority />
         <nav className="dz-header-nav" aria-label={t("home.nav.mainAria")}>
           <a href="#categories">{t("home.nav.explore")}</a>
           <a href="#professionnels">{t("home.nav.howItWorks")}</a>
@@ -352,7 +348,7 @@ function HomeFooter({ createHref }: { createHref: string }) {
   return (
     <footer className="dz-footer">
       <div className="dz-container dz-footer-main">
-        <div><Brand /><p>{t("home.footer.description")}</p></div>
+        <div><Brand variant="onDark" /><p>{t("home.footer.description")}</p></div>
         <nav aria-label={t("home.nav.footerAria")}>
           <Link href="/businesses">{t("home.footer.directory")}</Link>
           <Link href={createHref}>{t("home.footer.create")}</Link>

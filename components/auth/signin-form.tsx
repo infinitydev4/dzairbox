@@ -8,16 +8,7 @@ import { signIn } from "next-auth/react"
 import { ArrowLeft, ArrowRight, Eye, EyeOff, Loader2, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { useLanguage } from "@/components/language-provider"
-
-function BrandMark() {
-  return (
-    <svg className="dz-brand-mark" width="34" height="34" viewBox="0 0 38 38" fill="none" aria-hidden="true">
-      <path d="M19 2.5C10.2 2.5 3.5 9.2 3.5 18c0 11.3 15.5 17.5 15.5 17.5S34.5 29.3 34.5 18C34.5 9.2 27.8 2.5 19 2.5Z" fill="currentColor" />
-      <path d="m19 10 8.5 4.7v9.2L19 28.7l-8.5-4.8v-9.2L19 10Z" stroke="#F7F6F0" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="m10.7 14.8 8.3 4.7 8.3-4.7M19 19.5v9" stroke="#F7F6F0" strokeWidth="1.5" strokeLinejoin="round" />
-    </svg>
-  )
-}
+import { BrandLogo } from "@/components/brand-logo"
 
 export function SignInExperience() {
   const { t, language, setLanguage } = useLanguage()
@@ -107,8 +98,7 @@ export function SignInExperience() {
     <div className={`dz-home ob-root ob-login ${language === "ar" ? "ob-ar" : ""}`} dir={language === "ar" ? "rtl" : "ltr"}>
       <header className="ob-header">
         <Link href="/" className="dz-brand" aria-label="DzairBox">
-          <BrandMark />
-          <span>Dzair<span>Box</span></span>
+          <BrandLogo priority alt="" />
         </Link>
         <span className="ob-header-label">{t("auth.signin.kicker")}</span>
         <div className="ob-header-actions">
