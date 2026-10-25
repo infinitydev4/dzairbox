@@ -44,12 +44,7 @@ export default async function DirectoryPage({
   }
   return (
     <div className={display.variable}>
-      <DirectoryExperience
-        key={JSON.stringify(query)}
-        result={result}
-        query={query}
-        error={error}
-      />
+      <DirectoryExperience result={result} query={query} error={error} />
     </div>
   );
 }

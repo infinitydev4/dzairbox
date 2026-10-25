@@ -1898,6 +1898,18 @@
     "tip_faq": "Répondez aux questions que vos clients vous posent le plus souvent.",
     "approximate": "Position approximative · commune",
     "refineMap": "La carte affiche au maximum 1 000 repères. Affinez les filtres pour explorer une zone.",
-    "privacy": "Confidentialité"
+    "privacy": "Confidentialité",
+    "filters": "Filtres",
+    "applyFilters": "Afficher les résultats",
+    "showList": "Voir la liste",
+    "closeMapPanel": "Fermer",
+    "mapLoading": "Chargement de la carte…",
+    "mapControls": "Contrôles de la carte",
+    "zoomIn": "Agrandir la carte",
+    "zoomOut": "Réduire la carte",
+    "fitMap": "Recentrer sur les résultats",
+    "mapGroup": "professionnels dans cette zone",
+    "noMapLocations": "Aucun emplacement fiable pour ces résultats. Retrouvez tous les professionnels dans la liste.",
+    "mapPins": "repères"
   }
 }

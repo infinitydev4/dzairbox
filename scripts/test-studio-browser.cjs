@@ -189,7 +189,7 @@ async function settled(page) {
     });
     await p
       .getByRole("button", {
-        name: "Créer mon activité et ouvrir le studio",
+        name: "Se connecter",
         exact: true,
       })
       .click();

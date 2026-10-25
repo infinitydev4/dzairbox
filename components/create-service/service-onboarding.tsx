@@ -23,6 +23,7 @@ import {
 import { useLanguage } from "@/components/language-provider";
 import { trackEvent } from "@/lib/studio/events";
 import { LocationFields } from "@/components/studio/location-fields";
+import { locationLabel } from "@/lib/locations";
 import { businessCategories } from "@/lib/constants";
 import {
   accountSchema,
@@ -53,11 +54,31 @@ export function ServiceOnboarding() {
   const heading = useRef<HTMLHeadingElement>(null);
   const lock = useRef(false);
   const completed = useRef(false);
+  const draftRef = useRef(draft);
+  const stepRef = useRef(step);
+  const readyRef = useRef(ready);
+  draftRef.current = draft;
+  stepRef.current = step;
+  readyRef.current = ready;
   const connected = !!session;
   const Forward = language === "ar" ? ArrowLeft : ArrowRight;
   const Backward = language === "ar" ? ArrowRight : ArrowLeft;
+  function persist(nextDraft = draftRef.current, nextStep = stepRef.current) {
+    if (!readyRef.current || completed.current) return;
+    try {
+      const { password: _password, ...account } = nextDraft.account;
+      localStorage.setItem(
+        KEY,
+        JSON.stringify({ ...nextDraft, account, step: nextStep }),
+      );
+      setSaved(true);
+    } catch {
+      setSaved(false);
+    }
+  }
   useEffect(() => {
     const leave = () => {
+      persist();
       if (!completed.current) trackEvent("signup_abandon");
     };
     window.addEventListener("pagehide", leave);
@@ -79,6 +100,7 @@ export function ServiceOnboarding() {
               ...parsed.data,
               account: { ...parsed.data.account, password: "" },
             };
+            if (typeof parsed.data.step === "number") setStep(parsed.data.step);
             setRestored(true);
           }
         }
@@ -95,20 +117,24 @@ export function ServiceOnboarding() {
     const timer = setTimeout(() => {
       try {
         const { password: _password, ...account } = draft.account;
-        localStorage.setItem(KEY, JSON.stringify({ ...draft, account }));
+        localStorage.setItem(
+          KEY,
+          JSON.stringify({ ...draft, account, step }),
+        );
         setSaved(true);
       } catch {
         setSaved(false);
       }
     }, 300);
     return () => clearTimeout(timer);
-  }, [draft, ready, createdUrl]);
+  }, [draft, ready, createdUrl, step]);
   function go(index: number) {
     if (index > 0 && index < 4) trackEvent(`signup_${steps[index - 1]}`);
     setStep(index);
     setErrors({});
     setError("");
     setRestored(false);
+    persist(draft, index);
     requestAnimationFrame(() => {
       heading.current?.focus({ preventScroll: true });
       heading.current?.scrollIntoView({ block: "center", behavior: "instant" });
@@ -516,23 +542,66 @@ export function ServiceOnboarding() {
                   )}
                   {step === 3 && (
                     <>
+                      {!connected && !draft.account.password && (
+                        <label className="ob-field">
+                          {tr("account.password")} *
+                          <span className="ob-password">
+                            <input
+                              type={show ? "text" : "password"}
+                              autoComplete="current-password"
+                              minLength={8}
+                              maxLength={128}
+                              value={draft.account.password}
+                              aria-invalid={!!errors.password}
+                              onChange={(e) =>
+                                update("account", "password", e.target.value)
+                              }
+                              placeholder={tr("account.passwordPlaceholder")}
+                            />
+                            <button
+                              type="button"
+                              aria-label={tr(
+                                show ? "account.hide" : "account.show",
+                              )}
+                              onClick={() => setShow((v) => !v)}
+                            >
+                              {show ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                          </span>
+                          {fieldError("password")}
+                        </label>
+                      )}
                       <div className="ob-review">
                         {[
                           {
                             title: tr("review.account"),
                             value: connected
                               ? session?.user?.email
-                              : draft.account.email,
+                              : [draft.account.name, draft.account.email]
+                                  .filter(Boolean)
+                                  .join(" · "),
                             index: 0,
                           },
                           {
                             title: tr("review.activity"),
-                            value: draft.business.name,
+                            value: [
+                              draft.business.name,
+                              draft.business.category
+                                ? t(`categories.${draft.business.category}`)
+                                : "",
+                            ]
+                              .filter(Boolean)
+                              .join(" · "),
                             index: 1,
                           },
                           {
                             title: tr("review.contact"),
-                            value: draft.contact.phone,
+                            value: [
+                              draft.contact.phone,
+                              locationLabel(draft.contact.location, language),
+                            ]
+                              .filter(Boolean)
+                              .join(" · "),
                             index: 2,
                           },
                         ].map((item) => (
@@ -551,9 +620,15 @@ export function ServiceOnboarding() {
                           </section>
                         ))}
                       </div>
+                      <p className="ob-login-prompt">
+                        {tr("login")}{" "}
+                        <Link href="/auth/signin?callbackUrl=%2Fonboarding">
+                          {tr("signIn")}
+                        </Link>
+                      </p>
                       <div className="ob-moderation">
                         <ShieldCheck size={23} />
-                        <p>{st("afterSignup")}</p>
+                        <p>{tr("review.emailNote")}</p>
                       </div>
                     </>
                   )}
@@ -592,7 +667,7 @@ export function ServiceOnboarding() {
                   {busy
                     ? tr("creating")
                     : step === 3
-                      ? st("createAndOpen")
+                      ? tr("signIn")
                       : tr("next")}
                   <Forward size={17} />
                 </button>

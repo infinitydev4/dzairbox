@@ -47,6 +47,7 @@ export type OnboardingDraft = {
 };
 export const draftSchema = z.object({
   requestId: z.uuid(),
+  step: z.number().int().min(0).max(3).optional(),
   account: z.object({ name: z.string(), email: z.string() }),
   business: z.object({ name: z.string(), category: z.string() }),
   contact: z.object({ phone: z.string(), location: locationSchema }),

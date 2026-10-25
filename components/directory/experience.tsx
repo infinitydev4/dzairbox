@@ -17,6 +17,8 @@ import {
   Phone,
   Store,
   Loader2,
+  SlidersHorizontal,
+  X,
 } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 import { businessCategories } from "@/lib/constants";
@@ -47,13 +49,25 @@ export function DirectoryExperience({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [q, setQ] = useState(query.q || query.search || "");
-  const [mode, setMode] = useState(query.view === "map" ? "map" : "list");
+  const mode = query.view === "map" ? "map" : "list";
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const filterDialog = useRef<HTMLDialogElement>(null);
+  const searchValue = query.q || query.search || "";
+  const [previousSearch, setPreviousSearch] = useState(searchValue);
+  if (previousSearch !== searchValue) {
+    setPreviousSearch(searchValue);
+    setQ(searchValue);
+  }
+
   const [selected, setSelected] = useState<string | null>(null);
   const selectedRef = useRef<string | null>(null);
+  const activeEntry = result.markers.find((entry) => entry.id === selected);
   const [visitor, setVisitor] = useState<{ lat: number; lng: number } | null>(
     null,
   );
   const [geoError, setGeoError] = useState(false);
+  const [communeWilaya, setCommuneWilaya] = useState("");
   const [communes, setCommunes] = useState<
     Array<{ code: string; fr: string; ar: string }>
   >([]);
@@ -61,7 +75,10 @@ export function DirectoryExperience({
     const params = new URLSearchParams(query);
     params.set("q", q);
     params.delete("search");
-    if (reset) params.delete("page");
+    if (reset) {
+      params.delete("page");
+      setSelected(null);
+    }
     for (const [key, value] of Object.entries(change)) {
       if (value) params.set(key, value);
       else params.delete(key);
@@ -70,22 +87,44 @@ export function DirectoryExperience({
       router.push(`/businesses?${params.toString()}`, { scroll: false }),
     );
   }
-  function loadCommunes(code: string) {
-    if (code)
-      void fetch(`/api/locations?wilaya=${code}`)
-        .then((r) => r.json())
-        .then((data) => setCommunes(data.communes))
-        .catch(() => setCommunes([]));
-  }
-  // Fetch dependent choices only after hydration, without loading the full country into the client.
   useEffect(() => {
-    loadCommunes(query.wilaya || "");
+    if (mode !== "map") return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [mode]);
+  // Abort previous requests so rapid filter changes cannot restore stale communes.
+  useEffect(() => {
+    if (!query.wilaya) return;
+    const controller = new AbortController();
+    fetch(`/api/locations?wilaya=${query.wilaya}`, {
+      signal: controller.signal,
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error();
+        return response.json();
+      })
+      .then((data) => {
+        if (!controller.signal.aborted) {
+          setCommunes(data.communes);
+          setCommuneWilaya(query.wilaya);
+        }
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          setCommunes([]);
+          setCommuneWilaya(query.wilaya);
+        }
+      });
+    return () => controller.abort();
   }, [query.wilaya]);
   useEffect(() => {
     selectedRef.current = selected;
   }, [selected]);
   useEffect(() => {
-    if (selectedRef.current)
+    if (selectedRef.current && window.matchMedia("(min-width: 751px)").matches)
       document
         .getElementById(`business-${selectedRef.current}`)
         ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -111,9 +150,70 @@ export function DirectoryExperience({
       { timeout: 10000 },
     );
   }
+  const filters = (
+    <div className="directory-filters">
+      <label>
+        <span className="sr-only">{s("category")}</span>
+        <select
+          aria-label={s("category")}
+          value={query.category || ""}
+          onChange={(e) => navigate({ category: e.target.value })}
+        >
+          <option value="">{s("allCategories")}</option>
+          {businessCategories.map((c) => (
+            <option key={c} value={c}>
+              {t(`categories.${c}`)}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        <span className="sr-only">{s("wilaya")}</span>
+        <select
+          aria-label={s("wilaya")}
+          value={query.wilaya || ""}
+          onChange={(e) =>
+            navigate({
+              wilaya: e.target.value,
+              commune: "",
+              lat: "",
+              lng: "",
+            })
+          }
+        >
+          <option value="">{s("allWilayas")}</option>
+          {wilayas.map((w) => (
+            <option key={w.code} value={String(w.code).padStart(2, "0")}>
+              {language === "ar" ? w.name_ar : w.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        <span className="sr-only">{s("commune")}</span>
+        <select
+          aria-label={s("commune")}
+          value={query.commune || ""}
+          disabled={!query.wilaya || communeWilaya !== query.wilaya}
+          onChange={(e) => navigate({ commune: e.target.value })}
+        >
+          <option value="">{s("allCommunes")}</option>
+          {(communeWilaya === query.wilaya ? communes : []).map((c) => (
+            <option key={c.code} value={c.code}>
+              {c[language]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button className="directory-nearby" type="button" onClick={aroundMe}>
+        <LocateFixed size={15} />
+        {s("nearby")}
+      </button>
+    </div>
+  );
   return (
     <div
-      className="dz-home directory-root"
+      className={`dz-home directory-root ${mode === "map" ? "directory-map-mode" : ""}`}
       dir={language === "ar" ? "rtl" : "ltr"}
     >
       <LocalHeader />
@@ -135,81 +235,88 @@ export function DirectoryExperience({
             navigate({});
           }}
         >
-          <Search size={22} />
+          {mode === "map" && (
+            <button
+              className="directory-map-back"
+              type="button"
+              aria-label={s("showList")}
+              onClick={() => navigate({ view: "list" }, false)}
+            >
+              <ArrowLeft size={19} />
+            </button>
+          )}
+          <Search className="directory-search-icon" size={22} />
           <label className="sr-only" htmlFor="directory-query">
             {s("search")}
           </label>
           <input
             id="directory-query"
+            type="search"
+            enterKeyHint="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder={s("search")}
           />
-          <button type="submit">
+          <button
+            type="submit"
+            className="directory-search-submit"
+            aria-label={s("searchButton")}
+          >
             {pending ? (
               <Loader2 size={16} className="ob-spin" />
             ) : (
-              s("searchButton")
+              <span>{s("searchButton")}</span>
             )}
             <ArrowRight size={16} />
           </button>
+          {mode === "map" && (
+            <button
+              className="directory-map-filter-toggle"
+              type="button"
+              aria-label={s("filters")}
+              aria-haspopup="dialog"
+              aria-expanded={filtersOpen}
+              onClick={() => {
+                setFiltersOpen(true);
+                filterDialog.current?.showModal();
+              }}
+            >
+              <SlidersHorizontal size={20} />
+            </button>
+          )}
         </form>
-        <div className="directory-filters">
-          <label>
-            <span className="sr-only">{s("category")}</span>
-            <select
-              value={query.category || ""}
-              onChange={(e) => navigate({ category: e.target.value })}
+        {filters}
+        {mode === "map" && (
+          <dialog
+            className="directory-filter-dialog"
+            ref={filterDialog}
+            aria-labelledby="directory-filter-title"
+            onClose={() => setFiltersOpen(false)}
+            onClick={(event) => {
+              if (event.target === event.currentTarget)
+                event.currentTarget.close();
+            }}
+          >
+            <header>
+              <h2 id="directory-filter-title">{s("filters")}</h2>
+              <button
+                type="button"
+                aria-label={s("closeMapPanel")}
+                onClick={() => filterDialog.current?.close()}
+              >
+                <X size={20} />
+              </button>
+            </header>
+            {filtersOpen && filters}
+            <button
+              className="directory-filter-apply"
+              type="button"
+              onClick={() => filterDialog.current?.close()}
             >
-              <option value="">{s("allCategories")}</option>
-              {businessCategories.map((c) => (
-                <option key={c} value={c}>
-                  {t(`categories.${c}`)}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <span className="sr-only">{s("wilaya")}</span>
-            <select
-              value={query.wilaya || ""}
-              onChange={(e) =>
-                navigate({
-                  wilaya: e.target.value,
-                  commune: "",
-                  lat: "",
-                  lng: "",
-                })
-              }
-            >
-              <option value="">{s("allWilayas")}</option>
-              {wilayas.map((w) => (
-                <option key={w.code} value={String(w.code).padStart(2, "0")}>
-                  {language === "ar" ? w.name_ar : w.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <span className="sr-only">{s("commune")}</span>
-            <select
-              value={query.commune || ""}
-              disabled={!query.wilaya}
-              onChange={(e) => navigate({ commune: e.target.value })}
-            >
-              <option value="">{s("allCommunes")}</option>
-              {communes.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c[language]}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button className="directory-nearby" type="button" onClick={aroundMe}>
-            <LocateFixed size={15} />
-            {s("nearby")}
-          </button>
-        </div>
+              {s("applyFilters")}
+            </button>
+          </dialog>
+        )}
         {geoError && (
           <p className="directory-notice" role="status">
             {s("locationDenied")}
@@ -218,6 +325,12 @@ export function DirectoryExperience({
         <div className="directory-results-bar">
           <p>
             <strong>{result.total}</strong> {s("results")}
+            {mode === "map" && (
+              <span className="directory-map-coverage">
+                {" "}
+                · {result.markers.length} {s("mapPins")}
+              </span>
+            )}
           </p>
           <div>
             {Object.keys(query).some(
@@ -231,7 +344,6 @@ export function DirectoryExperience({
               type="button"
               aria-pressed={mode === "list"}
               onClick={() => {
-                setMode("list");
                 navigate({ view: "list" }, false);
               }}
             >
@@ -242,7 +354,6 @@ export function DirectoryExperience({
               type="button"
               aria-pressed={mode === "map"}
               onClick={() => {
-                setMode("map");
                 navigate({ view: "map" }, false);
               }}
             >
@@ -261,14 +372,17 @@ export function DirectoryExperience({
           className={`directory-results ${mode === "map" ? "directory-with-map" : ""}`}
           aria-busy={pending}
         >
-          <div>
+          <div className="directory-list-panel">
             <div className="directory-grid">
               {result.items.map((b) => (
                 <article
                   className={`directory-card ${selected === b.id ? "is-selected" : ""}`}
                   key={b.id}
                   id={`business-${b.id}`}
-                  onMouseEnter={() => setSelected(b.id)}
+                  onMouseEnter={() => setHovered(b.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onFocus={() => setHovered(b.id)}
+                  onBlur={() => setHovered(null)}
                 >
                   <Link
                     href={`/${b.subdomain}`}
@@ -352,20 +466,74 @@ export function DirectoryExperience({
             <aside className="directory-map-side">
               <BusinessMap
                 entries={result.markers}
-                selected={selected}
+                selected={hovered || selected}
                 visitor={visitor}
                 onSelect={(id) => {
                   setSelected(id);
+                  setHovered(null);
+                  if (!id) return;
                   const marker = result.markers.find(
                     (marker) => marker.id === id,
                   );
                   if (marker && marker.page !== result.page)
                     navigate({ page: String(marker.page) }, false);
-                  document
-                    .getElementById(`business-${id}`)
-                    ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+                  if (window.matchMedia("(min-width: 751px)").matches)
+                    document.getElementById(`business-${id}`)?.scrollIntoView({
+                      block: "nearest",
+                      behavior: "smooth",
+                    });
                 }}
               />
+              {activeEntry && (
+                <section
+                  className="directory-map-card"
+                  aria-live="polite"
+                  aria-label={activeEntry.name}
+                >
+                  <button
+                    className="directory-map-card-close"
+                    type="button"
+                    aria-label={s("closeMapPanel")}
+                    onClick={() => setSelected(null)}
+                  >
+                    <X size={17} />
+                  </button>
+                  <span>{categoryLabel(activeEntry.category, language)}</span>
+                  <Link href={`/${activeEntry.subdomain}`}>
+                    <h2>{activeEntry.name}</h2>
+                    <ArrowUpRight size={20} />
+                  </Link>
+                  <p>
+                    <MapPin size={14} />
+                    {activeEntry.address}
+                  </p>
+                  {activeEntry.approximate && <small>{s("approximate")}</small>}
+                  <div>
+                    <Link href={`/${activeEntry.subdomain}`}>
+                      {s("discover")}
+                      <ArrowRight size={16} />
+                    </Link>
+                    {activeEntry.phone && (
+                      <a
+                        href={`tel:${activeEntry.phone}`}
+                        onClick={() => trackEvent("call", activeEntry.id)}
+                      >
+                        <Phone size={15} />
+                        {s("call")}
+                      </a>
+                    )}
+                  </div>
+                </section>
+              )}
+              <button
+                className="directory-map-show-list"
+                type="button"
+                onClick={() => navigate({ view: "list" }, false)}
+              >
+                <List size={17} />
+                {s("showList")}
+                <span>{result.total}</span>
+              </button>
               {result.mapLimited && (
                 <p className="directory-notice">{s("refineMap")}</p>
               )}

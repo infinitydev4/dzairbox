@@ -3,8 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { directorySearchClauses } from "@/lib/search-normalization";
 import { publicBusiness } from "@/lib/studio/server";
 import { refreshExpiredCoordinates } from "@/lib/studio/geocoding";
-import { publicLocation } from "@/lib/locations";
-import { locationSchema } from "@/lib/studio/document";
+import { publicMapPoint } from "./map-location";
+import { locationLabel } from "@/lib/locations";
+import { locationSchema } from "./document";
+import type { MapEntry } from "@/lib/directory-map";
 export async function searchDirectory(params: URLSearchParams) {
   if (params.get("view") === "map") await refreshExpiredCoordinates();
   const page = Math.max(
@@ -68,26 +70,39 @@ export async function searchDirectory(params: URLSearchParams) {
     }),
     prisma.business.findMany({
       where,
-      select: { id: true, name: true, subdomain: true, location: true },
+      select: {
+        id: true,
+        name: true,
+        subdomain: true,
+        location: true,
+        address: true,
+        category: true,
+        phone: true,
+      },
       take: 1000,
       orderBy: [{ name: "asc" }, { id: "asc" }],
     }),
   ]);
-  const markers = mapRows.flatMap((row, index) => {
+  const markers: MapEntry[] = mapRows.flatMap((row, index) => {
     const parsed = locationSchema.safeParse(row.location);
-    if (!parsed.success) return [];
-    const location = publicLocation(parsed.data);
-    return location.point
+    const point = publicMapPoint(row.location, row.address);
+    return point
       ? [
           {
             id: row.id,
             name: row.name,
             subdomain: row.subdomain,
-            lat: location.point.lat,
-            lng: location.point.lng,
-            approximate: location.point.source === "commune",
-            mode: location.mode,
+            lat: point.lat,
+            lng: point.lng,
+            approximate: point.source === "commune",
+            mode: point.mode,
             page: Math.floor(index / pageSize) + 1,
+            category: row.category,
+            address:
+              parsed.success && parsed.data.mode === "area"
+                ? locationLabel(parsed.data)
+                : row.address,
+            phone: row.phone,
           },
         ]
       : [];

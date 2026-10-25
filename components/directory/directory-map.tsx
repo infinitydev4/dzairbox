@@ -1,25 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { Expand, Loader2, MapPin, Minus, Plus, X } from "lucide-react";
 import { loadMaps } from "@/lib/google-maps";
 import { useLanguage } from "@/components/language-provider";
-export type MapEntry = {
-  id: string;
-  name: string;
-  subdomain: string;
-  lat: number;
-  lng: number;
-  approximate: boolean;
-  mode: string;
-};
-export function clusterMarkers(entries: MapEntry[], zoom: number) {
-  const size = 360 / Math.pow(2, Math.max(2, zoom) + 2);
-  const groups = new Map<string, MapEntry[]>();
-  for (const p of entries) {
-    const key = `${Math.floor(p.lat / size)}:${Math.floor(p.lng / size)}`;
-    groups.set(key, [...(groups.get(key) || []), p]);
-  }
-  return [...groups.values()];
-}
+import { clusterMarkers, type MapEntry } from "@/lib/directory-map";
+import { createMapPin, type MapPin as Pin } from "./map-pins";
+export { clusterMarkers } from "@/lib/directory-map";
+export type { MapEntry } from "@/lib/directory-map";
+
 export default function DirectoryMap({
   entries,
   selected,
@@ -28,146 +16,289 @@ export default function DirectoryMap({
 }: {
   entries: MapEntry[];
   selected: string | null;
-  onSelect: (id: string) => void;
+  onSelect: (id: string | null) => void;
   visitor?: { lat: number; lng: number } | null;
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const s = (key: string) => t(`studio.${key}`);
   const canvas = useRef<HTMLDivElement>(null);
-  const instance = useRef<google.maps.Map | null>(null);
-  const markers = useRef<google.maps.Marker[]>([]);
-  const info = useRef<google.maps.InfoWindow | null>(null);
+  const map = useRef<google.maps.Map | null>(null);
+  const pins = useRef<Pin[]>([]);
+  const callback = useRef(onSelect);
+  const fitted = useRef("");
   const [ready, setReady] = useState(false);
+  const [tilesLoaded, setTilesLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [zoom, setZoom] = useState(7);
-  const callback = useRef(onSelect);
+  const [group, setGroup] = useState<MapEntry[]>([]);
+  const groupIds = new Set(group.map((entry) => entry.id));
+  const visibleGroup = entries.filter((entry) => groupIds.has(entry.id));
   useEffect(() => {
     callback.current = onSelect;
   }, [onSelect]);
+
   useEffect(() => {
     let active = true;
-    const failed = () => setError(true);
+    const timeout = setTimeout(() => {
+      if (active) setError(true);
+    }, 20000);
+    const failed = () => {
+      clearTimeout(timeout);
+      if (active) setError(true);
+    };
     window.addEventListener("dzairbox-map-error", failed);
     void loadMaps()
       .then(() => {
         if (!active || !canvas.current) return;
-        instance.current = new google.maps.Map(canvas.current, {
+        const instance = new google.maps.Map(canvas.current, {
           center: { lat: 34.9, lng: 3.1 },
           zoom: 6,
           mapTypeControl: false,
           streetViewControl: false,
+          fullscreenControl: false,
+          zoomControl: false,
+          rotateControl: false,
+          cameraControl: false,
+          clickableIcons: false,
+          gestureHandling: "greedy",
+          keyboardShortcuts: true,
+          styles: [
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{ visibility: "off" }],
+            },
+          ],
         });
-        info.current = new google.maps.InfoWindow();
-        instance.current.addListener("zoom_changed", () =>
-          setZoom(instance.current?.getZoom() || 7),
-        );
+        map.current = instance;
+        instance.addListener("tilesloaded", () => {
+          clearTimeout(timeout);
+          if (active) setTilesLoaded(true);
+        });
+        fitted.current = "";
+        instance.addListener("idle", () => {
+          if (active) setZoom(instance.getZoom() || 7);
+        });
+        instance.addListener("click", () => {
+          if (active) setGroup([]);
+        });
         setReady(true);
       })
-      .catch(() => setError(true));
+      .catch(failed);
     return () => {
       active = false;
+      clearTimeout(timeout);
       window.removeEventListener("dzairbox-map-error", failed);
-      markers.current.forEach((m) => m.setMap(null));
-      if (instance.current && window.google)
-        google.maps.event.clearInstanceListeners(instance.current);
+      pins.current.forEach((pin) => pin.overlay.setMap(null));
+      pins.current = [];
+      if (map.current && window.google)
+        google.maps.event.clearInstanceListeners(map.current);
+      map.current = null;
     };
   }, [attempt]);
+
   useEffect(() => {
-    if (!ready || !instance.current) return;
-    markers.current.forEach((m) => m.setMap(null));
-    markers.current = clusterMarkers(entries, zoom).map((group) => {
-      const pos = {
-        lat: group.reduce((n, p) => n + p.lat, 0) / group.length,
-        lng: group.reduce((n, p) => n + p.lng, 0) / group.length,
-      };
-      const marker = new google.maps.Marker({
-        map: instance.current,
-        position: pos,
-        title:
-          group.length > 1
-            ? `${group.length} ${t("studio.results")}`
-            : group[0].name,
-        label:
-          group.length > 1
-            ? { text: String(group.length), color: "white", fontSize: "12px" }
-            : undefined,
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: group.length > 1 ? 20 : 10,
-          fillColor: group.some((p) => p.id === selected)
-            ? "#caa652"
-            : "#17745f",
-          fillOpacity: 1,
-          strokeWeight: 3,
-          strokeColor: "#fff",
-        },
-      });
-      marker.addListener("click", () => {
-        const div = document.createElement("div");
-        div.style.cssText =
-          "padding:5px;max-width:240px;color:#103832;font:12px Arial;max-height:240px;overflow:auto";
-        for (const entry of group.slice(0, 20)) {
-          const row = document.createElement("div");
-          row.style.cssText = "padding:8px 0;border-bottom:1px solid #dde5d4";
-          const button = document.createElement("button");
-          button.textContent = entry.name;
-          button.style.cssText =
-            "display:block;background:none;border:0;text-align:start;font-weight:bold;cursor:pointer";
-          button.onclick = () => callback.current(entry.id);
-          const a = document.createElement("a");
-          a.href = `/${encodeURIComponent(entry.subdomain)}`;
-          a.textContent = t("studio.discover") + " ↗";
-          a.style.cssText = "display:block;margin-top:7px;color:#17745f";
-          row.append(button, a);
-          if (entry.approximate) {
-            const note = document.createElement("small");
-            note.textContent = t("studio.approximate");
-            row.append(note);
+    const instance = map.current;
+    if (!ready || !instance) return;
+    pins.current.forEach((pin) => pin.overlay.setMap(null));
+    pins.current = clusterMarkers(entries, zoom).map((entries) =>
+      createMapPin(
+        instance,
+        entries,
+        entries.length > 1
+          ? `${entries.length} ${t("studio.results")}`
+          : entries[0].name,
+        () => {
+          if (entries.length === 1) {
+            setGroup([]);
+            callback.current(entries[0].id);
+            return;
           }
-          div.append(row);
-        }
-        info.current?.setContent(div);
-        info.current?.open(instance.current, marker);
-        if (group.length === 1) callback.current(group[0].id);
-        else if (zoom < 13) {
-          instance.current?.setCenter(pos);
-          instance.current?.setZoom(zoom + 2);
-        }
-      });
-      return marker;
+          const spread = entries.some(
+            (e) =>
+              Math.abs(e.lat - entries[0].lat) +
+                Math.abs(e.lng - entries[0].lng) >
+              0.0001,
+          );
+          if (spread && zoom < 16) {
+            const bounds = new google.maps.LatLngBounds();
+            entries.forEach((entry) => bounds.extend(entry));
+            instance.fitBounds(bounds, 90);
+          } else {
+            callback.current(null);
+            setGroup(entries);
+          }
+        },
+      ),
+    );
+    return () => {
+      pins.current.forEach((pin) => pin.overlay.setMap(null));
+      pins.current = [];
+    };
+  }, [entries, ready, zoom, t]);
+
+  useEffect(() => {
+    pins.current.forEach((pin) => {
+      const active = pin.entries.some((entry) => entry.id === selected);
+      pin.button.classList.toggle("is-selected", active);
+      pin.button.setAttribute("aria-pressed", String(active));
+      pin.button.style.zIndex = active ? "2" : "1";
     });
-    return () => markers.current.forEach((m) => m.setMap(null));
-  }, [entries, ready, zoom, selected, t]);
+  }, [selected, entries, ready, zoom, t]);
+
   useEffect(() => {
-    if (!ready || !instance.current || !entries.length) return;
+    if (!ready || !map.current || !entries.length) return;
+    const key = entries
+      .map((entry) => `${entry.id}:${entry.lat}:${entry.lng}`)
+      .join("|");
+    if (fitted.current === key) return;
+    fitted.current = key;
     const bounds = new google.maps.LatLngBounds();
-    entries.forEach((e) => bounds.extend({ lat: e.lat, lng: e.lng }));
-    instance.current.fitBounds(bounds, 40);
+    entries.forEach((entry) => bounds.extend(entry));
+    map.current.fitBounds(bounds, {
+      top: 120,
+      right: 55,
+      bottom: 100,
+      left: 55,
+    });
+    const instance = map.current;
+    const listener = google.maps.event.addListenerOnce(instance, "idle", () => {
+      if ((instance.getZoom() || 0) > 15) instance.setZoom(15);
+    });
+    return () => listener.remove();
   }, [entries, ready]);
+
   useEffect(() => {
-    if (visitor && instance.current) {
-      instance.current.setCenter(visitor);
-      instance.current.setZoom(11);
+    if (!ready || !canvas.current) return;
+    const observer = new ResizeObserver(() => {
+      if (map.current) google.maps.event.trigger(map.current, "resize");
+    });
+    observer.observe(canvas.current);
+    return () => observer.disconnect();
+  }, [ready]);
+
+  useEffect(() => {
+    if (visitor && ready && map.current) {
+      map.current.panTo(visitor);
+      map.current.setZoom(12);
     }
-  }, [visitor]);
+  }, [visitor, ready]);
+
+  function fitResults() {
+    if (!map.current || !entries.length) return;
+    const bounds = new google.maps.LatLngBounds();
+    entries.forEach((entry) => bounds.extend(entry));
+    map.current.fitBounds(bounds, 80);
+  }
   return (
-    <div className="directory-map">
-      {error ? (
+    <div
+      className="directory-map"
+      data-tiles-loaded={tilesLoaded}
+      dir={language === "ar" ? "rtl" : "ltr"}
+    >
+      <div
+        ref={canvas}
+        className="directory-map-canvas"
+        aria-label={s("map")}
+      />
+      {!tilesLoaded && !error && (
+        <div className="directory-map-loading" role="status">
+          <Loader2 className="ob-spin" />
+          {s("mapLoading")}
+        </div>
+      )}
+      {error && (
         <div className="directory-map-error" role="status">
-          {t("studio.mapError")}
+          <MapPin size={28} />
+          <p>{s("mapError")}</p>
           <button
             type="button"
             onClick={() => {
               setError(false);
               setReady(false);
+              setTilesLoaded(false);
               setAttempt((value) => value + 1);
             }}
           >
-            {t("studio.retry")}
+            {s("retry")}
           </button>
         </div>
-      ) : (
-        <div ref={canvas} style={{ height: "100%", minHeight: 430 }} />
+      )}
+      {ready && !error && (
+        <>
+          <div className="directory-map-controls" aria-label={s("mapControls")}>
+            <button
+              type="button"
+              onClick={() =>
+                map.current?.setZoom(
+                  Math.min(20, (map.current.getZoom() || 7) + 1),
+                )
+              }
+              aria-label={s("zoomIn")}
+            >
+              <Plus size={19} />
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                map.current?.setZoom(
+                  Math.max(3, (map.current.getZoom() || 7) - 1),
+                )
+              }
+              aria-label={s("zoomOut")}
+            >
+              <Minus size={19} />
+            </button>
+            <button
+              type="button"
+              disabled={!entries.length}
+              onClick={fitResults}
+              aria-label={s("fitMap")}
+            >
+              <Expand size={18} />
+            </button>
+          </div>
+          {!entries.length && (
+            <p className="directory-map-empty" role="status">
+              {s("noMapLocations")}
+            </p>
+          )}
+          {visibleGroup.length > 0 && (
+            <section className="directory-map-group" aria-label={s("mapGroup")}>
+              <header>
+                <strong>
+                  {visibleGroup.length} {s("mapGroup")}
+                </strong>
+                <button
+                  type="button"
+                  aria-label={s("closeMapPanel")}
+                  onClick={() => setGroup([])}
+                >
+                  <X size={18} />
+                </button>
+              </header>
+              <div>
+                {visibleGroup.map((entry) => (
+                  <button
+                    type="button"
+                    key={entry.id}
+                    onClick={() => {
+                      setGroup([]);
+                      callback.current(entry.id);
+                    }}
+                  >
+                    <span>
+                      <strong>{entry.name}</strong>
+                      <small>{entry.address}</small>
+                    </span>
+                    <MapPin size={16} />
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
     </div>
   );
