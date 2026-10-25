@@ -3,19 +3,15 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { prisma } from "@/lib/prisma";
-import { PublicBusinessPage } from "@/components/business/public-business-page";
 import { PublicStudioPage } from "@/components/studio/public-page";
 import {
   documentFromBusiness,
-  studioDocumentSchema,
   localText,
+  studioDocumentSchema,
+  type StudioDocument,
 } from "@/lib/studio/document";
 import { publicBusiness } from "@/lib/studio/server";
 import { locationLabel } from "@/lib/locations";
-import type {
-  BusinessPageConfigData,
-  BusinessWithConfig,
-} from "@/types/template";
 import "../studio.css";
 const display = localFont({
   src: "../fonts/GeistVF.woff",
@@ -29,10 +25,24 @@ const getBusiness = cache(async (slug: string) =>
       pageConfig: {
         select: { config: true, publishedAt: true, configVersion: true },
       },
-      template: true,
     },
   }),
 );
+function publicDocument(
+  b: Parameters<typeof documentFromBusiness>[0] & {
+    useCustomPage: boolean;
+    pageConfig: { publishedAt: Date | null; config: unknown } | null;
+  },
+): StudioDocument {
+  const config =
+    b.useCustomPage && b.pageConfig?.publishedAt
+      ? b.pageConfig.config
+      : undefined;
+  const doc = documentFromBusiness(b, config);
+  if (!studioDocumentSchema.safeParse(config).success)
+    doc.design = { layout: "panorama", palette: "forest", font: "modern" };
+  return doc;
+}
 type Props = {
   params: Promise<{ subdomain: string }>;
   searchParams: Promise<{ lang?: string }>;
@@ -52,10 +62,7 @@ export async function generateMetadata({
         : b.primaryLanguage === "ar"
           ? "ar"
           : "fr";
-  const doc =
-    b.useCustomPage && b.pageConfig?.publishedAt
-      ? documentFromBusiness(b, b.pageConfig.config)
-      : documentFromBusiness(b);
+  const doc = publicDocument(b);
   const title =
     localText(doc.content.title, language, doc.primaryLanguage) || b.name;
   const description =
@@ -93,10 +100,7 @@ export default async function BusinessPage({ params, searchParams }: Props) {
           ? "ar"
           : "fr";
   const publicData = publicBusiness(b);
-  const doc =
-    b.useCustomPage && b.pageConfig?.publishedAt
-      ? documentFromBusiness(b, b.pageConfig.config)
-      : documentFromBusiness(b);
+  const doc = publicDocument(b);
   doc.profile = {
     ...doc.profile,
     name: b.name,
@@ -136,10 +140,6 @@ export default async function BusinessPage({ params, searchParams }: Props) {
       : {}),
     sameAs: Object.values(doc.content.socials).filter(Boolean),
   };
-  const legacy =
-    b.useCustomPage &&
-    b.pageConfig?.publishedAt &&
-    !studioDocumentSchema.safeParse(b.pageConfig.config).success;
   return (
     <div className={display.variable}>
       <script
@@ -148,28 +148,13 @@ export default async function BusinessPage({ params, searchParams }: Props) {
           __html: JSON.stringify(jsonld).replace(/</g, "\\u003c"),
         }}
       />
-      {legacy ? (
-        <PublicBusinessPage
-          business={
-            {
-              ...publicData,
-              user: { name: b.name, email: b.email || "" },
-              pageConfig: { config: b.pageConfig!.config },
-              template: b.template,
-            } as unknown as BusinessWithConfig
-          }
-          useCustomPage
-          config={b.pageConfig!.config as unknown as BusinessPageConfigData}
-        />
-      ) : (
-        <PublicStudioPage
-          document={doc}
-          businessId={b.id}
-          ownerId={b.userId || undefined}
-          language={language}
-          locationLabel={label}
-        />
-      )}
+      <PublicStudioPage
+        document={doc}
+        businessId={b.id}
+        ownerId={b.userId || undefined}
+        language={language}
+        locationLabel={label}
+      />
     </div>
   );
 }
