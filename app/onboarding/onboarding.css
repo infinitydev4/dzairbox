@@ -1,4 +1,3 @@
-body:has(.ob-root) { padding-bottom: 0; }
 .ob-root { min-height: 100svh; }
 .ob-root button, .ob-root input, .ob-root select, .ob-root textarea { font: inherit; }
 .ob-root button { cursor: pointer; }

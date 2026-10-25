@@ -12,7 +12,6 @@
 }
 
 .dz-home *, .dz-home *::before, .dz-home *::after { box-sizing: border-box; }
-body:has(.dz-home) { padding-bottom: 0; }
 .dz-home h1, .dz-home h2, .dz-home h3, .dz-brand { font-family: var(--font-home-display), var(--font-inter), sans-serif; }
 .dz-home a, .dz-home button { -webkit-tap-highlight-color: transparent; }
 .dz-home a:focus-visible, .dz-home button:focus-visible, .dz-home input:focus-visible, .dz-home summary:focus-visible { outline: 3px solid var(--dz-pin); outline-offset: 4px; }

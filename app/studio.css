@@ -1,7 +1,3 @@
-body:has(.st-root),
-body:has(.directory-root) {
-  padding-bottom: 0;
-}
 .st-root {
   --st-ink: #103832;
   --st-line: #d9e1d6;
